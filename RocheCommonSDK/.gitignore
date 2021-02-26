@@ -1,0 +1,40 @@
+# OSX
+.DS_Store
+
+# Android Studio
+*.iml
+.idea
+captures/
+.navigation/
+*.dex
+proguard/
+*.log
+local.properties
+.externalNativeBuild
+.cxx
+
+# Built application files
+*.apk
+*.aar
+*.ap_
+*.aab
+*.cmd
+*.patch
+
+# Generated files
+bin/
+gen/
+out/
+*.exec
+
+# Gradle files
+.gradle/
+build/
+app/version.properties
+
+# lint
+lint/intermediates/
+lint/generated/
+lint/outputs/
+lint/tmp/
+
