@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="genericDialog"
+            type="com.roche.roche.dis.rochecommon.dialogs.NRMDialog" />
+
+        <variable
+            name="genericDialogClickListener"
+            type="com.roche.roche.dis.rochecommon.dialogs.GenericDialog.OnButtonClickListener" />
+    </data>
+
+    <!--   needed in order to position the dialog and set the custom solid background-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/popupBackground"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_padding_size_xlarge"
+            android:layout_marginEnd="@dimen/margin_padding_size_xlarge"
+            android:background="@drawable/bg_dialog">
+
+            <LinearLayout
+                android:id="@+id/dialog_close_frame"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_padding_size_xsmall"
+                android:layout_marginEnd="@dimen/margin_padding_size_small"
+                android:clickable="true"
+                android:focusable="true"
+                android:onClick="@{(view) -> genericDialog.closeDialog()}"
+                android:padding="@dimen/margin_padding_size_small"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:id="@+id/dialog_close_ic"
+                    style="@style/GenericDialog_Btn_Close"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/null_"
+                    tools:visibility="visible"
+                    android:visibility="invisible" />
+            </LinearLayout>
+
+            <View
+                android:id="@+id/dialog_divider"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:visibility="gone"
+                app:layout_constraintTop_toBottomOf="@+id/dialog_close_frame" />
+
+            <ImageView
+                android:id="@+id/dialog_popup_image"
+                style="@style/GenericDialog_Btn_Exit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/dialog_divider"
+                tools:ignore="ContentDescription" />
+
+            <LinearLayout
+                android:id="@+id/dialog_title_container"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/dialog_popup_image">
+
+                <TextView
+                    android:id="@+id/dialog_title"
+                    style="@style/GenericDialog_Title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:layout_marginHorizontal="@dimen/unit_2"
+                    tools:text="Dialog title" />
+
+                <TextView
+                    android:id="@+id/dialog_subtitle"
+                    style="@style/GenericDialog_Subtitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/margin_padding_size_small"
+                    android:paddingStart="@dimen/margin_padding_size_large"
+                    android:paddingEnd="@dimen/margin_padding_size_large"
+                    android:visibility="gone"
+                    android:gravity="center_horizontal"
+                    tools:text="19 March 2020  - 6:35 AM"
+                    tools:visibility="visible" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/dialog_result_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                app:layout_constraintTop_toBottomOf="@+id/dialog_title_container">
+
+                <TextView
+                    android:id="@+id/dialog_result_title"
+                    style="@style/GenericDialog_Result_Title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="@dimen/margin_padding_size_xlarge"
+                    android:paddingEnd="@dimen/margin_padding_size_xlarge"
+                    android:gravity="center"
+                    android:layout_marginTop="@dimen/unit_4"
+                    android:layout_marginBottom="@dimen/unit_2"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/dialog_manual_input_value"
+                    style="@style/GenericDialog_Manual_Input_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="@dimen/margin_padding_size_xlarge"
+                    android:paddingEnd="@dimen/margin_padding_size_xlarge"
+                    android:layout_marginTop="@dimen/unit_12"
+                    android:gravity="center"
+                    android:layout_marginBottom="@dimen/unit_2"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+
+            <RelativeLayout
+                android:id="@+id/dialog_description_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginTop="@dimen/unit_2"
+                android:paddingBottom="@dimen/unit_6"
+                app:layout_constraintTop_toBottomOf="@+id/dialog_result_container">
+
+                <TextView
+                    android:id="@+id/dialog_description"
+                    style="@style/GenericDialog_Description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:maxHeight="@dimen/max_dialog_description_height"
+                    android:paddingStart="@dimen/margin_padding_size_xlarge"
+                    android:paddingEnd="@dimen/margin_padding_size_xlarge"
+                    android:paddingBottom="@dimen/margin_padding_size_xlarge"
+                    android:scrollbars="vertical"
+                    android:textAlignment="center"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="Dialog description" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/dialog_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:nestedScrollingEnabled="false"
+                    android:overScrollMode="never"
+                    android:paddingStart="@dimen/margin_padding_size_xmedium"
+                    android:paddingBottom="@dimen/margin_padding_size_xmedium"
+                    android:scrollbars="none"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/dialog_btn_left"
+                style="@style/GenericDialog_Btn_Left"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/dialog_btn_height"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:onClick="@{(view) -> genericDialogClickListener.onLeftButtonClick(genericDialog)}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/dialog_description_container"
+                app:layout_constraintWidth_percent="0.5"
+                tools:text="@string/dialog_button_no" />
+
+            <TextView
+                android:id="@+id/dialog_btn_right"
+                style="@style/GenericDialog_Btn_Right"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/dialog_btn_height"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:onClick="@{(view) -> genericDialogClickListener.onRightButtonClick(genericDialog)}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/dialog_btn_left"
+                app:layout_constraintTop_toBottomOf="@+id/dialog_description_container"
+                app:layout_constraintWidth_percent="0.5"
+                tools:text="@string/dialog_button_yes" />
+
+            <TextView
+                android:id="@+id/dialog_btn_single"
+                style="@style/GenericDialog_Btn_Single"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dialog_btn_height"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:onClick="@{(view) -> genericDialogClickListener.onCenterButtonClick(genericDialog)}"
+                android:text="@string/dialog_button_ok"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/dialog_description_container" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </LinearLayout>
+</layout>

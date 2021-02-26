@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Standard Margins & Padding -->
+    <dimen name="margin_padding_size_xsmall">4dp</dimen>
+    <dimen name="margin_padding_size_small">8dp</dimen>
+    <dimen name="margin_padding_size_xnormal">10dp</dimen>
+    <dimen name="margin_padding_size_normal">12dp</dimen>
+    <dimen name="margin_padding_size_medium">16dp</dimen>
+    <dimen name="margin_padding_size_xmedium">20dp</dimen>
+    <dimen name="margin_padding_size_large">24dp</dimen>
+    <dimen name="margin_padding_size_xlarge">32dp</dimen>
+
+    <!-- Dialog -->
+    <dimen name="dialog_close_size">16dp</dimen>
+    <dimen name="dialog_icon_size">100dp</dimen>
+    <dimen name="dialog_btn_height">64dp</dimen>
+    <dimen name="dialog_margin_top">104dp</dimen>
+    <dimen name="dialog_corner_radius">6dp</dimen>
+    <dimen name="max_dialog_description_height">350dp</dimen>
+    <dimen name="dialog_result_title_size">18sp</dimen>
+
+    <dimen name="margin_1dp">1dp</dimen>
+    <dimen name="margin_6dp">6dp</dimen>
+
+    <!-- General Units -->
+    <dimen name="unit">4dp</dimen>
+    <dimen name="unit_2">8dp</dimen>
+    <dimen name="unit_3">12dp</dimen>
+    <dimen name="unit_4">16dp</dimen>
+    <dimen name="unit_5">20dp</dimen>
+    <dimen name="unit_6">24dp</dimen>
+    <dimen name="unit_7">28dp</dimen>
+    <dimen name="unit_8">32dp</dimen>
+    <dimen name="unit_9">36dp</dimen>
+    <dimen name="unit_10">40dp</dimen>
+    <dimen name="unit_11">44dp</dimen>
+    <dimen name="unit_12">48dp</dimen>
+    <dimen name="unit_13">52dp</dimen>
+    <dimen name="unit_14">56dp</dimen>
+    <dimen name="unit_15">60dp</dimen>
+    <dimen name="unit_16">64dp</dimen>
+    <dimen name="unit_18">72dp</dimen>
+    <dimen name="unit_19">76dp</dimen>
+    <dimen name="unit_22">88dp</dimen>
+    <dimen name="unit_25">100dp</dimen>
+    <dimen name="unit_26">120dp</dimen>
+    <dimen name="unit_43">172dp</dimen>
+    <dimen name="unit_63">252dp</dimen>
+
+    <!--Button-->
+    <dimen name="btn_rounded_corner_radius">6dp</dimen>
+    <dimen name="btn_rounded_corner_radius_large">12dp</dimen>
+
+</resources>
