@@ -1,0 +1,7 @@
+include ':lvl_library'
+include ':security'
+include ':rocheCommon'
+include ':biometrics'
+include ':app'
+project(':lvl_library').projectDir = new File(rootDir, 'play-licensing/lvl_library/')
+rootProject.name = "RocheDISBiometrics"

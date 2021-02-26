@@ -1,4 +1,4 @@
-package com.roche.roche.dis.biometrics
+package com.roche.roche.dis.security
 
 import org.junit.Test
 

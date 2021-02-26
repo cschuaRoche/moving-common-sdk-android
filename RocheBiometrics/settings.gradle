@@ -1,3 +1,0 @@
-include ':biometrics'
-include ':app'
-rootProject.name = "RocheDISBiometrics"
