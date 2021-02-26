@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <color name="white">@android:color/white</color>
+    <color name="popupBackground">#9f000000</color>
+
+    <!-- Dialog -->
+    <color name="colorDialogButtonBlue" tools:override="true">#0066cc</color>
+
+    <!-- Buttons-->
+    <color name="colorPrimaryButtonNormal">#0066cc</color>
+    <color name="colorPrimaryButtonPressed">#23627D</color>
+    <color name="colorPrimaryButtonDisabled">#D3D3D3</color>
+    <color name="colorLinkText">#35a7ff</color>
+
+    <color name="colorFieldTextError">#ef4242</color>
+    <color name="colorFieldText">#99000000</color>
+
+    <!-- ProgressBar-->
+    <color name="color_progress_bar_loading_background">#9f000000</color>
+    <color name="color_progress_bar_loading">#f5f9fa</color>
+
+    <color name="expiration_remaining_progress_color">#d9edff</color>
+
+    <!-- Fields -->
+    <color name="light_grey">#888888</color>
+    <color name="medium_grey">#646464</color>
+    <color name="blue">#228af2</color>
+    <color name="colorHamburger">@color/white</color>
+    <color name="colorLightBlue">#e3f2ff</color>
+</resources>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Dialog -->
+    <style name="GenericDialog">
+        <item name="android:windowBackground">@color/popupBackground</item>
+    </style>
+    <style name="GenericDialog_Title" parent="Widget.AppCompat.TextView" />
+    <style name="GenericDialog_Subtitle" parent="Widget.AppCompat.TextView" />
+    <style name="GenericDialog_Result_Title" parent="Widget.AppCompat.TextView" />
+    <style name="GenericDialog_Manual_Input_value" parent="Widget.AppCompat.TextView" />
+    <style name="GenericDialog_Description" parent="Widget.AppCompat.TextView" />
+    <style name="GenericDialog_Btn_Left" parent="Widget.AppCompat.TextView" />
+    <style name="GenericDialog_Btn_Right" parent="GenericDialog_Btn_Left" />
+    <style name="GenericDialog_Btn_Single" parent="GenericDialog_Btn_Left" />
+    <style name="GenericDialog_Btn_Exit" parent="Widget.AppCompat.TextView"/>
+    <style name="GenericDialog_Btn_Close" parent="Widget.AppCompat.TextView" />
+
+    <!-- Toolbar -->
+    <style name="Top_Navigation_Toolbar" parent="ThemeOverlay.AppCompat.ActionBar"/>
+    <style name="Toolbar_Title" parent="Widget.AppCompat.TextView"/>
+    <style name="Toolbar_Close_Button" />
+    <style name="Toolbar_Back_Button" />
+    <style name="Toolbar_Right_Button" />
+    <style name="Heading_Base" />
+    <style name="Heading_Base_Field" />
+    <style name="Heading_Base_Label" />
+    <style name="Base_Field" />
+    <style name="Error_Message" />
+    <style name="Base_Button" />
+    <style name="Menu_Item" />
+    <style name="List_Item_Regular" />
+
+    <!-- About -->
+    <style name="Text_Style_About_Subtitle" parent="Widget.AppCompat.TextView" />
+    <style name="Text_Style_Test_Result_Info" parent="Widget.AppCompat.TextView" />
+
+    <!-- Country -->
+    <style name="Text_Country_Item" parent="Widget.AppCompat.TextView" />
+    <style name="Text_Country_List_Title" parent="Widget.AppCompat.TextView" />
+    <style name="Content_Header" parent="Widget.AppCompat.TextView" />
+
+    <!-- Scanning -->
+    <style name="Hyperlink_Large" parent="Widget.AppCompat.TextView" />
+    <style name="Text_Bold" parent="Widget.AppCompat.TextView" />
+
+    <style name="Profile_Verification_Title" parent="Widget.AppCompat.TextView" />
+
+    <style name="Profile_Verification_Description" parent="Widget.AppCompat.TextView" />
+
+    <style name="Profile_Verification_Details" parent="Widget.AppCompat.TextView" />
+
+</resources>

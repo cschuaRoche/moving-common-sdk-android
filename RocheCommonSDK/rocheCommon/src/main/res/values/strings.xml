@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="null_" />
+    <string name="cancel">Cancel</string>
+    <string name="settings">Settings</string>
+
+    <!-- Generic errors -->
+    <string name="network_error_title">NETWORK ERROR</string>
+    <string name="network_error_message">To use the app your device must be online. Please make sure that your device is online and retry.</string>
+    <string name="check_your_internet_connection_error_message">Please make sure that your device is online and retry.</string>
+    <string name="server_error_title">SERVER ERROR</string>
+    <string name="server_error_desc">There is an error. &lt;br /&gt; Please try again later.</string>
+
+    <!-- Rooted device Dialog -->
+    <string name="rooted_device_dialog_title">Device is Rooted</string>
+    <string name="rooted_device_dialog_desc">This device appears to be rooted and cannot be trusted to run this app securely.</string>
+
+    <!-- Invalid GooglePlay License -->
+    <string name="invalid_license_dialog_title">THE APP LICENSE IS INVALID.</string>
+    <string name="invalid_license_dialog_desc">This app appears to have an invalid GooglePlay License and cannot be trusted to run securely.</string>
+
+    <!-- Dialog -->
+    <string name="dialog_button_yes">YES</string>
+    <string name="dialog_button_no">NO</string>
+    <string name="dialog_button_ok">OK</string>
+    <string name="dialog_button_back">BACK</string>
+    <string name="dialog_button_confirm">CONFIRM</string>
+    <string name="dialog_button_okay">OKAY</string>
+    <string name="dialog_label_logout">LOGOUT</string>
+    <string name="dialog_logout_description">Are you sure you want to\nlog out?</string>
+    <string name="dialog_cancel_label">CANCEL</string>
+    <string name="dialog_label_delete_account">DELETE ACCOUNT</string>
+    <string name="dialog_delete_account_description">Once you confirm, all of your account data will be permanently deleted.</string>
+    <string name="dialog_button_not_now">NOT NOW</string>
+    <string name="dialog_alert_title">ALERT</string>
+    <string name="dialog_label_provide_comment">Please provide a comment below</string>
+</resources>
