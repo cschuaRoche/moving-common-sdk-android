@@ -1,0 +1,29 @@
+image:
+  name: bitbucketpipelines/android-ci-image
+
+definitions:
+  steps:
+  - step: &build
+      name: Build
+      caches:
+        - docker
+        - gradle
+      script:
+        - cd RocheCommonSDK
+        - ./gradlew assembleDebug
+
+  - step: &unittest
+      name: Unit Tests
+      caches:
+        - docker
+        - gradle
+      script:
+        - cd RocheCommonSDK
+        - ./gradlew test
+
+
+pipelines:
+  branches:
+    bitbucket-pipeline-ci:
+      - *build
+      - *unittest
