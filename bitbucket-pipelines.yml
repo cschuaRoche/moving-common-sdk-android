@@ -6,7 +6,6 @@ definitions:
   - step: &build
       name: Build
       caches:
-        - docker
         - gradle
       script:
         - cd RocheCommonSDK
@@ -15,12 +14,10 @@ definitions:
   - step: &unittest
       name: Unit Tests
       caches:
-        - docker
         - gradle
       script:
         - cd RocheCommonSDK
         - ./gradlew test
-
 
 pipelines:
   branches:
