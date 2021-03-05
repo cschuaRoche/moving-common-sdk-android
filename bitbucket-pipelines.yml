@@ -9,6 +9,7 @@ definitions:
         - gradle
       script:
         - cd RocheCommonSDK
+        - yes | sdkmanager --licenses
         - ./gradlew assembleDebug
 
   - step: &unittest
