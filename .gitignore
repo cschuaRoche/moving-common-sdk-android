@@ -18,6 +18,7 @@ dist/
 
 # Package files
 *.jar
+!RocheCommonSDK/gradle/wrapper/gradle-wrapper.jar
 
 # Maven
 target/
