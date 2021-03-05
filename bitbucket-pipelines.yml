@@ -25,5 +25,5 @@ definitions:
 pipelines:
   branches:
     bitbucket-pipeline-ci:
-      - *build
-      - *unittest
+      - step: *build
+      - step: *unittest
