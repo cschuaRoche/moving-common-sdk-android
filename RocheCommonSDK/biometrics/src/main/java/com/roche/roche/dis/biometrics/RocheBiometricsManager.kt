@@ -25,8 +25,15 @@ class RocheBiometricsManager(private val context: Context, private var allowedAu
     var type: BiometricsType
         private set
 
-    // determines if biometrics have been setup and ready to be used
+    /**
+     * Determines if biometrics have been setup and ready to be used.
+     * Note that in some devices, Biometrics is set to unknown due to security updates.
+     * Check the RocheBiometricsManager.type to determine the supported hardware.
+     */
     var isAvailable: Boolean
+        private set
+
+    var canSetupBiometrics: Boolean
         private set
 
     var isBiometricsDialogShowing: Boolean
@@ -56,6 +63,7 @@ class RocheBiometricsManager(private val context: Context, private var allowedAu
             }
         }
         isAvailable = isBiometricsAvailable(context)
+        canSetupBiometrics = canSetupBiometrics(context)
         isBiometricsDialogShowing = false
         biometricsDialogs = BiometricsDialogs(allowedAuthenticators!!, type)
     }
@@ -140,9 +148,14 @@ class RocheBiometricsManager(private val context: Context, private var allowedAu
      * verifies whether user has setup their biometrics
      * @return true if biometrics is setup on the device, otherwise false
      */
-    fun isBiometricsAvailable(context: Context): Boolean {
+    private fun isBiometricsAvailable(context: Context): Boolean {
         val biometricManager = BiometricManager.from(context)
         return biometricManager.canAuthenticate(allowedAuthenticators!!) == BiometricManager.BIOMETRIC_SUCCESS
+    }
+
+    fun canSetupBiometrics(context: Context): Boolean {
+        val biometricManager = BiometricManager.from(context)
+        return biometricManager.canAuthenticate(allowedAuthenticators!!) == BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED
     }
 
     /**

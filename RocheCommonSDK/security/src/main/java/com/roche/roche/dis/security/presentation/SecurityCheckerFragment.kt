@@ -3,7 +3,7 @@ package com.roche.roche.dis.security.presentation
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
-import com.roche.roche.dis.rochecommon.dialogs.NRMDialogFactory
+import com.roche.roche.dis.rochecommon.dialogs.RocheDialogFactory
 import com.roche.roche.dis.rochecommon.presentation.observeState
 import javax.inject.Inject
 
@@ -26,16 +26,16 @@ abstract class SecurityCheckerFragment: Fragment() {
         {
             when (it) {
                 SecurityCheckerViewState.DeviceIsRooted -> {
-                    NRMDialogFactory.showRootedDeviceDialog(requireContext()) { activity?.finish() }
+                    RocheDialogFactory.showRootedDeviceDialog(requireContext()) { activity?.finish() }
                 }
                 SecurityCheckerViewState.InvalidLicense -> {
-                    NRMDialogFactory.showInvalidLicenseDialog(requireContext()) {
+                    RocheDialogFactory.showInvalidLicenseDialog(requireContext()) {
                         activity?.finish()
                     }
                 }
                 SecurityCheckerViewState.Retry -> {
                     // We don't have a specific logic for retry, so default to network error
-                    NRMDialogFactory.showNonCancellableNetworkErrorDialog(requireContext()) {
+                    RocheDialogFactory.showNonCancellableNetworkErrorDialog(requireContext()) {
                         activity?.finish()
                     }
                 }
