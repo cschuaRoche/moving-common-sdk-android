@@ -1,64 +1,67 @@
 package com.roche.roche.dis
 
-import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
-import android.widget.Toast
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import androidx.biometric.BiometricManager
-import com.roche.roche.dis.biometrics.BiometricsType
-import com.roche.roche.dis.biometrics.OnAuthenticationCallback
-import com.roche.roche.dis.biometrics.OnAuthenticationCallback.BiometricStatusConstants
-import com.roche.roche.dis.biometrics.R
-import com.roche.roche.dis.biometrics.RocheBiometricsManager
+import androidx.appcompat.widget.Toolbar
+import androidx.navigation.NavController
+import androidx.navigation.NavOptions
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.NavigationUI
+import androidx.navigation.ui.setupActionBarWithNavController
+import com.google.android.material.navigation.NavigationView
 import com.roche.roche.dis.databinding.ActivityMainBinding
-import com.roche.roche.dis.rochecommon.dialogs.RocheDialogFactory
 
-class MainActivity : AppCompatActivity(), OnAuthenticationCallback {
+class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     private lateinit var binding: ActivityMainBinding
-    private lateinit var biometricsManager: RocheBiometricsManager
-    private val TAG = "Biometrics"
+    private lateinit var appBarConfiguration: AppBarConfiguration
+    private lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(LayoutInflater.from(this))
         setContentView(binding.root)
 
-        val allowedAuthenticators = if (Build.VERSION.SDK_INT > 29) {
-            BiometricManager.Authenticators.DEVICE_CREDENTIAL or BiometricManager.Authenticators.BIOMETRIC_STRONG
-        } else {
-            BiometricManager.Authenticators.BIOMETRIC_STRONG
-        }
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.main_nav_host) as NavHostFragment
+        navController = navHostFragment.navController
 
-        biometricsManager = RocheBiometricsManager(this, allowedAuthenticators)
-        Log.d(TAG, "isAvailable: ${biometricsManager.isAvailable}")
-        Log.d(TAG, "type: ${biometricsManager.type}")
-        Log.d(TAG, "hasFingerprintSetup: ${biometricsManager.hasFingerprintSetup()}")
-        Log.d(TAG, "canSetupBiometrics: ${biometricsManager.canSetupBiometrics(this)}")
+        appBarConfiguration = AppBarConfiguration.Builder(
+            R.id.biometrics_nav_f
+        ) //Pass the ids of fragments from nav_graph which you d'ont want to show back button in toolbar
+            .setOpenableLayout(binding.mainDrawerLayout) //Pass the drawer layout id from activity xml
+            .build()
 
+        val toolbar = binding.root.findViewById<Toolbar>(R.id.main_tool_bar)
+        setSupportActionBar(toolbar) //Set toolbar
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowTitleEnabled(false)// remove default titles of the fragments
+        setupActionBarWithNavController(navController, appBarConfiguration)
 
-        binding.biometricBtn.setOnClickListener {
-            // if biometrics is available or
-            // if fingerprint hardware is supported then allow biometrics auth
-            // Note that in some devices, Biometrics is set to unknown due to security updates,
-            // therefore we check if Fingerprint hardware is supported.
-            if (biometricsManager.isAvailable || BiometricsType.FINGERPRINT == biometricsManager.type) {
-                biometricsManager.showAuthDialog(this, this)
-            } else {
-                Toast.makeText(this, "Biometrics is not supported for this device!", Toast.LENGTH_SHORT).show()
-            }
-        }
+        // set
+        binding.mainNavigationView.setNavigationItemSelectedListener(this)
     }
 
-    override fun onAuthComplete(statusCode: Int) {
-        Toast.makeText(this, "statusCode: $statusCode", Toast.LENGTH_SHORT).show()
-        // User does not have any biometrics created on the device, go to settings
-        if (BiometricStatusConstants.ERROR_NO_BIOMETRICS == statusCode) {
-            RocheDialogFactory.showCancelOrSettings(getString(R.string.biometric_confirm_title), getString(
-                R.string.biometric_enable_desc
-            ), this)
+    override fun onSupportNavigateUp(): Boolean { //Setup appBarConfiguration for back arrow
+        return NavigationUI.navigateUp(navController, appBarConfiguration)
+    }
+
+    /**
+     * menu Item select listener
+     */
+    override fun onNavigationItemSelected(menuItem: MenuItem): Boolean {
+        menuItem.isCheckable = false
+        when (menuItem.itemId) {
+            R.id.menu_biometrics -> {
+                val action = MainNavGraphDirections.actionToBiometrics()
+                val options = NavOptions.Builder().setLaunchSingleTop(true).build()
+                findNavController(R.id.main_nav_host).navigate(action, options)
+            }
         }
+        binding.mainDrawerLayout.close()
+        return true
     }
 }
