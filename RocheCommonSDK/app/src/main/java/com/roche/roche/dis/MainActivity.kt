@@ -1,0 +1,67 @@
+package com.roche.roche.dis
+
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.MenuItem
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import androidx.navigation.NavController
+import androidx.navigation.NavOptions
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.NavigationUI
+import androidx.navigation.ui.setupActionBarWithNavController
+import com.google.android.material.navigation.NavigationView
+import com.roche.roche.dis.databinding.ActivityMainBinding
+
+class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+
+    private lateinit var binding: ActivityMainBinding
+    private lateinit var appBarConfiguration: AppBarConfiguration
+    private lateinit var navController: NavController
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = ActivityMainBinding.inflate(LayoutInflater.from(this))
+        setContentView(binding.root)
+
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.main_nav_host) as NavHostFragment
+        navController = navHostFragment.navController
+
+        appBarConfiguration = AppBarConfiguration.Builder(
+            R.id.biometrics_nav_f
+        ) //Pass the ids of fragments from nav_graph which you d'ont want to show back button in toolbar
+            .setOpenableLayout(binding.mainDrawerLayout) //Pass the drawer layout id from activity xml
+            .build()
+
+        val toolbar = binding.root.findViewById<Toolbar>(R.id.main_tool_bar)
+        setSupportActionBar(toolbar) //Set toolbar
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowTitleEnabled(false)// remove default titles of the fragments
+        setupActionBarWithNavController(navController, appBarConfiguration)
+
+        // set
+        binding.mainNavigationView.setNavigationItemSelectedListener(this)
+    }
+
+    override fun onSupportNavigateUp(): Boolean { //Setup appBarConfiguration for back arrow
+        return NavigationUI.navigateUp(navController, appBarConfiguration)
+    }
+
+    /**
+     * menu Item select listener
+     */
+    override fun onNavigationItemSelected(menuItem: MenuItem): Boolean {
+        menuItem.isCheckable = false
+        when (menuItem.itemId) {
+            R.id.menu_biometrics -> {
+                val action = MainNavGraphDirections.actionToBiometrics()
+                val options = NavOptions.Builder().setLaunchSingleTop(true).build()
+                findNavController(R.id.main_nav_host).navigate(action, options)
+            }
+        }
+        binding.mainDrawerLayout.close()
+        return true
+    }
+}

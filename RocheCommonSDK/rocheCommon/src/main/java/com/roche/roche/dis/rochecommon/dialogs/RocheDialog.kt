@@ -14,11 +14,11 @@ import androidx.databinding.ViewDataBinding
 import com.roche.roche.dis.rochecommon.R
 import com.roche.roche.dis.rochecommon.utils.fromHtml
 
-abstract class NRMDialog<T : ViewDataBinding>(context: Context, themeRes: Int, layoutRes: Int) :
+abstract class RocheDialog<T : ViewDataBinding>(context: Context, themeRes: Int, layoutRes: Int) :
     Dialog(context, themeRes), CloseDialogListener by DialogHelper() {
     abstract fun closeDialog()
     abstract fun setUpListeners()
-    abstract fun setButtonClickListener(buttonClickListener: GenericDialog.OnButtonClickListener): NRMDialog<T>
+    abstract fun setButtonClickListener(buttonClickListener: GenericDialog.OnButtonClickListener): RocheDialog<T>
 
     var binding: T
 
@@ -33,7 +33,7 @@ abstract class NRMDialog<T : ViewDataBinding>(context: Context, themeRes: Int, l
         )
     }
 
-    fun setOnDismissListener(onDismissListener: DialogInterface.OnDismissListener): NRMDialog<T> {
+    fun setOnDismissListener(onDismissListener: DialogInterface.OnDismissListener): RocheDialog<T> {
         super.setOnDismissListener(onDismissListener)
         return this
     }
@@ -50,7 +50,7 @@ abstract class NRMDialog<T : ViewDataBinding>(context: Context, themeRes: Int, l
      * @see R.style.GenericDialog_Btn_Right
      * @see R.style.GenericDialog_Btn_Single
      */
-    fun setTextFont(typeface: Typeface): NRMDialog<T>  {
+    fun setTextFont(typeface: Typeface): RocheDialog<T>  {
         val dialogTitle: TextView = findViewById(R.id.dialog_title) ?: throw getResourceException("dialog_title")
         dialogTitle.typeface = typeface
         val dialogDescription: TextView = findViewById(R.id.dialog_description) ?: throw getResourceException("dialog_description")
@@ -66,7 +66,7 @@ abstract class NRMDialog<T : ViewDataBinding>(context: Context, themeRes: Int, l
         return this
     }
 
-    fun setColorScheme(color: Int): NRMDialog<T> {
+    fun setColorScheme(color: Int): RocheDialog<T> {
         val dialogTitle: TextView = findViewById(R.id.dialog_title) ?: throw Exception("Missing dialog_title in dialog layout")
         dialogTitle.setTextColor(color)
         val dialogBtnRight: TextView = findViewById(R.id.dialog_btn_right) ?: throw getResourceException("dialog_btn_right")
@@ -74,55 +74,55 @@ abstract class NRMDialog<T : ViewDataBinding>(context: Context, themeRes: Int, l
         return this
     }
 
-    fun setLeftButton(@StringRes text: Int): NRMDialog<T> {
+    fun setLeftButton(@StringRes text: Int): RocheDialog<T> {
         val dialogBtnLeft: TextView = findViewById(R.id.dialog_btn_left) ?: throw getResourceException("dialog_btn_left")
         dialogBtnLeft.setText(text)
         return this
     }
 
-    fun setLeftButton(text: String): NRMDialog<T> {
+    fun setLeftButton(text: String): RocheDialog<T> {
         val dialogBtnLeft: TextView = findViewById(R.id.dialog_btn_left) ?: throw getResourceException("dialog_btn_left")
         dialogBtnLeft.text = text
         return this
     }
 
-    fun setRightButton(@StringRes text: Int): NRMDialog<T> {
+    fun setRightButton(@StringRes text: Int): RocheDialog<T> {
         val dialogBtnRight: TextView = findViewById(R.id.dialog_btn_right) ?: throw getResourceException("dialog_btn_right")
         dialogBtnRight.setText(text)
         return this
     }
 
-    fun setRightButton(text: String): NRMDialog<T> {
+    fun setRightButton(text: String): RocheDialog<T> {
         val dialogBtnRight: TextView = findViewById(R.id.dialog_btn_right) ?: throw getResourceException("dialog_btn_right")
         dialogBtnRight.text = text
         return this
     }
 
-    fun setCenterButton(@StringRes text: Int): NRMDialog<T> {
+    fun setCenterButton(@StringRes text: Int): RocheDialog<T> {
         val dialogBtnSingle: TextView = findViewById(R.id.dialog_btn_single) ?: throw getResourceException("dialog_btn_single")
         dialogBtnSingle.setText(text)
         return this
     }
 
-    fun setCenterButton(text: String): NRMDialog<T> {
+    fun setCenterButton(text: String): RocheDialog<T> {
         val dialogBtnSingle: TextView = findViewById(R.id.dialog_btn_single) ?: throw getResourceException("dialog_btn_single")
         dialogBtnSingle.text = text
         return this
     }
 
-    fun setDialogTitle(@StringRes text: Int): NRMDialog<T> {
+    fun setDialogTitle(@StringRes text: Int): RocheDialog<T> {
         val dialogTitle: TextView = findViewById(R.id.dialog_title) ?: throw getResourceException("dialog_title")
         dialogTitle.setText(text)
         return this
     }
 
-    fun setDialogTitle(text: String): NRMDialog<T> {
+    fun setDialogTitle(text: String): RocheDialog<T> {
         val dialogTitle: TextView = findViewById(R.id.dialog_title) ?: throw getResourceException("dialog_title")
         dialogTitle.text = text
         return this
     }
 
-    fun configureCancelable(cancelable: Boolean): NRMDialog<T> {
+    fun configureCancelable(cancelable: Boolean): RocheDialog<T> {
         setCancelable(cancelable)
         return this
     }

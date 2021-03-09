@@ -7,7 +7,7 @@ import android.provider.Settings
 import androidx.annotation.StringRes
 import com.roche.roche.dis.rochecommon.R
 
-object NRMDialogFactory {
+object RocheDialogFactory {
 
     fun showLogoutConfirmationDialog(
         context: Context,
@@ -56,11 +56,11 @@ object NRMDialogFactory {
             .setLeftButton(R.string.cancel)
             .setRightButton(R.string.settings)
             .setButtonClickListener(object : GenericDialog.OnButtonClickListener {
-                override fun onLeftButtonClick(dialog: NRMDialog<*>) {
+                override fun onLeftButtonClick(dialog: RocheDialog<*>) {
                     dialog.dismiss()
                 }
 
-                override fun onRightButtonClick(dialog: NRMDialog<*>) {
+                override fun onRightButtonClick(dialog: RocheDialog<*>) {
                     val enrollIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                         Intent(Settings.ACTION_FINGERPRINT_ENROLL)
                     } else {
@@ -79,12 +79,12 @@ object NRMDialogFactory {
             .setDialogTitle(R.string.network_error_title)
             .setCenterButton(R.string.dialog_button_okay)
             .setButtonClickListener(object : GenericDialog.OnButtonClickListener {
-                override fun onCenterButtonClick(dialog: NRMDialog<*>) {
+                override fun onCenterButtonClick(dialog: RocheDialog<*>) {
                     dialog.cancel()
                     onButtonClicked?.invoke()
                 }
 
-                override fun onCloseButtonClick(dialog: NRMDialog<*>) {
+                override fun onCloseButtonClick(dialog: RocheDialog<*>) {
                     dialog.cancel()
                     onButtonClicked?.invoke()
                 }
@@ -158,13 +158,13 @@ object NRMDialogFactory {
 
     private fun GenericDialog.setOnButtonClicked(onButtonClicked: (() -> Unit)): GenericDialog {
         setButtonClickListener(object : GenericDialog.OnButtonClickListener {
-            override fun onCenterButtonClick(dialog: NRMDialog<*>) {
+            override fun onCenterButtonClick(dialog: RocheDialog<*>) {
                 super.onCenterButtonClick(dialog)
                 onButtonClicked.invoke()
                 dialog.dismiss()
             }
 
-            override fun onCloseButtonClick(dialog: NRMDialog<*>) {
+            override fun onCloseButtonClick(dialog: RocheDialog<*>) {
                 super.onCloseButtonClick(dialog)
                 onButtonClicked.invoke()
                 dialog.dismiss()
@@ -190,12 +190,12 @@ object NRMDialogFactory {
             .setDialogTitle(R.string.server_error_title)
             .setCenterButton(R.string.dialog_button_okay)
             .setButtonClickListener(object : GenericDialog.OnButtonClickListener {
-                override fun onCenterButtonClick(dialog: NRMDialog<*>) {
+                override fun onCenterButtonClick(dialog: RocheDialog<*>) {
                     dialog.cancel()
                     onButtonClicked?.invoke()
                 }
 
-                override fun onCloseButtonClick(dialog: NRMDialog<*>) {
+                override fun onCloseButtonClick(dialog: RocheDialog<*>) {
                     dialog.cancel()
                     onButtonClicked?.invoke()
                 }
@@ -219,12 +219,12 @@ object NRMDialogFactory {
             centerBtnText,
             showCloseButton,
             onButtonClickListener = object : GenericDialog.OnButtonClickListener {
-                override fun onCenterButtonClick(dialog: NRMDialog<*>) {
+                override fun onCenterButtonClick(dialog: RocheDialog<*>) {
                     dialog.cancel()
                     onButtonClicked?.invoke()
                 }
 
-                override fun onCloseButtonClick(dialog: NRMDialog<*>) {
+                override fun onCloseButtonClick(dialog: RocheDialog<*>) {
                     onCloseButtonClicked?.invoke()
                 }
             })
@@ -239,11 +239,11 @@ object NRMDialogFactory {
         onCloseButtonClicked: (() -> Unit)? = null,
         onButtonClickListener: GenericDialog.OnButtonClickListener = object :
             GenericDialog.OnButtonClickListener {
-            override fun onCenterButtonClick(dialog: NRMDialog<*>) {
+            override fun onCenterButtonClick(dialog: RocheDialog<*>) {
                 dialog.closeDialog()
             }
 
-            override fun onCloseButtonClick(dialog: NRMDialog<*>) {
+            override fun onCloseButtonClick(dialog: RocheDialog<*>) {
                 onCloseButtonClicked?.invoke()
             }
         }

@@ -1,7 +1,6 @@
 package com.roche.roche.dis.rochecommon.dialogs
 
 import android.content.Context
-import android.graphics.Typeface
 import android.text.Annotation
 import android.text.SpannableString
 import android.text.Spanned
@@ -29,7 +28,7 @@ class GenericDialog(
     context: Context,
     themeRes: Int = R.style.GenericDialog,
     layoutRes: Int = R.layout.view_generic_dialog
-) : NRMDialog<ViewGenericDialogBinding>(context, themeRes, layoutRes) {
+) : RocheDialog<ViewGenericDialogBinding>(context, themeRes, layoutRes) {
 
     init {
         setUpListeners()
@@ -39,7 +38,7 @@ class GenericDialog(
     override fun setUpListeners() {
         binding.genericDialog = this
         binding.genericDialogClickListener = object : OnButtonClickListener {
-            override fun onCenterButtonClick(dialog: NRMDialog<*>) {
+            override fun onCenterButtonClick(dialog: RocheDialog<*>) {
                 dialog.closeDialog()
             }
         }
@@ -157,23 +156,23 @@ class GenericDialog(
     }
 
     interface OnButtonClickListener {
-        fun onLeftButtonClick(dialog: NRMDialog<*>) {
+        fun onLeftButtonClick(dialog: RocheDialog<*>) {
             //do nothing by default
         }
 
-        fun onRightButtonClick(dialog: NRMDialog<*>) {
+        fun onRightButtonClick(dialog: RocheDialog<*>) {
             //do nothing by default
         }
 
-        fun onCenterButtonClick(dialog: NRMDialog<*>) {
+        fun onCenterButtonClick(dialog: RocheDialog<*>) {
             //do nothing by default
         }
 
-        fun onCloseButtonClick(dialog: NRMDialog<*>) {
+        fun onCloseButtonClick(dialog: RocheDialog<*>) {
             //do nothing by default
         }
 
-        fun onDescriptionLinkClick(dialog: NRMDialog<*>, hyperLink: String) {
+        fun onDescriptionLinkClick(dialog: RocheDialog<*>, hyperLink: String) {
             // do nothing by default
         }
     }

@@ -7,7 +7,7 @@
 
         <variable
             name="genericDialog"
-            type="com.roche.roche.dis.rochecommon.dialogs.NRMDialog" />
+            type="com.roche.roche.dis.rochecommon.dialogs.RocheDialog" />
 
         <variable
             name="genericDialogClickListener"
