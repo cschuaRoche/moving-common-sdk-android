@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import androidx.annotation.IntDef
+import androidx.annotation.RequiresApi
 import androidx.annotation.VisibleForTesting
 import androidx.biometric.BiometricManager
 import androidx.fragment.app.Fragment
@@ -21,7 +22,10 @@ import java.lang.annotation.RetentionPolicy
  * @param context the application context where the prompt dialog will be shown
  * @param allowedAuthenticators authenticator types - BiometricManager.Authenticators
  */
-class RocheBiometricsManager(private val context: Context, private var allowedAuthenticators: Int?) {
+class RocheBiometricsManager(
+    private val context: Context,
+    private var allowedAuthenticators: Int?
+) {
     var type: BiometricsType
         private set
 
@@ -33,7 +37,7 @@ class RocheBiometricsManager(private val context: Context, private var allowedAu
     var isAvailable: Boolean
         private set
 
-    var canSetupBiometrics: Boolean
+    var isNotEnrolled: Boolean
         private set
 
     var isBiometricsDialogShowing: Boolean
@@ -52,18 +56,25 @@ class RocheBiometricsManager(private val context: Context, private var allowedAu
             hasFingerPrint(context) -> {
                 BiometricsType.FINGERPRINT
             }
-            hasFaceUnlock(context) -> {
-                BiometricsType.FACE_UNLOCK
-            }
-            hasIrisUnlock(context) -> {
-                BiometricsType.IRIS
+            hasFaceIrisAPISupport() -> {
+                when {
+                    hasFaceUnlock(context) -> {
+                        BiometricsType.FACE_UNLOCK
+                    }
+                    hasIrisUnlock(context) -> {
+                        BiometricsType.IRIS
+                    }
+                    else -> {
+                        BiometricsType.NONE
+                    }
+                }
             }
             else -> {
                 BiometricsType.NONE
             }
         }
-        isAvailable = isBiometricsAvailable(context)
-        canSetupBiometrics = canSetupBiometrics(context)
+        isAvailable = isBiometricsAvailable()
+        isNotEnrolled = isBiometricsNotEnrolled()
         isBiometricsDialogShowing = false
         biometricsDialogs = BiometricsDialogs(allowedAuthenticators!!, type)
     }
@@ -113,47 +124,52 @@ class RocheBiometricsManager(private val context: Context, private var allowedAu
     }
 
     /**
-     * verifies whether fingerprint have been setup by the user on the device settings
-     * @return true if fingerprint have been setup by the user on the device settings
+     * verifies whether fingerprint is available or can be setup in the device settings
+     * @return true if fingerprint is available or can be setup in the device settings
      */
     fun hasFingerprintSetup(): Boolean {
-        return BiometricsType.FINGERPRINT == type && isAvailable
+        return BiometricsType.FINGERPRINT == type && (isAvailable || isNotEnrolled)
     }
 
     /**
-     * verifies whether face unlock have been setup by the user on the device settings
-     * @return true if face unlock have been setup by the user on the device settings
+     * verifies whether face unlock is available or can be setup in the device settings
+     * @return true if face unlock is available or can be setup in the device settings
      */
     fun hasFaceUnlockSetup(): Boolean {
-        return BiometricsType.FACE_UNLOCK == type && isAvailable
+        return BiometricsType.FACE_UNLOCK == type && (isAvailable || isNotEnrolled)
     }
 
     /**
-     * verifies whether iris have been setup by the user on the device settings
-     * @return true if iris have been setup by the user on the device settings
+     * verifies whether iris is available or can be setup in the device settings
+     * @return true if iris is available or can be setup in the device settings
      */
     fun hasIrisSetup(): Boolean {
-        return BiometricsType.IRIS == type && isAvailable
+        return BiometricsType.IRIS == type && (isAvailable || isNotEnrolled)
     }
 
     /**
-     * verifies whether multiple biometrics have been setup by the user on the device settings
-     * @return true if multiple biometrics have been setup by the user on the device settings
+     * verifies whether multiple biometrics is available or can be setup in the device settings
+     * @return true if multiple biometrics is available or can be setup in the device settings
      */
     fun hasMultipleBiometricsSetup(): Boolean {
-        return BiometricsType.MULTIPLE == type && isAvailable
+        return BiometricsType.MULTIPLE == type && (isAvailable || isNotEnrolled)
     }
 
     /**
      * verifies whether user has setup their biometrics
      * @return true if biometrics is setup on the device, otherwise false
      */
-    private fun isBiometricsAvailable(context: Context): Boolean {
+    private fun isBiometricsAvailable(): Boolean {
         val biometricManager = BiometricManager.from(context)
         return biometricManager.canAuthenticate(allowedAuthenticators!!) == BiometricManager.BIOMETRIC_SUCCESS
     }
 
-    fun canSetupBiometrics(context: Context): Boolean {
+    /**
+     * verifies whether the user's biometric or device credential is not enrolled.
+     * @return true if biometrics is not yet setup on the device and the user can set one up now, otherwise false
+     * Note: if hardware is not supported, this will return false
+     */
+    private fun isBiometricsNotEnrolled(): Boolean {
         val biometricManager = BiometricManager.from(context)
         return biometricManager.canAuthenticate(allowedAuthenticators!!) == BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED
     }
@@ -162,25 +178,38 @@ class RocheBiometricsManager(private val context: Context, private var allowedAu
      * Verifies whether the app should show the biometrics registration flow.
      * returns true if biometrics registration should be displayed, otherwise don't show
      */
-    fun shouldShowRegisterBiometric(context: Context): Boolean {
+    fun shouldShowRegisterBiometric(): Boolean {
         return (!BiometricSharedPreference.isBiometricRegistrationComplete(context) &&
-                isBiometricsAvailable(
-                        context
-                ))
+                canShowBiometric())
     }
 
     /**
      * Verifies whether the app should show the biometrics authentication flow.
      * returns true if biometrics authentication should be displayed, otherwise don't show
      */
-    fun shouldShowAuthBiometric(context: Context): Boolean {
+    fun shouldShowAuthBiometric(): Boolean {
         return isAppBiometricEnabled(context) &&
-                isBiometricsAvailable(
-                        context
-                )
+                canShowBiometric()
+    }
+
+    /**
+     * Verifies whether the device can authenticate with biometrics.
+     * returns true if the device has setup biometric or can setup a biometrics, otherwise false
+     */
+    private fun canShowBiometric(): Boolean {
+        val biometricManager = BiometricManager.from(context)
+        val status = biometricManager.canAuthenticate(allowedAuthenticators!!)
+        return status == BiometricManager.BIOMETRIC_SUCCESS ||
+                status == BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED ||
+                status == BiometricManager.BIOMETRIC_STATUS_UNKNOWN
     }
 
     companion object {
+        @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+        internal fun hasFaceIrisAPISupport(): Boolean {
+            return Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
+        }
+
         /**
          * verifies whether fingerprint is supported in the device
          * @return true if fingerprint is supported, otherwise false
@@ -194,6 +223,7 @@ class RocheBiometricsManager(private val context: Context, private var allowedAu
          * verifies whether face unlock is supported in the device
          * @return true if face unlock is supported, otherwise false
          */
+        @RequiresApi(Build.VERSION_CODES.Q)
         fun hasFaceUnlock(context: Context): Boolean {
             val packageManager: PackageManager = context.packageManager
             return packageManager.hasSystemFeature(PackageManager.FEATURE_FACE)
@@ -203,6 +233,7 @@ class RocheBiometricsManager(private val context: Context, private var allowedAu
          * verifies whether face unlock is supported in the device
          * @return true if face unlock is supported, otherwise false
          */
+        @RequiresApi(Build.VERSION_CODES.Q)
         fun hasIrisUnlock(context: Context): Boolean {
             val packageManager: PackageManager = context.packageManager
             return packageManager.hasSystemFeature(PackageManager.FEATURE_IRIS)
@@ -220,8 +251,10 @@ class RocheBiometricsManager(private val context: Context, private var allowedAu
             }
             var count = 0
             if (hasFingerPrint(context)) count++
-            if (hasFaceUnlock(context)) count++
-            if (hasIrisUnlock(context)) count++
+            if (hasFaceIrisAPISupport()) {
+                if (hasFaceUnlock(context)) count++
+                if (hasIrisUnlock(context)) count++
+            }
             return count > 1
         }
 

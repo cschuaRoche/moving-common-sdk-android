@@ -52,6 +52,13 @@ dependencies {
     implementation "androidx.security:security-crypto:1.1.0-alpha02"
 
     dokkaHtmlPlugin("org.jetbrains.dokka:kotlin-as-java-plugin:1.4.20")
+
+    // test
+    testImplementation "androidx.test:core:$versions.testcore"
+    testImplementation "androidx.arch.core:core-testing:$versions.arch"
+    testImplementation "androidx.test.ext:junit:$versions.extjunit"
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$versions.testcoroutines"
+    testImplementation "io.mockk:mockk:$versions.mockk"
 }
 
 dokkaHtml.configure {

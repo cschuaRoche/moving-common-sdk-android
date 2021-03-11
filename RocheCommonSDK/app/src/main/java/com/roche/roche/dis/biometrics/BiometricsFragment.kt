@@ -30,7 +30,7 @@ class BiometricsFragment : Fragment(), OnAuthenticationCallback,
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val allowedAuthenticators = if (Build.VERSION.SDK_INT > 29) {
+        val allowedAuthenticators = if (Build.VERSION.SDK_INT > Build.VERSION_CODES.Q) {
             BiometricManager.Authenticators.DEVICE_CREDENTIAL or BiometricManager.Authenticators.BIOMETRIC_STRONG
         } else {
             BiometricManager.Authenticators.BIOMETRIC_STRONG
@@ -40,7 +40,7 @@ class BiometricsFragment : Fragment(), OnAuthenticationCallback,
         Log.d(TAG, "isAvailable: ${biometricsManager.isAvailable}")
         Log.d(TAG, "type: ${biometricsManager.type}")
         Log.d(TAG, "hasFingerprintSetup: ${biometricsManager.hasFingerprintSetup()}")
-        Log.d(TAG, "canSetupBiometrics: ${biometricsManager.canSetupBiometrics(requireContext())}")
+        Log.d(TAG, "shouldShowAuthBiometric: ${biometricsManager.shouldShowAuthBiometric()}")
 
         requireBinding {
             biometricBtn.setOnClickListener {
