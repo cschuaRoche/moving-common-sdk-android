@@ -11,10 +11,15 @@ definitions:
         # Download and unzip android sdk
         - wget --quiet --output-document=android-sdk.zip https://dl.google.com/android/repository/commandlinetools-linux-6858069_latest.zip
         - unzip -o -qq android-sdk.zip -d android-sdk
+        - mv android-sdk/cmdline-tools android-sdk/tools
+        # hack due to change of path in the new android sdk
+        # https://stackoverflow.com/questions/65262340/cmdline-tools-could-not-determine-sdk-root
+        - mkdir android-sdk/cmdline-tools
+        - mv android-sdk/tools android-sdk/cmdline-tools/tools
 
         # Define Android Home and add PATHs
         - export ANDROID_HOME="/opt/atlassian/pipelines/agent/build/android-sdk"
-        - export PATH="$ANDROID_HOME/cmdline-tools/bin:$PATH"
+        - export PATH="$ANDROID_HOME/cmdline-tools/tools/bin:$PATH"
 
         # Download packages.
         - yes | sdkmanager "platform-tools"
