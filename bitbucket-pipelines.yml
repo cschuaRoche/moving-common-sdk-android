@@ -29,6 +29,7 @@ pipelines:
   branches:
     bitbucket-pipeline-ci:
       - step: *build
+      - step: *unittest
 
 definitions:
     caches:
