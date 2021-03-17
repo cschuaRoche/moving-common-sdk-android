@@ -1,6 +1,5 @@
 image:
   name: 651863433406.dkr.ecr.us-east-2.amazonaws.com/dev/dhp-base-android-builder:build-6
-  run-as-user: 1000
   aws:
     access-key: $ECR_READONLY_KEY_ID
     secret-key: $ECR_READONLY_SECRET_KEY
