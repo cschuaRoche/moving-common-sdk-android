@@ -16,8 +16,6 @@ definitions:
         - cd RocheCommonSDK
         - chmod a+x ./gradlew
         - ./gradlew assembleDebug
-      artifacts:
-        - app/build/outputs/**
 
   - step: &unittest
       name: Unit Tests
