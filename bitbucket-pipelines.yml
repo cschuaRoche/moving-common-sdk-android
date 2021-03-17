@@ -25,11 +25,24 @@ definitions:
         - cd RocheCommonSDK
         - ./gradlew test
 
+  - step: &whitesource
+      name: Whitesource
+      caches:
+        - gradle
+      script:
+        - pipe: WhitesourceSoftware/whitesource-scan:1.3.0
+          variables:
+            API_KEY: $WHITESOURCE_API_KEY
+            DIRECTORY: 'RocheCommonSDK'
+            CONFIG_FILE_PATH: './RocheCommonSDK/wss-unified-agent.config'
+
 pipelines:
   branches:
     bitbucket-pipeline-ci:
       - step: *build
-      - step: *unittest
+      - parallel:
+          - step: *unittest
+          - step: *whitesource
 
 definitions:
     caches:
