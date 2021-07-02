@@ -14,6 +14,8 @@ pipelines:
             caches:       # caching speed up subsequent execution https://support.atlassian.com/bitbucket-cloud/docs/cache-dependencies/
               - gradle
             script:
+              - cd RocheCommonSDK
+              - chmod +x gradlew
               - ./gradlew assembleDebug
             artifacts:
               - app/build/outputs/**        # artifacts are files that are produced by a step https://support.atlassian.com/bitbucket-cloud/docs/use-artifacts-in-steps/
