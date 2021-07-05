@@ -18,5 +18,4 @@ pipelines:
               - chmod +x gradlew
               - ./gradlew assembleDebug
             artifacts:
-              - cd RocheCommonSDK
-              - app/build/outputs/**        # artifacts are files that are produced by a step https://support.atlassian.com/bitbucket-cloud/docs/use-artifacts-in-steps/
+              - /**       # artifacts are files that are produced by a step https://support.atlassian.com/bitbucket-cloud/docs/use-artifacts-in-steps/
