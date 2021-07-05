@@ -18,4 +18,4 @@ pipelines:
               - chmod +x gradlew
               - ./gradlew assembleDebug
             artifacts:
-              - **     # artifacts are files that are produced by a step https://support.atlassian.com/bitbucket-cloud/docs/use-artifacts-in-steps/
+              - "*"     # artifacts are files that are produced by a step https://support.atlassian.com/bitbucket-cloud/docs/use-artifacts-in-steps/
