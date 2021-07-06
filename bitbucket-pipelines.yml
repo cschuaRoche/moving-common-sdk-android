@@ -17,7 +17,7 @@ pipelines:
               - cd RocheCommonSDK
               - chmod +x gradlew
               - export FIREBASE_TOKEN=1//0gWpfj1fE4IHqCgYIARAAGBASNwF-L9IrVt7D7_nN2aexFlf9HyZ9m-ZM4cSBjezTFD4ihMYXaU8ZdTn-14kcjoIJdryFrpOzNa0
-              - ./gradlew assembleRelease appDistributionUploadDebug
+              - ./gradlew assembleDebug appDistributionUploadDebug
             artifacts:
               - RocheCommonSDK/app/build/outputs/apk/debug/app-debug.apk     # artifacts are files that are produced by a step https://support.atlassian.com/bitbucket-cloud/docs/use-artifacts-in-steps/
               
