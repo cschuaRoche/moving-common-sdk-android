@@ -53,6 +53,7 @@ class LicenseValidator {
     private final String mPackageName;
     private final String mVersionCode;
     private final DeviceLimiter mDeviceLimiter;
+    private ResponseData data;
 
     LicenseValidator(Policy policy, DeviceLimiter deviceLimiter, LicenseCheckerCallback callback,
              int nonce, String packageName, String versionCode) {
@@ -86,10 +87,10 @@ class LicenseValidator {
      * @param signedData signed data from server
      * @param signature server signature
      */
-    public void verify(PublicKey publicKey, int responseCode, String signedData, String signature) {
+    public boolean verify(PublicKey publicKey, int responseCode, String signedData, String signature) {
         String userId = null;
         // Skip signature check for unsuccessful requests
-        ResponseData data = null;
+        data = null;
         if (responseCode == LICENSED || responseCode == NOT_LICENSED ||
                 responseCode == LICENSED_OLD_KEY) {
             // Verify signature.
@@ -98,7 +99,7 @@ class LicenseValidator {
                     Log.e(TAG, "Signature verification failed: signedData is empty. " +
                             "(Device not signed-in to any Google accounts?)");
                     handleInvalidResponse();
-                    return;
+                    return false;
                 }
 
                 Signature sig = Signature.getInstance(SIGNATURE_ALGORITHM);
@@ -108,20 +109,20 @@ class LicenseValidator {
                 if (!sig.verify(Base64.decode(signature))) {
                     Log.e(TAG, "Signature verification failed.");
                     handleInvalidResponse();
-                    return;
+                    return false;
                 }
             } catch (NoSuchAlgorithmException e) {
                 // This can't happen on an Android compatible device.
                 throw new RuntimeException(e);
             } catch (InvalidKeyException e) {
                 handleApplicationError(LicenseCheckerCallback.ERROR_INVALID_PUBLIC_KEY);
-                return;
+                return false;
             } catch (SignatureException e) {
                 throw new RuntimeException(e);
             } catch (Base64DecoderException e) {
                 Log.e(TAG, "Could not Base64-decode signature.");
                 handleInvalidResponse();
-                return;
+                return false;
             }
 
             // Parse and validate response.
@@ -130,31 +131,31 @@ class LicenseValidator {
             } catch (IllegalArgumentException e) {
                 Log.e(TAG, "Could not parse response.");
                 handleInvalidResponse();
-                return;
+                return false;
             }
 
             if (data.responseCode != responseCode) {
                 Log.e(TAG, "Response codes don't match.");
                 handleInvalidResponse();
-                return;
+                return false;
             }
 
             if (data.nonce != mNonce) {
                 Log.e(TAG, "Nonce doesn't match.");
                 handleInvalidResponse();
-                return;
+                return false;
             }
 
             if (!data.packageName.equals(mPackageName)) {
                 Log.e(TAG, "Package name doesn't match.");
                 handleInvalidResponse();
-                return;
+                return false;
             }
 
             if (!data.versionCode.equals(mVersionCode)) {
                 Log.e(TAG, "Version codes don't match.");
                 handleInvalidResponse();
-                return;
+                return false;
             }
 
             // Application-specific user identifier.
@@ -162,16 +163,16 @@ class LicenseValidator {
             if (TextUtils.isEmpty(userId)) {
                 Log.e(TAG, "User identifier is empty.");
                 handleInvalidResponse();
-                return;
+                return false;
             }
         }
 
         switch (responseCode) {
             case LICENSED:
             case LICENSED_OLD_KEY:
-                int limiterResponse = mDeviceLimiter.isDeviceAllowed(userId);
-                handleResponse(limiterResponse, data);
-                break;
+//                int limiterResponse = mDeviceLimiter.isDeviceAllowed(userId);
+//                handleResponse(limiterResponse, data);
+                return true;
             case NOT_LICENSED:
                 handleResponse(Policy.NOT_LICENSED, data);
                 break;
@@ -198,6 +199,21 @@ class LicenseValidator {
                 break;
             default:
                 Log.e(TAG, "Unknown response code for license check.");
+                handleInvalidResponse();
+        }
+        return false;
+    }
+
+    public void verifyFromServer(int response) {
+        switch (response) {
+            case ServerLicenseValidatorCallback.SUCCESS:
+                int limiterResponse = mDeviceLimiter.isDeviceAllowed(data.userId);
+                handleResponse(limiterResponse, data);
+                break;
+            case ServerLicenseValidatorCallback.UNAUTHORISED_ACCESS:
+                handleResponse(Policy.NOT_LICENSED, data);
+                break;
+            default:
                 handleInvalidResponse();
         }
     }

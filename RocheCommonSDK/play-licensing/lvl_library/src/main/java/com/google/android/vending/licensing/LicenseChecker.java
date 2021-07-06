@@ -96,6 +96,7 @@ public class LicenseChecker implements ServiceConnection {
         mPublicKey = generatePublicKey(encodedPublicKey);
         mPackageName = mContext.getPackageName();
         mVersionCode = getVersionCode(context, mPackageName);
+        LicenseValidatorRetrofitClient.initialize();
         HandlerThread handlerThread = new HandlerThread("background thread");
         handlerThread.start();
         mHandler = new Handler(handlerThread.getLooper());
@@ -238,7 +239,7 @@ public class LicenseChecker implements ServiceConnection {
         }
     }
 
-    private class ResultListener extends ILicenseResultListener.Stub {
+    private class ResultListener extends ILicenseResultListener.Stub implements ServerLicenseValidatorCallback {
         private final LicenseValidator mValidator;
         private Runnable mOnTimeout;
 
@@ -268,8 +269,12 @@ public class LicenseChecker implements ServiceConnection {
                     // Make sure it hasn't already timed out.
                     if (mChecksInProgress.contains(mValidator)) {
                         clearTimeout();
-                        mValidator.verify(mPublicKey, responseCode, signedData, signature);
-                        finishCheck(mValidator);
+                        boolean isLicensed = mValidator.verify(mPublicKey, responseCode, signedData, signature);
+                        if (isLicensed) {
+                            checkServerAccess(signedData, signature);
+                        } else {
+                            finishCheck(mValidator);
+                        }
                     }
                     if (DEBUG_LICENSE_ERROR) {
                         boolean logResponse;
@@ -303,6 +308,19 @@ public class LicenseChecker implements ServiceConnection {
 
                 }
             });
+        }
+
+        private void checkServerAccess(String signedData, String signature) {
+            Log.i(TAG, "Check server access.");
+            LicenseVerificationDTO license = new LicenseVerificationDTO(signedData, signature);
+            LicenseValidatorRetrofitClient.getInstance().validateLicense(license, this);
+        }
+
+        @Override
+        public void onServerResponse(int response) {
+            Log.i(TAG, "Received server response.");
+            mValidator.verifyFromServer(response);
+            finishCheck(mValidator);
         }
 
         private void startTimeout() {
