@@ -4,6 +4,7 @@ plugins {
 }
 
 apply plugin: "androidx.navigation.safeargs.kotlin"
+apply plugin: 'com.google.firebase.appdistribution'
 
 android {
     compileSdkVersion 30
@@ -31,6 +32,11 @@ android {
         }
 
         debug {
+            firebaseAppDistribution {
+                appId="1:400925773139:android:4e91c0e8227aed737125a6"
+                artifactType="APK"
+                testers = "dhaiwat.bhavsar@contractors.roche.com, sanket.shah.ss1@contractors.roche.com"
+            }
             testCoverageEnabled true
             debuggable true
             buildConfigField "Boolean", 'ENABLE_SECURITY', "false"
