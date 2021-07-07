@@ -12,12 +12,14 @@ import javax.inject.Inject
  * When the Fragment is visible to the user, a non-cancellable error popup is shown if an error is
  * detected. Dismissing the error popup will finish the Activity.
  */
-abstract class SecurityCheckerFragment: Fragment() {
+abstract class SecurityCheckerFragment : Fragment() {
 
     @Inject
     lateinit var securityViewModel: SecurityCheckerViewModel
 
     abstract fun provideLicensingKey(): String
+
+    abstract fun provideBaseUrl(): String
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -51,6 +53,6 @@ abstract class SecurityCheckerFragment: Fragment() {
     override fun onResume() {
         super.onResume()
 
-        securityViewModel.validate(provideLicensingKey())
+        securityViewModel.validate(provideLicensingKey(), provideBaseUrl())
     }
 }

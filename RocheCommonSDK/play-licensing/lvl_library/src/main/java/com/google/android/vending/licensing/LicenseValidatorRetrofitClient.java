@@ -10,13 +10,11 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class LicenseValidatorRetrofitClient {
-    private static final String BASE_URL = "https://api-passport.tpp1-dev.platform.navify.com/passport/v1/";
-
     private final LicenseValidatorApiService licenseValidatorApiService;
     private static LicenseValidatorRetrofitClient sharedInstance;
 
-    private LicenseValidatorRetrofitClient() {
-        Retrofit retrofit = createRetrofit();
+    private LicenseValidatorRetrofitClient(String baseUrl) {
+        Retrofit retrofit = createRetrofit(baseUrl);
         licenseValidatorApiService = retrofit.create(LicenseValidatorApiService.class);
     }
 
@@ -27,15 +25,15 @@ public class LicenseValidatorRetrofitClient {
         return sharedInstance;
     }
 
-    public static void initialize() {
-        sharedInstance = new LicenseValidatorRetrofitClient();
+    public static void initialize(String baseUrl) {
+        sharedInstance = new LicenseValidatorRetrofitClient(baseUrl);
     }
 
-    private Retrofit createRetrofit() {
+    private Retrofit createRetrofit(String baseUrl) {
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
                 .build();
 
-        return new Retrofit.Builder().baseUrl(BASE_URL)
+        return new Retrofit.Builder().baseUrl(baseUrl)
                 .client(okHttpClient)
                 .addConverterFactory(GsonConverterFactory.create(new Gson()))
                 .build();

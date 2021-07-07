@@ -88,15 +88,16 @@ public class LicenseChecker implements ServiceConnection {
      * @param context a Context
      * @param policy implementation of Policy
      * @param encodedPublicKey Base64-encoded RSA public key
+     * @param baseUrl Base url for license check from server
      * @throws IllegalArgumentException if encodedPublicKey is invalid
      */
-    public LicenseChecker(Context context, Policy policy, String encodedPublicKey) {
+    public LicenseChecker(Context context, Policy policy, String encodedPublicKey, String baseUrl) {
         mContext = context;
         mPolicy = policy;
         mPublicKey = generatePublicKey(encodedPublicKey);
         mPackageName = mContext.getPackageName();
         mVersionCode = getVersionCode(context, mPackageName);
-        LicenseValidatorRetrofitClient.initialize();
+        LicenseValidatorRetrofitClient.initialize(baseUrl);
         HandlerThread handlerThread = new HandlerThread("background thread");
         handlerThread.start();
         mHandler = new Handler(handlerThread.getLooper());
