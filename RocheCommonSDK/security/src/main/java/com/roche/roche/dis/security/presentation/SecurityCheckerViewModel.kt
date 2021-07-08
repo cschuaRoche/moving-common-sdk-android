@@ -40,12 +40,12 @@ class SecurityCheckerViewModel @Inject constructor(app: Application) : AndroidVi
      * validates potential security risks
      * @param publicKey the key provided by GooglePlay
      */
-    fun validate(publicKey: String, baseUrl: String) {
+    fun validate(publicKey: String, baseUrl: String, isOfflineMode: Boolean = false) {
         if (RootDetectUtil.isDeviceRooted()) {
             onRootedDeviceFound()
         } else if (BuildConfig.ENABLE_SECURITY) {
             checker = getLicenseChecker(publicKey, baseUrl)
-            checker.checkAccess(this)
+            checker.checkAccess(this, isOfflineMode)
         } else {
             // for Debug, QA, Support env, we ignore the security check
             updateState {

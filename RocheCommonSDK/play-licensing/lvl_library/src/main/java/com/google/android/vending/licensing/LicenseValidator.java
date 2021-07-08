@@ -53,16 +53,18 @@ class LicenseValidator {
     private final String mPackageName;
     private final String mVersionCode;
     private final DeviceLimiter mDeviceLimiter;
+    private final boolean mIsOfflineMode;
     private ResponseData data;
 
     LicenseValidator(Policy policy, DeviceLimiter deviceLimiter, LicenseCheckerCallback callback,
-             int nonce, String packageName, String versionCode) {
+                     int nonce, String packageName, String versionCode, boolean isOfflineMode) {
         mPolicy = policy;
         mDeviceLimiter = deviceLimiter;
         mCallback = callback;
         mNonce = nonce;
         mPackageName = packageName;
         mVersionCode = versionCode;
+        mIsOfflineMode = isOfflineMode;
     }
 
     public LicenseCheckerCallback getCallback() {
@@ -82,10 +84,10 @@ class LicenseValidator {
     /**
      * Verifies the response from server and calls appropriate callback method.
      *
-     * @param publicKey public key associated with the developer account
+     * @param publicKey    public key associated with the developer account
      * @param responseCode server response code
-     * @param signedData signed data from server
-     * @param signature server signature
+     * @param signedData   signed data from server
+     * @param signature    server signature
      */
     public boolean verify(PublicKey publicKey, int responseCode, String signedData, String signature) {
         String userId = null;
@@ -170,8 +172,11 @@ class LicenseValidator {
         switch (responseCode) {
             case LICENSED:
             case LICENSED_OLD_KEY:
-//                int limiterResponse = mDeviceLimiter.isDeviceAllowed(userId);
-//                handleResponse(limiterResponse, data);
+                if (mIsOfflineMode) {
+                    int limiterResponse = mDeviceLimiter.isDeviceAllowed(userId);
+                    handleResponse(limiterResponse, data);
+                    return false;
+                }
                 return true;
             case NOT_LICENSED:
                 handleResponse(Policy.NOT_LICENSED, data);

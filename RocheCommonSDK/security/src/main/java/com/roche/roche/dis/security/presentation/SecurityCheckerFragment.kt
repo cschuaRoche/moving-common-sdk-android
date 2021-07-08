@@ -21,6 +21,8 @@ abstract class SecurityCheckerFragment : Fragment() {
 
     abstract fun provideBaseUrl(): String
 
+    abstract fun isOfflineMode(): Boolean
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -53,6 +55,6 @@ abstract class SecurityCheckerFragment : Fragment() {
     override fun onResume() {
         super.onResume()
 
-        securityViewModel.validate(provideLicensingKey(), provideBaseUrl())
+        securityViewModel.validate(provideLicensingKey(), provideBaseUrl(), isOfflineMode())
     }
 }

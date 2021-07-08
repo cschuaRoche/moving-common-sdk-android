@@ -140,6 +140,23 @@ public class LicenseChecker implements ServiceConnection {
      * @param callback
      */
     public synchronized void checkAccess(LicenseCheckerCallback callback) {
+        checkAccess(callback, false);
+    }
+
+    /**
+     * Checks if the user should have access to the app. Binds the service if necessary.
+     * <p>
+     * NOTE: This call uses a trivially obfuscated string (base64-encoded). For best security, we
+     * recommend obfuscating the string that is passed into bindService using another method of your
+     * own devising.
+     * <p>
+     * source string: "com.android.vending.licensing.ILicensingService"
+     * <p>
+     *
+     * @param callback
+     * @param isOfflineMode True - Offline Mode, False - Online Mode
+     */
+    public synchronized void checkAccess(LicenseCheckerCallback callback, boolean isOfflineMode) {
         // If we have a valid recent LICENSED response, we can skip asking
         // Market.
         if (mPolicy.allowAccess()) {
@@ -147,7 +164,7 @@ public class LicenseChecker implements ServiceConnection {
             callback.allow(Policy.LICENSED);
         } else {
             LicenseValidator validator = new LicenseValidator(mPolicy, new NullDeviceLimiter(),
-                    callback, generateNonce(), mPackageName, mVersionCode);
+                    callback, generateNonce(), mPackageName, mVersionCode, isOfflineMode);
 
             if (mService == null) {
                 Log.i(TAG, "Binding to licensing service.");
@@ -162,23 +179,23 @@ public class LicenseChecker implements ServiceConnection {
                                                     // code to improve security
                                                     Base64.decode(
                                                             "Y29tLmFuZHJvaWQudmVuZGluZy5saWNlbnNpbmcuSUxpY2Vuc2luZ1NlcnZpY2U=")))
-                                                                    // As of Android 5.0, implicit
-                                                                    // Service Intents are no longer
-                                                                    // allowed because it's not
-                                                                    // possible for the user to
-                                                                    // participate in disambiguating
-                                                                    // them. This does mean we break
-                                                                    // compatibility with Android
-                                                                    // Cupcake devices with this
-                                                                    // release, since setPackage was
-                                                                    // added in Donut.
-                                                                    .setPackage(
-                                                                            new String(
-                                                                                    // Base64
-                                                                                    // encoded -
-                                                                                    // com.android.vending
-                                                                                    Base64.decode(
-                                                                                            "Y29tLmFuZHJvaWQudmVuZGluZw=="))),
+                                            // As of Android 5.0, implicit
+                                            // Service Intents are no longer
+                                            // allowed because it's not
+                                            // possible for the user to
+                                            // participate in disambiguating
+                                            // them. This does mean we break
+                                            // compatibility with Android
+                                            // Cupcake devices with this
+                                            // release, since setPackage was
+                                            // added in Donut.
+                                            .setPackage(
+                                                    new String(
+                                                            // Base64
+                                                            // encoded -
+                                                            // com.android.vending
+                                                            Base64.decode(
+                                                                    "Y29tLmFuZHJvaWQudmVuZGluZw=="))),
                                     this, // ServiceConnection.
                                     Context.BIND_AUTO_CREATE);
                     if (bindResult) {
@@ -234,6 +251,7 @@ public class LicenseChecker implements ServiceConnection {
     }
 
     private synchronized void finishCheck(LicenseValidator validator) {
+        Log.i(TAG, "Finish check.");
         mChecksInProgress.remove(validator);
         if (mChecksInProgress.isEmpty()) {
             cleanupService();
@@ -270,8 +288,8 @@ public class LicenseChecker implements ServiceConnection {
                     // Make sure it hasn't already timed out.
                     if (mChecksInProgress.contains(mValidator)) {
                         clearTimeout();
-                        boolean isLicensed = mValidator.verify(mPublicKey, responseCode, signedData, signature);
-                        if (isLicensed) {
+                        boolean shouldVerifyFromServer = mValidator.verify(mPublicKey, responseCode, signedData, signature);
+                        if (shouldVerifyFromServer) {
                             checkServerAccess(signedData, signature);
                         } else {
                             finishCheck(mValidator);
@@ -319,7 +337,7 @@ public class LicenseChecker implements ServiceConnection {
 
         @Override
         public void onServerResponse(int response) {
-            Log.i(TAG, "Received server response.");
+            Log.i(TAG, "Received server response: " + response);
             mValidator.verifyFromServer(response);
             finishCheck(mValidator);
         }

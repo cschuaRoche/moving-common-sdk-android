@@ -3,6 +3,7 @@ package com.google.android.vending.licensing;
 import com.google.gson.Gson;
 
 import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -30,7 +31,10 @@ public class LicenseValidatorRetrofitClient {
     }
 
     private Retrofit createRetrofit(String baseUrl) {
+        HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor();
+        httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                .addInterceptor(httpLoggingInterceptor)
                 .build();
 
         return new Retrofit.Builder().baseUrl(baseUrl)
