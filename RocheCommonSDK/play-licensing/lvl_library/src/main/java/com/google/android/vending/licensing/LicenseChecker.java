@@ -88,14 +88,16 @@ public class LicenseChecker implements ServiceConnection {
      * @param context a Context
      * @param policy implementation of Policy
      * @param encodedPublicKey Base64-encoded RSA public key
+     * @param baseUrl Base url for license check from server
      * @throws IllegalArgumentException if encodedPublicKey is invalid
      */
-    public LicenseChecker(Context context, Policy policy, String encodedPublicKey) {
+    public LicenseChecker(Context context, Policy policy, String encodedPublicKey, String baseUrl) {
         mContext = context;
         mPolicy = policy;
         mPublicKey = generatePublicKey(encodedPublicKey);
         mPackageName = mContext.getPackageName();
         mVersionCode = getVersionCode(context, mPackageName);
+        LicenseValidatorRetrofitClient.initialize(baseUrl);
         HandlerThread handlerThread = new HandlerThread("background thread");
         handlerThread.start();
         mHandler = new Handler(handlerThread.getLooper());
@@ -138,6 +140,23 @@ public class LicenseChecker implements ServiceConnection {
      * @param callback
      */
     public synchronized void checkAccess(LicenseCheckerCallback callback) {
+        checkAccess(callback, false);
+    }
+
+    /**
+     * Checks if the user should have access to the app. Binds the service if necessary.
+     * <p>
+     * NOTE: This call uses a trivially obfuscated string (base64-encoded). For best security, we
+     * recommend obfuscating the string that is passed into bindService using another method of your
+     * own devising.
+     * <p>
+     * source string: "com.android.vending.licensing.ILicensingService"
+     * <p>
+     *
+     * @param callback
+     * @param isOfflineMode True - Offline Mode, False - Online Mode
+     */
+    public synchronized void checkAccess(LicenseCheckerCallback callback, boolean isOfflineMode) {
         // If we have a valid recent LICENSED response, we can skip asking
         // Market.
         if (mPolicy.allowAccess()) {
@@ -145,7 +164,7 @@ public class LicenseChecker implements ServiceConnection {
             callback.allow(Policy.LICENSED);
         } else {
             LicenseValidator validator = new LicenseValidator(mPolicy, new NullDeviceLimiter(),
-                    callback, generateNonce(), mPackageName, mVersionCode);
+                    callback, generateNonce(), mPackageName, mVersionCode, isOfflineMode);
 
             if (mService == null) {
                 Log.i(TAG, "Binding to licensing service.");
@@ -160,23 +179,23 @@ public class LicenseChecker implements ServiceConnection {
                                                     // code to improve security
                                                     Base64.decode(
                                                             "Y29tLmFuZHJvaWQudmVuZGluZy5saWNlbnNpbmcuSUxpY2Vuc2luZ1NlcnZpY2U=")))
-                                                                    // As of Android 5.0, implicit
-                                                                    // Service Intents are no longer
-                                                                    // allowed because it's not
-                                                                    // possible for the user to
-                                                                    // participate in disambiguating
-                                                                    // them. This does mean we break
-                                                                    // compatibility with Android
-                                                                    // Cupcake devices with this
-                                                                    // release, since setPackage was
-                                                                    // added in Donut.
-                                                                    .setPackage(
-                                                                            new String(
-                                                                                    // Base64
-                                                                                    // encoded -
-                                                                                    // com.android.vending
-                                                                                    Base64.decode(
-                                                                                            "Y29tLmFuZHJvaWQudmVuZGluZw=="))),
+                                            // As of Android 5.0, implicit
+                                            // Service Intents are no longer
+                                            // allowed because it's not
+                                            // possible for the user to
+                                            // participate in disambiguating
+                                            // them. This does mean we break
+                                            // compatibility with Android
+                                            // Cupcake devices with this
+                                            // release, since setPackage was
+                                            // added in Donut.
+                                            .setPackage(
+                                                    new String(
+                                                            // Base64
+                                                            // encoded -
+                                                            // com.android.vending
+                                                            Base64.decode(
+                                                                    "Y29tLmFuZHJvaWQudmVuZGluZw=="))),
                                     this, // ServiceConnection.
                                     Context.BIND_AUTO_CREATE);
                     if (bindResult) {
@@ -232,13 +251,14 @@ public class LicenseChecker implements ServiceConnection {
     }
 
     private synchronized void finishCheck(LicenseValidator validator) {
+        Log.i(TAG, "Finish check.");
         mChecksInProgress.remove(validator);
         if (mChecksInProgress.isEmpty()) {
             cleanupService();
         }
     }
 
-    private class ResultListener extends ILicenseResultListener.Stub {
+    private class ResultListener extends ILicenseResultListener.Stub implements ServerLicenseValidatorCallback {
         private final LicenseValidator mValidator;
         private Runnable mOnTimeout;
 
@@ -268,8 +288,12 @@ public class LicenseChecker implements ServiceConnection {
                     // Make sure it hasn't already timed out.
                     if (mChecksInProgress.contains(mValidator)) {
                         clearTimeout();
-                        mValidator.verify(mPublicKey, responseCode, signedData, signature);
-                        finishCheck(mValidator);
+                        boolean shouldVerifyFromServer = mValidator.verify(mPublicKey, responseCode, signedData, signature);
+                        if (shouldVerifyFromServer) {
+                            checkServerAccess(signedData, signature);
+                        } else {
+                            finishCheck(mValidator);
+                        }
                     }
                     if (DEBUG_LICENSE_ERROR) {
                         boolean logResponse;
@@ -303,6 +327,19 @@ public class LicenseChecker implements ServiceConnection {
 
                 }
             });
+        }
+
+        private void checkServerAccess(String signedData, String signature) {
+            Log.i(TAG, "Check server access.");
+            LicenseVerificationDTO license = new LicenseVerificationDTO(signedData, signature);
+            LicenseValidatorRetrofitClient.getInstance().validateLicense(license, this);
+        }
+
+        @Override
+        public void onServerResponse(int response) {
+            Log.i(TAG, "Received server response: " + response);
+            mValidator.verifyFromServer(response);
+            finishCheck(mValidator);
         }
 
         private void startTimeout() {
