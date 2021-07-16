@@ -1,0 +1,23 @@
+# Bitbucket Pipelines Template to build, test your Android Application.
+
+# This template contains 3 parallel steps to build Android application, run Android code scanning tool and run unit tests.
+# For more details see https://support.atlassian.com/bitbucket-cloud/docs/configure-bitbucket-pipelinesyml/
+
+# Docker for Android SDK 30 with pre-installed build tools and emulator image.
+# Note: This docker image is created and maintained by a non official third party. For more details see: https://hub.docker.com/r/androidsdk/android-30
+image: androidsdk/android-30
+
+pipelines:
+  default:                # pipeline definition for all branches
+        - step:           # step to build Android debug application
+            name: Android Debug Application
+            caches:       # caching speed up subsequent execution https://support.atlassian.com/bitbucket-cloud/docs/cache-dependencies/
+              - gradle
+            script:
+              - cd RocheCommonSDK
+              - chmod +x gradlew
+              - export FIREBASE_TOKEN=1//0gWpfj1fE4IHqCgYIARAAGBASNwF-L9IrVt7D7_nN2aexFlf9HyZ9m-ZM4cSBjezTFD4ihMYXaU8ZdTn-14kcjoIJdryFrpOzNa0
+              - ./gradlew assembleDebug appDistributionUploadDebug
+            artifacts:
+              - RocheCommonSDK/app/build/outputs/apk/debug/app-debug.apk     # artifacts are files that are produced by a step https://support.atlassian.com/bitbucket-cloud/docs/use-artifacts-in-steps/
+              
