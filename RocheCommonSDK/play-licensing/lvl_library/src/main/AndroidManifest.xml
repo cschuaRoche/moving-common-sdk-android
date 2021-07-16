@@ -21,4 +21,7 @@
     <uses-sdk android:minSdkVersion="4" android:targetSdkVersion="23" />
     <!-- Required permission to check licensing. -->
     <uses-permission android:name="com.android.vending.CHECK_LICENSE" />
+    <!-- Required permission to check licensing from server. -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 </manifest>
