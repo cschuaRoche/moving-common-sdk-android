@@ -4,6 +4,7 @@ versions.lifecycle = '2.2.0'
 versions.kotlin_version = "1.4.20"
 versions.dokka_version = "1.4.20"
 versions.nav_version = "2.3.3"
+versions.activity_version = "1.2.3"
 ext.versions = versions
 
 def static addBuildScriptRepos(RepositoryHandler handler) {
