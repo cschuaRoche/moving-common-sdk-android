@@ -17,11 +17,15 @@ abstract class SecurityCheckerFragment : Fragment() {
     @Inject
     lateinit var securityViewModel: SecurityCheckerViewModel
 
-    abstract fun provideLicensingKey(): String
+    protected abstract fun shouldValidateLicense(): Boolean
 
-    abstract fun provideBaseUrl(): String
+    protected abstract fun provideLicensingKey(): String
 
-    abstract fun isOfflineMode(): Boolean
+    protected abstract fun provideBaseUrl(): String
+
+    protected abstract fun isOfflineMode(): Boolean
+
+    protected abstract fun onValidLicense()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -30,18 +34,16 @@ abstract class SecurityCheckerFragment : Fragment() {
         {
             when (it) {
                 SecurityCheckerViewState.DeviceIsRooted -> {
-                    RocheDialogFactory.showRootedDeviceDialog(requireContext()) { activity?.finish() }
+                    onDeviceRooted()
                 }
                 SecurityCheckerViewState.InvalidLicense -> {
-                    RocheDialogFactory.showInvalidLicenseDialog(requireContext()) {
-                        activity?.finish()
-                    }
+                    onInvalidLicense()
                 }
                 SecurityCheckerViewState.Retry -> {
-                    // We don't have a specific logic for retry, so default to network error
-                    RocheDialogFactory.showNonCancellableNetworkErrorDialog(requireContext()) {
-                        activity?.finish()
-                    }
+                    onRetry()
+                }
+                SecurityCheckerViewState.ValidLicense, SecurityCheckerViewState.IgnoreSecurityCheck -> {
+                    onValidLicense()
                 }
             }
         }
@@ -55,6 +57,30 @@ abstract class SecurityCheckerFragment : Fragment() {
     override fun onResume() {
         super.onResume()
 
-        securityViewModel.validate(provideLicensingKey(), provideBaseUrl(), isOfflineMode())
+        securityViewModel.validate(
+            provideLicensingKey(),
+            provideBaseUrl(),
+            shouldValidateLicense(),
+            isOfflineMode()
+        )
+    }
+
+    protected open fun onDeviceRooted() {
+        RocheDialogFactory.showRootedDeviceDialog(requireContext()) {
+            activity?.finish()
+        }
+    }
+
+    protected open fun onInvalidLicense() {
+        RocheDialogFactory.showInvalidLicenseDialog(requireContext()) {
+            activity?.finish()
+        }
+    }
+
+    protected open fun onRetry() {
+        // We don't have a specific logic for retry, so default to network error
+        RocheDialogFactory.showNonCancellableNetworkErrorDialog(requireContext()) {
+            activity?.finish()
+        }
     }
 }

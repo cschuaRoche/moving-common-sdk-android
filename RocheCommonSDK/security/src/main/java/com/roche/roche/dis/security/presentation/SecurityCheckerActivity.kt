@@ -32,7 +32,12 @@ abstract class SecurityCheckerActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        securityViewModel.validate(provideLicensingKey(), provideBaseUrl(), isOfflineMode())
+        securityViewModel.validate(
+            provideLicensingKey(),
+            provideBaseUrl(),
+            shouldValidateLicense(),
+            isOfflineMode()
+        )
     }
 
     override fun onDestroy() {
@@ -59,11 +64,13 @@ abstract class SecurityCheckerActivity : AppCompatActivity() {
         }
     }
 
-    abstract fun onValidLicense()
+    protected abstract fun onValidLicense()
 
-    abstract fun provideLicensingKey(): String
+    protected abstract fun shouldValidateLicense(): Boolean
 
-    abstract fun provideBaseUrl(): String
+    protected abstract fun provideLicensingKey(): String
 
-    abstract fun isOfflineMode(): Boolean
+    protected abstract fun provideBaseUrl(): String
+
+    protected abstract fun isOfflineMode(): Boolean
 }

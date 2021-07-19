@@ -23,13 +23,11 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            buildConfigField "Boolean", 'ENABLE_SECURITY', "true"
         }
 
         debug {
             testCoverageEnabled true
             debuggable true
-            buildConfigField "Boolean", 'ENABLE_SECURITY', "false"
         }
     }
     compileOptions {
