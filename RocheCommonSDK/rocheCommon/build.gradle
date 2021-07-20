@@ -64,9 +64,9 @@ artifactory {
     contextUrl = 'https://dhs.jfrog.io/dhs/'
     publish {
         repository {
-            repoKey = "mobile-android"
-            username = "mobile.user"
-            password = "93PQ6SKtwR4jRqxx"
+            repoKey = getProperty('artifactory.repokey')
+            username = getProperty('artifactory.user')
+            password = getProperty('artifactory.password')
         }
         defaults {
             // Tell the Artifactory Plugin which artifacts should be published to Artifactory.

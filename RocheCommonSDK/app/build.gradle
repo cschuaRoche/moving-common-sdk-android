@@ -27,7 +27,7 @@ android {
     buildTypes {
         release {
             firebaseAppDistribution {
-                appId="1:400925773139:android:4e91c0e8227aed737125a6"
+                appId=getProperty('firebase.appid')
                 artifactType="APK"
                 testers = "dhaiwat.bhavsar@contractors.roche.com, sanket.shah.ss1@contractors.roche.com, christopher.chua@roche.com"
             }
@@ -38,7 +38,7 @@ android {
 
         debug {
             firebaseAppDistribution {
-                appId="1:400925773139:android:4e91c0e8227aed737125a6"
+                appId=getProperty('firebase.appid')
                 artifactType="APK"
                 testers = "dhaiwat.bhavsar@contractors.roche.com, sanket.shah.ss1@contractors.roche.com"
             }
