@@ -14,7 +14,6 @@ import com.roche.roche.dis.rochecommon.presentation.ViewEventHolder
 import com.roche.roche.dis.rochecommon.presentation.ViewEventHolderImpl
 import com.roche.roche.dis.rochecommon.presentation.ViewStateHolder
 import com.roche.roche.dis.rochecommon.presentation.ViewStateHolderImpl
-import com.roche.roche.dis.security.BuildConfig
 import com.roche.roche.dis.security.utils.RootDetectUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -39,11 +38,19 @@ class SecurityCheckerViewModel @Inject constructor(app: Application) : AndroidVi
     /**
      * validates potential security risks
      * @param publicKey the key provided by GooglePlay
+     * @param baseUrl Base url for validating server side license
+     * @param shouldValidateLicense By default it's true
+     * @param isOfflineMode By default it's false
      */
-    fun validate(publicKey: String, baseUrl: String, isOfflineMode: Boolean = false) {
+    fun validate(
+        publicKey: String,
+        baseUrl: String,
+        shouldValidateLicense: Boolean = true,
+        isOfflineMode: Boolean = false
+    ) {
         if (RootDetectUtil.isDeviceRooted()) {
             onRootedDeviceFound()
-        } else if (BuildConfig.ENABLE_SECURITY) {
+        } else if (shouldValidateLicense) {
             checker = getLicenseChecker(publicKey, baseUrl)
             checker.checkAccess(this, isOfflineMode)
         } else {
