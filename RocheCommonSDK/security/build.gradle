@@ -25,21 +25,19 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            buildConfigField "Boolean", 'ENABLE_SECURITY', "true"
         }
 
         debug {
             testCoverageEnabled true
             debuggable true
-            buildConfigField "Boolean", 'ENABLE_SECURITY', "false"
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_6
-        targetCompatibility JavaVersion.VERSION_1_6
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
     kotlinOptions {
-        jvmTarget = '1.6'
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
     }
 }
 publishing {
@@ -83,4 +81,6 @@ dependencies {
     implementation project(path: ':lvl_library')
 
     implementation "javax.inject:javax.inject:1"
+
+    implementation "androidx.activity:activity-ktx:$versions.activity_version"
 }
