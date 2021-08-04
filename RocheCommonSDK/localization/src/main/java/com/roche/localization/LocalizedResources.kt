@@ -68,6 +68,8 @@ open class LocalizedResources : LifecycleObserver {
     fun getBaseContext(newBase: Context): ContextWrapper {
         return LokaliseContextWrapper.wrap(newBase)
     }
+
+    fun getLocaliseContextWrapper() = LokaliseContextWrapper()
 }
 
 fun Context.getLocalisedString(@StringRes id: Int) =
