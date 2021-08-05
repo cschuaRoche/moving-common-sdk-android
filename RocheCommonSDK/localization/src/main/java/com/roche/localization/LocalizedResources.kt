@@ -27,11 +27,15 @@ open class LocalizedResources : LifecycleObserver {
             isInitialize = true
         }
 
-        fun isPreRelease(falg:Boolean){
-            if(!isInitialize){
+        fun isPreRelease(falg: Boolean) {
+            if (!isInitialize) {
                 throw RuntimeException("Lokalise is not initialize Please call initialise first.")
             }
             Lokalise.isPreRelease = falg
+        }
+
+        fun setLokaliseContextWrapper(context: Context): Context {
+            return LokaliseContextWrapper.wrap(context)
         }
     }
 
