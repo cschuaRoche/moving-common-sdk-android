@@ -34,7 +34,7 @@ open class LocalizedResources : LifecycleObserver {
             Lokalise.isPreRelease = falg
         }
 
-        fun setLokaliseContextWrapper(context: Context): Context {
+        fun setLokaliseContextWrapper(context: Context): ContextWrapper {
             return LokaliseContextWrapper.wrap(context)
         }
     }
