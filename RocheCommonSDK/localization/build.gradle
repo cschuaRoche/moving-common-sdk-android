@@ -43,6 +43,15 @@ publishing {
 
             // Tell maven to prepare the generated "*.aar" file for publishing
             artifact("$buildDir/outputs/aar/${project.getName()}-release.aar")
+            pom.withXml {
+                def dependencies = asNode().appendNode('dependencies')
+                configurations.getByName("compile").getResolvedConfiguration().getFirstLevelModuleDependencies().each {
+                    def dependency = dependencies.appendNode('dependency')
+                    dependency.appendNode('groupId', it.moduleGroup)
+                    dependency.appendNode('artifactId', it.moduleName)
+                    dependency.appendNode('version', it.moduleVersion)
+                }
+            }
         }
     }
 }
@@ -70,7 +79,7 @@ dependencies {
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
-    implementation("com.lokalise.android:sdk:2.0.0-lite-beta-12") {
+    compile ("com.lokalise.android:sdk:2.0.0-lite-beta-12") {
         transitive = true
     }
 }
