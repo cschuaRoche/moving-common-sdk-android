@@ -9,5 +9,9 @@
             android:id="@+id/menu_biometrics"
             android:title="Biometrics"
             app:actionLayout="@layout/action_view_arrow" />
+        <item
+            android:id="@+id/menu_download_static_content"
+            android:title="Download Static Content"
+            app:actionLayout="@layout/action_view_arrow" />
     </group>
 </menu>
