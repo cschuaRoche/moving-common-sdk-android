@@ -18,13 +18,21 @@ import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupActionBarWithNavController
 import com.google.android.material.navigation.NavigationView
 import com.roche.roche.dis.databinding.ActivityMainBinding
+import com.roche.roche.dis.staticcontent.DownloadStaticContentCallback
 import com.roche.roche.dis.staticcontent.DownloadStaticContent
 
-class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, DownloadStaticContentCallback {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var navController: NavController
+
+    // Storage Permissions
+    private val REQUEST_EXTERNAL_STORAGE = 1
+    private val PERMISSIONS_STORAGE = arrayOf(
+        Manifest.permission.READ_EXTERNAL_STORAGE,
+        Manifest.permission.WRITE_EXTERNAL_STORAGE
+    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -76,29 +84,26 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     private fun downloadStaticContent() {
-        Toast.makeText(this, "Start Downloading Content", Toast.LENGTH_LONG).show()
+        Toast.makeText(this, "Downloading content..", Toast.LENGTH_SHORT).show()
         DownloadStaticContent.downloadToFileSystem(
             this,
             "https://passport-static-content.tpp1-dev.platform.navify.com/com.roche.nrm_passport/configuration/countries/dev_countries.json",
             "dev_countries.json",
-            ::callback
+            this
         )
     }
 
-    private fun callback(isSuccess: Boolean) {
-        if (isSuccess) {
-            Toast.makeText(this, "Downloading content is successful", Toast.LENGTH_LONG).show()
-        } else {
-            Toast.makeText(this, "Downloading content is failed", Toast.LENGTH_LONG).show()
-        }
+    override fun success() {
+        Toast.makeText(this, "Downloading content is successful", Toast.LENGTH_SHORT).show()
     }
 
-    // Storage Permissions
-    private val REQUEST_EXTERNAL_STORAGE = 1
-    private val PERMISSIONS_STORAGE = arrayOf(
-        Manifest.permission.READ_EXTERNAL_STORAGE,
-        Manifest.permission.WRITE_EXTERNAL_STORAGE
-    )
+    override fun failure(errorMessage: String) {
+        Toast.makeText(this, "Downloading content is failed due to $errorMessage", Toast.LENGTH_SHORT).show()
+    }
+
+    override fun publishProgress(progress: Int) {
+        Toast.makeText(this, "Downloading content progress $progress", Toast.LENGTH_SHORT).show()
+    }
 
     private fun isStoragePermissionGranted(): Boolean {
         if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {

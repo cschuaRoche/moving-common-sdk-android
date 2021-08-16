@@ -15,21 +15,31 @@ import java.net.HttpURLConnection
 import java.net.URL
 
 object DownloadStaticContent {
-    fun downloadToFileSystem(context: Context, urlString: String, fileName:String, callback: (Boolean) -> Unit) {
+    fun downloadToFileSystem(context: Context, urlString: String, fileName:String, callback: DownloadStaticContentCallback) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val url = URL(urlString)
                 val connection = url.openConnection() as HttpURLConnection
                 connection.connect()
 
+                val fileLength = connection.contentLength
+
                 // download the file
                 val input: InputStream = BufferedInputStream(connection.inputStream)
                 val path = context.getExternalFilesDir(null)?.absoluteFile?.path + File.separator + fileName
                 val output: OutputStream = FileOutputStream(path)
 
-                val data = ByteArray(1024)
+                val data = ByteArray(4096)
+                var total: Long = 0
                 var count: Int
                 while (input.read(data).also { count = it } != -1) {
+                    // publishing the progress....
+                    total += count
+                    if (fileLength > 0) { // only if total length is known
+                        withContext(Dispatchers.Main) {
+                            callback.publishProgress(((total * 100 / fileLength).toInt()))
+                        }
+                    }
                     output.write(data, 0, count)
                 }
 
@@ -39,12 +49,12 @@ object DownloadStaticContent {
                 input.close()
 
                 withContext(Dispatchers.Main) {
-                    callback(true)
+                    callback.success()
                 }
             } catch (e: Exception) {
                 Log.e("DownloadStaticContent", "Exception ${e.localizedMessage}")
                 withContext(Dispatchers.Main) {
-                    callback(false)
+                    callback.failure(e.localizedMessage)
                 }
             }
         }
