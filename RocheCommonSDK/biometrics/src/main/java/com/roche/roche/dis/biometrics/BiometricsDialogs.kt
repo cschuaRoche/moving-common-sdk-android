@@ -14,7 +14,13 @@ import androidx.fragment.app.FragmentActivity
  * @param type RocheBiometricsManager.BiometricsType
  * @see "https://developer.android.com/reference/androidx/biometric/BiometricPrompt.PromptInfo.Builder#setAllowedAuthenticators(int)"
  */
-class BiometricsDialogs(private val allowedAuthenticators: Int, val type: BiometricsType) {
+internal class BiometricsDialogs(
+    private val allowedAuthenticators: Int,
+    private val type: BiometricsType,
+    private val title: String,
+    private val description: String,
+    private val negativeButtonText: String
+) {
     var biometricPrompt: BiometricPrompt? = null
 
     /**
@@ -92,10 +98,10 @@ class BiometricsDialogs(private val allowedAuthenticators: Int, val type: Biomet
             Log.w("BiometricsManager", "No biometrics detected")
             return
         }
-        val title = fragment.getString(R.string.biometric_auth_title)
+        /*val title = fragment.getString(R.string.biometric_auth_title)
         val description = getAuthDescription(fragment.resources)
-        val buttonText = fragment.getString(R.string.biometric_auth_cancel_label)
-        showBiometricDialog(fragment, PromptData(title, description, buttonText), callback)
+        val buttonText = fragment.getString(R.string.biometric_auth_cancel_label)*/
+        showBiometricDialog(fragment, PromptData(title, description, negativeButtonText), callback)
     }
 
     private fun getAuthDescription(resources: Resources): String {

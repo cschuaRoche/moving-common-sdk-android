@@ -1,8 +1,10 @@
 package com.roche.roche.dis.biometrics
 
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
+import android.provider.Settings
 import androidx.annotation.IntDef
 import androidx.annotation.VisibleForTesting
 import androidx.biometric.BiometricManager
@@ -21,7 +23,13 @@ import java.lang.annotation.RetentionPolicy
  * @param context the application context where the prompt dialog will be shown
  * @param allowedAuthenticators authenticator types - BiometricManager.Authenticators
  */
-class RocheBiometricsManager(private val context: Context, private var allowedAuthenticators: Int?) {
+class RocheBiometricsManager(
+    private val context: Context,
+    private var allowedAuthenticators: Authenticator,
+    title: String = context.getString(R.string.biometric_auth_title),
+    description: String = context.getString(R.string.biometric_auth_desc),
+    negativeButtonText: String = context.getString(R.string.cancel)
+) {
     var type: BiometricsType
         private set
 
@@ -42,9 +50,9 @@ class RocheBiometricsManager(private val context: Context, private var allowedAu
     private val biometricsDialogs: BiometricsDialogs
 
     init {
-        if (allowedAuthenticators == null) {
+        /*if (allowedAuthenticators == null) {
             allowedAuthenticators = BiometricManager.Authenticators.BIOMETRIC_WEAK
-        }
+        }*/
         type = when {
             hasMultipleBiometrics(context) -> {
                 BiometricsType.MULTIPLE
@@ -65,7 +73,8 @@ class RocheBiometricsManager(private val context: Context, private var allowedAu
         isAvailable = isBiometricsAvailable(context)
         canSetupBiometrics = canSetupBiometrics(context)
         isBiometricsDialogShowing = false
-        biometricsDialogs = BiometricsDialogs(allowedAuthenticators!!, type)
+        biometricsDialogs =
+            BiometricsDialogs(allowedAuthenticators.value, type, title, description, negativeButtonText)
     }
 
     /**
@@ -150,12 +159,12 @@ class RocheBiometricsManager(private val context: Context, private var allowedAu
      */
     private fun isBiometricsAvailable(context: Context): Boolean {
         val biometricManager = BiometricManager.from(context)
-        return biometricManager.canAuthenticate(allowedAuthenticators!!) == BiometricManager.BIOMETRIC_SUCCESS
+        return biometricManager.canAuthenticate(allowedAuthenticators.value) == BiometricManager.BIOMETRIC_SUCCESS
     }
 
     fun canSetupBiometrics(context: Context): Boolean {
         val biometricManager = BiometricManager.from(context)
-        return biometricManager.canAuthenticate(allowedAuthenticators!!) == BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED
+        return biometricManager.canAuthenticate(allowedAuthenticators.value) == BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED
     }
 
     /**
@@ -165,7 +174,7 @@ class RocheBiometricsManager(private val context: Context, private var allowedAu
     fun shouldShowRegisterBiometric(context: Context): Boolean {
         return (!BiometricSharedPreference.isBiometricRegistrationComplete(context) &&
                 isBiometricsAvailable(
-                        context
+                    context
                 ))
     }
 
@@ -176,8 +185,16 @@ class RocheBiometricsManager(private val context: Context, private var allowedAu
     fun shouldShowAuthBiometric(context: Context): Boolean {
         return isAppBiometricEnabled(context) &&
                 isBiometricsAvailable(
-                        context
+                    context
                 )
+    }
+
+    fun enrollBiometric() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            context.startActivity(Intent(Settings.ACTION_BIOMETRIC_ENROLL))
+        } else {
+            context.startActivity(Intent(Settings.ACTION_SECURITY_SETTINGS))
+        }
     }
 
     companion object {
@@ -196,7 +213,11 @@ class RocheBiometricsManager(private val context: Context, private var allowedAu
          */
         fun hasFaceUnlock(context: Context): Boolean {
             val packageManager: PackageManager = context.packageManager
-            return packageManager.hasSystemFeature(PackageManager.FEATURE_FACE)
+            return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                packageManager.hasSystemFeature(PackageManager.FEATURE_FACE)
+            } else {
+                false
+            }
         }
 
         /**
@@ -205,7 +226,11 @@ class RocheBiometricsManager(private val context: Context, private var allowedAu
          */
         fun hasIrisUnlock(context: Context): Boolean {
             val packageManager: PackageManager = context.packageManager
-            return packageManager.hasSystemFeature(PackageManager.FEATURE_IRIS)
+            return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                packageManager.hasSystemFeature(PackageManager.FEATURE_IRIS)
+            } else {
+                false
+            }
         }
 
         /**

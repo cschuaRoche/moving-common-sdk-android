@@ -1,13 +1,11 @@
 package com.roche.roche.dis.biometrics
 
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.biometric.BiometricManager
 import androidx.fragment.app.Fragment
 import com.roche.roche.dis.databinding.BiometricsFragmentBinding
 import com.roche.roche.dis.rochecommon.dialogs.RocheDialogFactory
@@ -30,13 +28,15 @@ class BiometricsFragment : Fragment(), OnAuthenticationCallback,
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val allowedAuthenticators = if (Build.VERSION.SDK_INT > 29) {
+        /*val allowedAuthenticators = if (Build.VERSION.SDK_INT > 29) {
             BiometricManager.Authenticators.DEVICE_CREDENTIAL or BiometricManager.Authenticators.BIOMETRIC_STRONG
         } else {
             BiometricManager.Authenticators.BIOMETRIC_STRONG
-        }
+        }*/
 
-        biometricsManager = RocheBiometricsManager(requireContext(), allowedAuthenticators)
+        //val allowedAuthenticators = BiometricManager.Authenticators.BIOMETRIC_STRONG
+        biometricsManager =
+            RocheBiometricsManager(requireContext(), Authenticator.STRONG, negativeButtonText = "Cancel")
         Log.d(TAG, "isAvailable: ${biometricsManager.isAvailable}")
         Log.d(TAG, "type: ${biometricsManager.type}")
         Log.d(TAG, "hasFingerprintSetup: ${biometricsManager.hasFingerprintSetup()}")
@@ -51,7 +51,9 @@ class BiometricsFragment : Fragment(), OnAuthenticationCallback,
                 if (biometricsManager.isAvailable || BiometricsType.FINGERPRINT == biometricsManager.type) {
                     biometricsManager.showAuthDialog(this@BiometricsFragment, this@BiometricsFragment)
                 } else {
-                    Toast.makeText(requireContext(), "Biometrics is not supported for this device!", Toast.LENGTH_SHORT).show()
+                    /*Toast.makeText(requireContext(), "Biometrics is not supported for this device!", Toast.LENGTH_SHORT)
+                        .show()*/
+                    biometricsManager.enrollBiometric()
                 }
             }
         }
