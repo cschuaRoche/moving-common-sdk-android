@@ -113,8 +113,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         Toast.makeText(this, "Downloading content..", Toast.LENGTH_SHORT).show()
         DownloadStaticContent.downloadToFileSystem(
             this,
-            "https://passport-static-content.tpp1-dev.platform.navify.com/com.roche.nrm_passport/configuration/countries/dev_countries.json",
-            "dev_countries.json",
+            "https://passport-static-content.tpp1-dev.platform.navify.com/com.roche.nrm_passport/docs/floodlight.json",
+            "1.2.1",
             this
         )
     }
@@ -128,7 +128,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     override fun publishProgress(progress: Int) {
-        Toast.makeText(this, "Downloading content progress $progress", Toast.LENGTH_SHORT).show()
+        Log.d("Downloading Content", "Progress $progress")
     }
 
     private fun isStoragePermissionGranted(): Boolean {
