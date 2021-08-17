@@ -10,6 +10,10 @@
             android:title="Biometrics"
             app:actionLayout="@layout/action_view_arrow" />
         <item
+            android:id="@+id/menu_unzip"
+            android:title="UnZip"
+            app:actionLayout="@layout/action_view_arrow" />
+        <item
             android:id="@+id/menu_download_static_content"
             android:title="Download Static Content"
             app:actionLayout="@layout/action_view_arrow" />

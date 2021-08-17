@@ -78,6 +78,7 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
     implementation project(path: ':rocheCommon')
+    implementation project(path: ':utils')
 
     implementation project(path: ':staticContent')
     implementation project(path: ':biometrics')

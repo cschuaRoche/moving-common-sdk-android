@@ -3,6 +3,7 @@ package com.roche.roche.dis
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.widget.Toast
@@ -18,6 +19,8 @@ import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupActionBarWithNavController
 import com.google.android.material.navigation.NavigationView
 import com.roche.roche.dis.databinding.ActivityMainBinding
+import com.roche.roche.dis.utils.UnZipUtils
+import java.io.File
 import com.roche.roche.dis.staticcontent.DownloadStaticContentCallback
 import com.roche.roche.dis.staticcontent.DownloadStaticContent
 
@@ -39,7 +42,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         binding = ActivityMainBinding.inflate(LayoutInflater.from(this))
         setContentView(binding.root)
 
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.main_nav_host) as NavHostFragment
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.main_nav_host) as NavHostFragment
         navController = navHostFragment.navController
 
         appBarConfiguration = AppBarConfiguration.Builder(
@@ -73,6 +77,18 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 val options = NavOptions.Builder().setLaunchSingleTop(true).build()
                 findNavController(R.id.main_nav_host).navigate(action, options)
             }
+            R.id.menu_unzip -> {
+                var path: File = filesDir
+                val targetDirectory = "usermanuals"
+                path = File(path.toString() + File.separator + targetDirectory)
+                if (path.list().isNullOrEmpty()) {
+                    Log.d("files", "Creating files")
+                    UnZipUtils.unzipFromAsset("de_DE.zip", targetDirectory, applicationContext)
+                } else {
+                    Log.d("files", "Directory is not empty!")
+                    getFilesRecursive(path)
+                }
+            }
             R.id.menu_download_static_content -> {
                 if(isStoragePermissionGranted()) {
                     downloadStaticContent()
@@ -81,6 +97,16 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
         binding.mainDrawerLayout.close()
         return true
+    }
+
+    private fun getFilesRecursive(pFile: File) {
+        for (files in pFile.listFiles()) {
+            if (files.isDirectory) {
+                getFilesRecursive(files)
+            } else {
+                Log.d("files", "$files")
+            }
+        }
     }
 
     private fun downloadStaticContent() {
