@@ -1,91 +1,38 @@
 package com.roche.roche.dis.biometrics
 
-import android.content.res.Resources
-import android.util.Log
 import androidx.annotation.Keep
 import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import com.roche.roche.dis.biometrics.callback.OnAuthenticationCallback
 
 /**
  * Used for showing Biometrics Dialogs
  * @param allowedAuthenticators authenticator types - BiometricManager.Authenticators
- * @param type RocheBiometricsManager.BiometricsType
  * @see "https://developer.android.com/reference/androidx/biometric/BiometricPrompt.PromptInfo.Builder#setAllowedAuthenticators(int)"
  */
 internal class BiometricsDialogs(
-    private val allowedAuthenticators: Int,
-    private val type: BiometricsType,
-    private val title: String,
-    private val description: String,
-    private val negativeButtonText: String
+    private val allowedAuthenticators: Int
 ) {
-    var biometricPrompt: BiometricPrompt? = null
-
-    /**
-     * Shows a system dialog to confirm use of biometrics
-     * @param activity the Activity where the prompt dialog will be shown
-     * @param callback to notify the caller of the {@link BiometricStatusConstants}
-     */
-    fun showConfirmationDialog(activity: FragmentActivity, callback: OnAuthenticationCallback) {
-        if (type == BiometricsType.NONE) {
-            Log.w("BiometricsManager", "No biometrics detected")
-            return
-        }
-        val title = activity.getString(R.string.biometric_confirm_title)
-        val description = getConfirmationDescription(activity.resources)
-        val buttonText = activity.getString(R.string.cancel)
-        showBiometricDialog(activity, PromptData(title, description, buttonText), callback)
-    }
-
-    /**
-     * Shows a system dialog to confirm use of biometrics
-     * @param fragment the Fragment where the prompt dialog will be shown
-     * @param callback to notify the caller of the {@link BiometricStatusConstants}
-     */
-    fun showConfirmationDialog(fragment: Fragment, callback: OnAuthenticationCallback) {
-        if (type == BiometricsType.NONE) {
-            Log.w("BiometricsManager", "No biometrics detected")
-            return
-        }
-        val title = fragment.getString(R.string.biometric_confirm_title)
-        val description = getConfirmationDescription(fragment.resources)
-        val buttonText = fragment.getString(R.string.cancel)
-        showBiometricDialog(fragment, PromptData(title, description, buttonText), callback)
-    }
-
-    private fun getConfirmationDescription(resources: Resources): String {
-        return when (type) {
-            BiometricsType.MULTIPLE -> {
-                resources.getString(R.string.biometric_confirm_desc)
-            }
-            BiometricsType.FINGERPRINT -> {
-                resources.getString(R.string.biometric_confirm_fingerprint_desc)
-            }
-            BiometricsType.FACE_UNLOCK -> {
-                resources.getString(R.string.biometric_confirm_face_desc)
-            }
-            else -> {
-                resources.getString(R.string.biometric_confirm_desc)
-            }
-        }
-    }
+    private var biometricPrompt: BiometricPrompt? = null
 
     /**
      * Shows a system biometric dialog for authentication
      * @param activity the Activity where the prompt dialog will be shown
      * @param callback to notify the caller of the {@link BiometricStatusConstants}
      */
-    fun showAuthDialog(activity: FragmentActivity, callback: OnAuthenticationCallback) {
-        if (type == BiometricsType.NONE) {
-            Log.w("BiometricsManager", "No biometrics detected")
-            return
-        }
-        val title = activity.getString(R.string.biometric_auth_title)
+    fun showAuthDialog(
+        activity: FragmentActivity,
+        callback: OnAuthenticationCallback,
+        title: String,
+        description: String,
+        negativeButtonText: String
+    ) {
+        /*val title = activity.getString(R.string.biometric_auth_title)
         val description = getAuthDescription(activity.resources)
-        val buttonText = activity.getString(R.string.biometric_auth_cancel_label)
-        showBiometricDialog(activity, PromptData(title, description, buttonText), callback)
+        val buttonText = activity.getString(R.string.biometric_auth_cancel_label)*/
+        showBiometricDialog(activity, PromptData(title, description, negativeButtonText), callback)
     }
 
     /**
@@ -93,32 +40,17 @@ internal class BiometricsDialogs(
      * @param fragment the Fragment where the prompt dialog will be shown
      * @param callback to notify the caller of the {@link BiometricStatusConstants}
      */
-    fun showAuthDialog(fragment: Fragment, callback: OnAuthenticationCallback) {
-        if (type == BiometricsType.NONE) {
-            Log.w("BiometricsManager", "No biometrics detected")
-            return
-        }
+    fun showAuthDialog(
+        fragment: Fragment,
+        callback: OnAuthenticationCallback,
+        title: String,
+        description: String,
+        negativeButtonText: String
+    ) {
         /*val title = fragment.getString(R.string.biometric_auth_title)
         val description = getAuthDescription(fragment.resources)
         val buttonText = fragment.getString(R.string.biometric_auth_cancel_label)*/
         showBiometricDialog(fragment, PromptData(title, description, negativeButtonText), callback)
-    }
-
-    private fun getAuthDescription(resources: Resources): String {
-        return when (type) {
-            BiometricsType.MULTIPLE -> {
-                resources.getString(R.string.biometric_auth_desc)
-            }
-            BiometricsType.FINGERPRINT -> {
-                resources.getString(R.string.biometric_auth_finger_desc)
-            }
-            BiometricsType.FACE_UNLOCK -> {
-                resources.getString(R.string.biometric_auth_face_desc)
-            }
-            else -> {
-                resources.getString(R.string.biometric_auth_desc)
-            }
-        }
     }
 
     /**
@@ -128,7 +60,7 @@ internal class BiometricsDialogs(
      * @param promptData the data to be used in the UI
      * @param callback to notify the caller of the {@link BiometricStatusConstants}
      */
-    fun showBiometricDialog(
+    private fun showBiometricDialog(
         activity: FragmentActivity,
         promptData: PromptData,
         callback: OnAuthenticationCallback
@@ -149,7 +81,7 @@ internal class BiometricsDialogs(
      * @param promptData the data to be used in the UI
      * @param callback to notify the caller of the {@link BiometricStatusConstants}
      */
-    fun showBiometricDialog(
+    private fun showBiometricDialog(
         fragment: Fragment,
         promptData: PromptData,
         callback: OnAuthenticationCallback
@@ -189,7 +121,7 @@ internal class BiometricsDialogs(
     private fun getBiometricPrompt(
         fragment: Fragment,
         authCallback: OnAuthenticationCallback
-    ): BiometricPrompt? {
+    ): BiometricPrompt {
         val context = fragment.requireContext()
         val executor = ContextCompat.getMainExecutor(context)
         return BiometricPrompt(fragment, executor, BiometricPromptCallback(authCallback))
@@ -198,7 +130,7 @@ internal class BiometricsDialogs(
     private fun getBiometricPrompt(
         activity: FragmentActivity,
         authCallback: OnAuthenticationCallback
-    ): BiometricPrompt? {
+    ): BiometricPrompt {
         val executor = ContextCompat.getMainExecutor(activity)
         return BiometricPrompt(activity, executor, BiometricPromptCallback(authCallback))
     }
@@ -255,7 +187,7 @@ internal class BiometricPromptCallback(private val callback: OnAuthenticationCal
  * Used to customize the values of System Biometrics Prompt
  */
 @Keep
-data class PromptData(
+internal data class PromptData(
     val title: String,
     val description: String,
     val buttonText: String

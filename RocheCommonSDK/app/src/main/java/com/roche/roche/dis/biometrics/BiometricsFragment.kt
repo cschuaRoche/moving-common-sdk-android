@@ -1,12 +1,12 @@
 package com.roche.roche.dis.biometrics
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.roche.roche.dis.biometrics.callback.OnAuthenticationCallback
 import com.roche.roche.dis.databinding.BiometricsFragmentBinding
 import com.roche.roche.dis.rochecommon.dialogs.RocheDialogFactory
 import com.roche.roche.dis.rochecommon.presentation.ViewBindingHolder
@@ -16,7 +16,7 @@ class BiometricsFragment : Fragment(), OnAuthenticationCallback,
     ViewBindingHolder<BiometricsFragmentBinding> by ViewBindingHolderImpl() {
 
     private lateinit var biometricsManager: RocheBiometricsManager
-    private val TAG = "Biometrics"
+    //private val TAG = "Biometrics"
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,7 +32,7 @@ class BiometricsFragment : Fragment(), OnAuthenticationCallback,
             BiometricManager.Authenticators.DEVICE_CREDENTIAL or BiometricManager.Authenticators.BIOMETRIC_STRONG
         } else {
             BiometricManager.Authenticators.BIOMETRIC_STRONG
-        }*/
+        }
 
         //val allowedAuthenticators = BiometricManager.Authenticators.BIOMETRIC_STRONG
         biometricsManager =
@@ -56,6 +56,30 @@ class BiometricsFragment : Fragment(), OnAuthenticationCallback,
                     biometricsManager.enrollBiometric()
                 }
             }
+        }*/
+        biometricsManager =
+            RocheBiometricsManager(requireContext(), Authenticator.STRONG)
+        requireBinding {
+            biometricBtn.setOnClickListener {
+                // if biometrics is available or
+                // if fingerprint hardware is supported then allow biometrics auth
+                // Note that in some devices, Biometrics is set to unknown due to security updates,
+                // therefore we check if Fingerprint hardware is supported.
+                val finger=biometricsManager.isFingerprintSupported()
+                val face=biometricsManager.isFaceSupported()
+                val iris=biometricsManager.isIrisSupported()
+
+                if (biometricsManager.isBiometricSupported()) {
+                    biometricsManager.showAuthDialog(
+                        this@BiometricsFragment,
+                        this@BiometricsFragment,
+                        negativeButtonText = "Cancel"
+                    )
+                } else {
+                    Toast.makeText(requireContext(), "Biometrics is not supported for this device!", Toast.LENGTH_SHORT)
+                        .show()
+                }
+            }
         }
     }
 
@@ -63,7 +87,11 @@ class BiometricsFragment : Fragment(), OnAuthenticationCallback,
         Toast.makeText(requireContext(), "statusCode: $statusCode", Toast.LENGTH_SHORT).show()
         // User does not have any biometrics created on the device, go to settings
         if (OnAuthenticationCallback.ERROR_NO_BIOMETRICS == statusCode) {
-            RocheDialogFactory.showCancelOrSettings(getString(R.string.biometric_confirm_title), getString(R.string.biometric_enable_desc), requireContext())
+            /*RocheDialogFactory.showCancelOrSettings(
+                getString(R.string.biometric_confirm_title),
+                getString(R.string.biometric_enable_desc),
+                requireContext()
+            )*/
         }
     }
 }
