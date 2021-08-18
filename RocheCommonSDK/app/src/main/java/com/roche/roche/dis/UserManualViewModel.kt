@@ -1,10 +1,15 @@
 package com.roche.roche.dis
 
+import android.app.Application
 import android.util.Log
 import androidx.annotation.StringDef
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.AndroidViewModel
+import com.roche.roche.dis.utils.PreferenceUtil
+import com.roche.roche.dis.utils.get
+import com.roche.roche.dis.utils.set
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import org.json.JSONObject
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
@@ -53,18 +58,34 @@ annotation class Response {
     }
 }
 
-class UserManualViewModel(): ViewModel() {
+class UserManualViewModel(application: Application): AndroidViewModel(application) {
     companion object {
         const val EXCEPTION_NOT_MODIFIED = "Not Modified"
+        const val USER_MANUALS_PREFS = "USER_MANUALS_PREFS"
+        const val PREF_KEY_ETAG_PREFIX = "key_etag_"
+        const val HEADER_KEY_ETAG = "ETag"
     }
 
     suspend fun syncUserManuals(configUrl: String, @LocaleType localeType: String): @Response String {
         return try {
-            val jsonResponse = getStaticResponse(configUrl)
+            val jsonResponse = getStaticResponse(configUrl, localeType)
             suspendCoroutine { cont ->
                 // get sharedPreference from etag
                 // hardcode for now
                 Log.d("cschua", "jsonResponse: $jsonResponse")
+
+                val jsonObject = JSONObject(jsonResponse)
+                val keys = jsonObject.keys()
+                while (keys.hasNext()) {
+                    val key = keys.next() as String
+                    if (jsonObject.get(key) is JSONObject) {
+                        val versionObject = jsonObject.getJSONObject(key)
+                        val zipContentUrl = versionObject.getString(localeType)
+                        Log.d("syncUserManuals", "zipContentUrl: $zipContentUrl")
+                        break
+                    }
+                }
+
                 cont.resumeWith(Result.success(Response.UPDATED))
                 //cont.resumeWith(Result.failure(java.lang.Exception("errorMessage")))
             }
@@ -74,20 +95,24 @@ class UserManualViewModel(): ViewModel() {
     }
 
     @Throws(IllegalStateException::class)
-    suspend fun getStaticResponse(staticURL: String): String? {
+    suspend fun getStaticResponse(staticURL: String, @LocaleType localeType: String): String? {
         return withContext(Dispatchers.IO) {
-            val url =
-                URL(staticURL)
+            val url = URL(staticURL)
             val urlConnection: HttpURLConnection = url.openConnection() as HttpURLConnection
 
-            // TODO get etag value from secure shared preference
-            val etag = "8dc0c63a38126f59dadde2a309805d43"
+            // get etag value from secure shared preference
+            val prefKey = PREF_KEY_ETAG_PREFIX + localeType
+            val etag = getETag(prefKey)
             if (etag.isNotBlank()) {
                 urlConnection.addRequestProperty("If-None-Match", etag)
                 urlConnection.useCaches = false
             }
 
             //printHeaderKeys(urlConnection)
+            val newETag = urlConnection.headerFields[HEADER_KEY_ETAG]
+            if (newETag != null && newETag.isNotEmpty()) {
+                saveETag(prefKey, newETag[0])
+            }
 
             if (HttpURLConnection.HTTP_NOT_MODIFIED == urlConnection.responseCode) {
                 throw IllegalStateException(EXCEPTION_NOT_MODIFIED)
@@ -123,5 +148,15 @@ class UserManualViewModel(): ViewModel() {
         for (key in urlConnection.headerFields.keys) {
             Log.d("http", "$key : ${urlConnection.headerFields[key]}")
         }
+    }
+
+    private fun getETag(key: String): String {
+        val pref = PreferenceUtil.createOrGetPreference(getApplication(), USER_MANUALS_PREFS)
+        return pref.get(key, "") ?: ""
+    }
+
+    private fun saveETag(key: String, eTag: String) {
+        val pref = PreferenceUtil.createOrGetPreference(getApplication(), USER_MANUALS_PREFS)
+        pref.set(key, eTag)
     }
 }

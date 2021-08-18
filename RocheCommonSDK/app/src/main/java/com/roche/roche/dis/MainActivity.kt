@@ -45,7 +45,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         binding = ActivityMainBinding.inflate(LayoutInflater.from(this))
         setContentView(binding.root)
 
-        downloadViewModel = UserManualViewModel()
+        downloadViewModel = UserManualViewModel(application)
 
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.main_nav_host) as NavHostFragment
@@ -100,11 +100,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     Log.d("usermanual", "response: $response")
                 }
             }
-            R.id.menu_download_static_content -> {
+            /*R.id.menu_download_static_content -> {
                 if(isStoragePermissionGranted()) {
                     downloadStaticContent()
                 }
-            }
+            }*/
         }
         binding.mainDrawerLayout.close()
         return true
