@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 import androidx.navigation.findNavController
@@ -20,6 +21,7 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import com.google.android.material.navigation.NavigationView
 import com.roche.roche.dis.databinding.ActivityMainBinding
 import com.roche.roche.dis.utils.UnZipUtils
+import kotlinx.coroutines.launch
 import java.io.File
 import com.roche.roche.dis.staticcontent.DownloadStaticContentCallback
 import com.roche.roche.dis.staticcontent.DownloadStaticContent
@@ -29,6 +31,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private lateinit var binding: ActivityMainBinding
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var navController: NavController
+    private lateinit var downloadViewModel: UserManualViewModel
 
     // Storage Permissions
     private val REQUEST_EXTERNAL_STORAGE = 1
@@ -41,6 +44,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(LayoutInflater.from(this))
         setContentView(binding.root)
+
+        downloadViewModel = UserManualViewModel()
 
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.main_nav_host) as NavHostFragment
@@ -87,6 +92,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 } else {
                     Log.d("files", "Directory is not empty!")
                     getFilesRecursive(path)
+                }
+            }
+            R.id.menu_user_manual -> {
+                lifecycleScope.launch {
+                    val response = downloadViewModel.syncUserManuals("https://passport-static-content.tpp1-dev.platform.navify.com/com.roche.nrm_passport/docs/floodlight.json", LocaleType.EN_US)
+                    Log.d("usermanual", "response: $response")
                 }
             }
             R.id.menu_download_static_content -> {

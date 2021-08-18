@@ -14,8 +14,8 @@
             android:title="UnZip"
             app:actionLayout="@layout/action_view_arrow" />
         <item
-            android:id="@+id/menu_download_static_content"
-            android:title="Download Static Content"
+            android:id="@+id/menu_user_manual"
+            android:title="GetStaticUserManual"
             app:actionLayout="@layout/action_view_arrow" />
     </group>
 </menu>
