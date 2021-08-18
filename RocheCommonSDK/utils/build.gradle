@@ -24,11 +24,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_6
-        targetCompatibility JavaVersion.VERSION_1_6
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
     kotlinOptions {
-        jvmTarget = '1.6'
+        jvmTarget = '1.8'
     }
 }
 
@@ -40,6 +40,7 @@ dependencies {
     implementation 'com.google.android.material:material:1.4.0'
 
     implementation 'org.apache.commons:commons-compress:1.21'
+    implementation "androidx.security:security-crypto:1.1.0-alpha03"
 
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
