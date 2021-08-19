@@ -3,9 +3,7 @@ package com.roche.roche.dis.staticcontent
 import android.content.Context
 import android.util.Log
 import androidx.annotation.StringDef
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.json.JSONException
 import org.json.JSONObject
@@ -53,6 +51,19 @@ object DownloadStaticContent {
     private const val EXCEPTION_MANIFEST_LOCALE_NOT_FOUND = "Manifest Locale Not Found"
     private const val HEADER_KEY_ETAG = "ETag"
 
+    @Throws(IllegalStateException::class, IllegalArgumentException::class, JSONException::class)
+    suspend fun downloadStaticAssets(
+        context: Context,
+        manifestUrl: String,
+        appVersion: String,
+        @LocaleType locale: String,
+        progress: (Int) -> Unit,
+        targetSubDir: String? = null
+    ): String {
+        val fileUrl = getUrlFromManifest(context, manifestUrl, appVersion, locale)
+        return downloadFromUrl(context, fileUrl, progress, targetSubDir)
+    }
+
     /**
      * Get zip content url from the given manifest url.
      *
@@ -72,10 +83,12 @@ object DownloadStaticContent {
             val url = URL(manifestUrl)
             val urlConnection: HttpURLConnection = url.openConnection() as HttpURLConnection
 
-            // get etag value from secure shared preference
-            val prefKey = DownloadStaticContentSharedPref.PREF_KEY_ETAG_PREFIX + locale
-            val etag = DownloadStaticContentSharedPref.getETag(context, prefKey)
-            if (etag.isNotBlank()) {
+            // get etag and downloaded file path value from secure shared preference
+            val etag = DownloadStaticContentSharedPref.getETag(context, appVersion, locale)
+            val filePath =
+                DownloadStaticContentSharedPref.getDownloadedFilePath(context, appVersion, locale)
+            if (etag.isNotBlank() && filePath.isNotBlank()) {
+                // If both eTag and file path are available then add etag in header
                 urlConnection.addRequestProperty("If-None-Match", etag)
                 urlConnection.useCaches = false
             }
@@ -96,7 +109,8 @@ object DownloadStaticContent {
                     if (newETag != null && newETag.isNotEmpty()) {
                         DownloadStaticContentSharedPref.saveETag(
                             context,
-                            prefKey,
+                            appVersion,
+                            locale,
                             newETag[0]
                         )
                     }
@@ -107,6 +121,60 @@ object DownloadStaticContent {
                 } finally {
                     urlConnection.disconnect()
                 }
+            }
+        }
+    }
+
+    suspend fun downloadFromUrl(
+        context: Context,
+        fileURL: String,
+        progress: (Int) -> Unit,
+        targetSubDir: String? = null
+    ): String {
+        return withContext(Dispatchers.IO) {
+            val url = URL(fileURL)
+            val connection = url.openConnection() as HttpURLConnection
+            connection.connect()
+
+            val fileLength = connection.contentLength
+            val fileName = fileURL.substring(fileURL.lastIndexOf("/") + 1)
+            val path = if (targetSubDir != null) {
+                val file = File(targetSubDir)
+                if (file.exists().not()) {
+                    file.mkdir()
+                }
+                targetSubDir
+            } else {
+                context.getExternalFilesDir(null)?.absoluteFile?.path + File.separator + fileName
+            }
+
+            // download the file
+            val input: InputStream = BufferedInputStream(connection.inputStream)
+            val output: OutputStream = FileOutputStream(path)
+            try {
+                val data = ByteArray(4096)
+                var total: Long = 0
+                var count: Int
+                while (input.read(data).also { count = it } != -1) {
+                    // publishing the progress....
+                    total += count
+                    if (fileLength > 0) { // only if total length is known
+                        withContext(Dispatchers.Main) {
+                            progress(((total * 100 / fileLength).toInt()))
+                        }
+                    }
+                    output.write(data, 0, count)
+                }
+                path
+            } catch (e: IOException) {
+                Log.e(LOG_TAG, "Exception ${e.localizedMessage}")
+                throw e
+            } finally {
+                // close streams
+                output.flush()
+                output.close()
+                input.close()
+                connection.disconnect()
             }
         }
     }
@@ -144,57 +212,6 @@ object DownloadStaticContent {
         } catch (e: JSONException) {
             Log.e(LOG_TAG, "error: $e")
             throw e
-        }
-    }
-
-    private fun downloadContent(
-        context: Context,
-        contentUrl: String,
-        callback: DownloadStaticContentCallback
-    ) {
-        CoroutineScope(Dispatchers.IO).launch {
-            try {
-                val url = URL(contentUrl)
-                val connection = url.openConnection() as HttpURLConnection
-                connection.connect()
-
-                val fileLength = connection.contentLength
-
-                // download the file
-                val input: InputStream = BufferedInputStream(connection.inputStream)
-                val fileName = contentUrl.substring(contentUrl.lastIndexOf("/") + 1)
-                val path =
-                    context.getExternalFilesDir(null)?.absoluteFile?.path + File.separator + fileName
-                val output: OutputStream = FileOutputStream(path)
-
-                val data = ByteArray(4096)
-                var total: Long = 0
-                var count: Int
-                while (input.read(data).also { count = it } != -1) {
-                    // publishing the progress....
-                    total += count
-                    if (fileLength > 0) { // only if total length is known
-                        withContext(Dispatchers.Main) {
-                            callback.publishProgress(((total * 100 / fileLength).toInt()))
-                        }
-                    }
-                    output.write(data, 0, count)
-                }
-
-                // close streams
-                output.flush()
-                output.close()
-                input.close()
-
-                withContext(Dispatchers.Main) {
-                    callback.success()
-                }
-            } catch (e: Exception) {
-                Log.e(LOG_TAG, "Exception ${e.localizedMessage}")
-                withContext(Dispatchers.Main) {
-                    callback.failure(e.localizedMessage)
-                }
-            }
         }
     }
 }

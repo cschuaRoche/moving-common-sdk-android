@@ -25,6 +25,8 @@ import kotlinx.coroutines.launch
 import java.io.File
 import com.roche.roche.dis.staticcontent.DownloadStaticContentCallback
 import com.roche.roche.dis.staticcontent.DownloadStaticContent
+import java.lang.IllegalArgumentException
+import java.lang.IllegalStateException
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, DownloadStaticContentCallback {
 
@@ -95,16 +97,22 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 }
             }
             R.id.menu_user_manual -> {
+                // lifecycleScope.launch {
+                //     val response = downloadViewModel.syncUserManuals("https://passport-static-content.tpp1-dev.platform.navify.com/com.roche.nrm_passport/docs/floodlight.json", LocaleType.EN_US)
+                //     Log.d("usermanual", "response: $response")
+                // }
+
                 lifecycleScope.launch {
-                    val response = downloadViewModel.syncUserManuals("https://passport-static-content.tpp1-dev.platform.navify.com/com.roche.nrm_passport/docs/floodlight.json", LocaleType.EN_US)
-                    Log.d("usermanual", "response: $response")
+                    try {
+                        val path = DownloadStaticContent.downloadStaticAssets(this@MainActivity, "https://passport-static-content.tpp1-dev.platform.navify.com/com.roche.nrm_passport/docs/floodlight.json", "1.2.1", LocaleType.EN_US, ::showProgress)
+                        Log.d("usermanual", "file path: $path")
+                    } catch (e: IllegalStateException) {
+                        Log.e("usermanual", "error: $e")
+                    } catch (e1: IllegalArgumentException) {
+                        Log.e("usermanual", "error: $e1")
+                    }
                 }
             }
-            /*R.id.menu_download_static_content -> {
-                if(isStoragePermissionGranted()) {
-                    downloadStaticContent()
-                }
-            }*/
         }
         binding.mainDrawerLayout.close()
         return true
@@ -128,6 +136,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         //     "1.2.1",
         //     this
         // )
+    }
+
+    private fun showProgress(progress: Int) {
+        Log.d("sanket", "Downloading Progress: $progress")
     }
 
     override fun success() {
