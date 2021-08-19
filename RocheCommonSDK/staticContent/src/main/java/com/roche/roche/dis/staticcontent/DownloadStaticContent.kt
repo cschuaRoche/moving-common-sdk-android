@@ -53,6 +53,18 @@ object DownloadStaticContent {
     private const val EXCEPTION_UNZIPPING_FILE = "Error In Unzipping The File"
     private const val HEADER_KEY_ETAG = "ETag"
 
+    /**
+     * Download static assets and unzips them
+     *
+     * @param context application context
+     * @param manifestUrl url of the manifest file
+     * @param appVersion application version
+     * @param locale locale for which static assets needs to be downloaded
+     * @param progress callback which will return the progress of the download
+     * @param targetSubDir optional sub directory where the files will be downloaded to
+     *
+     * @return file path of the downloaded and unzipped static assets
+     */
     @Throws(IllegalStateException::class, IllegalArgumentException::class, JSONException::class)
     suspend fun downloadStaticAssets(
         context: Context,
@@ -132,6 +144,16 @@ object DownloadStaticContent {
         }
     }
 
+    /**
+     * Download the zipped file to the app's files directory.
+     *
+     * @param context application context
+     * @param fileURL zipped file url
+     * @param progress callback which will return the progress of the download
+     * @param targetSubDir optional sub directory where the files will be downloaded to
+     *
+     * @return downloaded zipped file's path
+     */
     suspend fun downloadFromUrl(
         context: Context,
         fileURL: String,
@@ -188,6 +210,19 @@ object DownloadStaticContent {
         }
     }
 
+    /**
+     * Unzip the file
+     *
+     * @param context the application context
+     * @param appVersion application version
+     * @param locale application locale
+     * @param filePath location of the zipped file
+     * @param targetSubDir sub directory where the files will be unzipped to.
+     * If not provided then it will unzip to app's files directory
+     *
+     * @return unzip file path if zip file was successfully unzipped to the app's directory,
+     * otherwise throws error
+     */
     @Throws(IllegalStateException::class)
     fun unzipFile(
         context: Context,
