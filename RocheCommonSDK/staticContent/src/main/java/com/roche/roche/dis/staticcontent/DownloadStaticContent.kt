@@ -63,7 +63,7 @@ object DownloadStaticContent {
      * @param progress callback which will return the progress of the download
      * @param targetSubDir optional sub directory where the files will be downloaded to
      *
-     * @return file path of the downloaded and unzipped static assets
+     * @return downloaded and unzipped static asset's path
      */
     @Throws(IllegalStateException::class, IllegalArgumentException::class, JSONException::class)
     suspend fun downloadStaticAssets(
