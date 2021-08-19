@@ -122,12 +122,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     private fun downloadStaticContent() {
         Toast.makeText(this, "Downloading content..", Toast.LENGTH_SHORT).show()
-        DownloadStaticContent.downloadToFileSystem(
-            this,
-            "https://passport-static-content.tpp1-dev.platform.navify.com/com.roche.nrm_passport/docs/floodlight.json",
-            "1.2.1",
-            this
-        )
+        // DownloadStaticContent.downloadToFileSystem(
+        //     this,
+        //     "https://passport-static-content.tpp1-dev.platform.navify.com/com.roche.nrm_passport/docs/floodlight.json",
+        //     "1.2.1",
+        //     this
+        // )
     }
 
     override fun success() {
