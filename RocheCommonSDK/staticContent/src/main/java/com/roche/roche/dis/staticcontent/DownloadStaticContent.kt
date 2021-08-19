@@ -138,14 +138,16 @@ object DownloadStaticContent {
 
             val fileLength = connection.contentLength
             val fileName = fileURL.substring(fileURL.lastIndexOf("/") + 1)
+            val absoluteFilePath = context.getExternalFilesDir(null)?.absoluteFile?.path
             val path = if (targetSubDir != null) {
-                val file = File(targetSubDir)
+                val file =
+                    File(absoluteFilePath + File.separator + targetSubDir)
                 if (file.exists().not()) {
                     file.mkdir()
                 }
-                targetSubDir
+                file.path + File.separator + fileName
             } else {
-                context.getExternalFilesDir(null)?.absoluteFile?.path + File.separator + fileName
+                absoluteFilePath + File.separator + fileName
             }
 
             // download the file

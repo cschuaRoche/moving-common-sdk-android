@@ -104,7 +104,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
                 lifecycleScope.launch {
                     try {
-                        val path = DownloadStaticContent.downloadStaticAssets(this@MainActivity, "https://passport-static-content.tpp1-dev.platform.navify.com/com.roche.nrm_passport/docs/floodlight.json", "1.2.1", LocaleType.EN_US, ::showProgress)
+                        val path =
+                            DownloadStaticContent.downloadStaticAssets(
+                                this@MainActivity,
+                                "https://passport-static-content.tpp1-dev.platform.navify.com/com.roche.nrm_passport/docs/floodlight.json",
+                                "1.2.1",
+                                LocaleType.EN_US,
+                                ::showProgress
+                            )
                         Log.d("usermanual", "file path: $path")
                     } catch (e: IllegalStateException) {
                         Log.e("usermanual", "error: $e")
