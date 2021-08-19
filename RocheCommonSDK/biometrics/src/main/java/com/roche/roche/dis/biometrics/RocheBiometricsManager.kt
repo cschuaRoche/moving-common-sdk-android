@@ -77,6 +77,9 @@ class RocheBiometricsManager(
     /**
      * Shows a system biometric dialog for authentication
      * @param callback to notify the caller of the {@link BiometricStatusConstants}
+     * @param title Title of the Biometric Dialog
+     * @param description Description of the Biometric Dialog
+     * @param negativeButtonText Negative button text of Biometric Dialog
      */
     fun showAuthDialog(
         activity: FragmentActivity,
@@ -92,6 +95,9 @@ class RocheBiometricsManager(
     /**
      * Shows a system biometric dialog for authentication
      * @param callback to notify the caller of the {@link BiometricStatusConstants}
+     * @param title Title of the Biometric Dialog
+     * @param description Description of the Biometric Dialog
+     * @param negativeButtonText Negative button text of Biometric Dialog
      */
     fun showAuthDialog(
         fragment: Fragment,

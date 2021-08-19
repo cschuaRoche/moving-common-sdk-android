@@ -9,7 +9,7 @@ import com.roche.roche.dis.biometrics.callback.OnAuthenticationCallback
 
 /**
  * Used for showing Biometrics Dialogs
- * @param allowedAuthenticators authenticator types - BiometricManager.Authenticators
+ * @param allowedAuthenticators authenticator types - com.roche.roche.dis.biometrics.Authenticator
  * @see "https://developer.android.com/reference/androidx/biometric/BiometricPrompt.PromptInfo.Builder#setAllowedAuthenticators(int)"
  */
 internal class BiometricsDialogs(
@@ -20,7 +20,7 @@ internal class BiometricsDialogs(
     /**
      * Shows a system biometric dialog for authentication
      * @param activity the Activity where the prompt dialog will be shown
-     * @param callback to notify the caller of the {@link BiometricStatusConstants}
+     * @param callback to notify the caller of the {@link OnAuthenticationCallback}
      */
     fun showAuthDialog(
         activity: FragmentActivity,
