@@ -3,6 +3,7 @@ package com.roche.roche.dis.staticcontent
 import android.content.Context
 import android.util.Log
 import androidx.annotation.StringDef
+import com.roche.roche.dis.utils.UnZipUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.json.JSONException
@@ -49,6 +50,7 @@ object DownloadStaticContent {
     private const val EXCEPTION_NOT_MODIFIED = "Not Modified"
     private const val EXCEPTION_APP_VERSION_NOT_FOUND = "Manifest App Version Not Found"
     private const val EXCEPTION_MANIFEST_LOCALE_NOT_FOUND = "Manifest Locale Not Found"
+    private const val EXCEPTION_UNZIPPING_FILE = "Error In Unzipping The File"
     private const val HEADER_KEY_ETAG = "ETag"
 
     @Throws(IllegalStateException::class, IllegalArgumentException::class, JSONException::class)
@@ -61,7 +63,12 @@ object DownloadStaticContent {
         targetSubDir: String? = null
     ): String {
         val fileUrl = getUrlFromManifest(context, manifestUrl, appVersion, locale)
-        return downloadFromUrl(context, fileUrl, progress, targetSubDir)
+        val zippedFilePath = downloadFromUrl(context, fileUrl, progress, targetSubDir)
+        val directoryName = zippedFilePath.substring(
+            zippedFilePath.lastIndexOf("/") + 1,
+            zippedFilePath.lastIndexOf(".")
+        )
+        return unzipFile(context, appVersion, locale, zippedFilePath, directoryName)
     }
 
     /**
@@ -138,7 +145,7 @@ object DownloadStaticContent {
 
             val fileLength = connection.contentLength
             val fileName = fileURL.substring(fileURL.lastIndexOf("/") + 1)
-            val absoluteFilePath = context.getExternalFilesDir(null)?.absoluteFile?.path
+            val absoluteFilePath = context.filesDir.toString()
             val path = if (targetSubDir != null) {
                 val file =
                     File(absoluteFilePath + File.separator + targetSubDir)
@@ -179,6 +186,32 @@ object DownloadStaticContent {
                 connection.disconnect()
             }
         }
+    }
+
+    @Throws(IllegalStateException::class)
+    fun unzipFile(
+        context: Context,
+        appVersion: String,
+        @LocaleType locale: String,
+        filePath: String,
+        targetSubDir: String? = null
+    ): String {
+        val unzipPath = UnZipUtils.unzipFromAppFiles(filePath, targetSubDir ?: "", context)
+        if (unzipPath != null) {
+            // save unzipping file path to the shared pref
+            DownloadStaticContentSharedPref.saveDownloadedFilePath(
+                context,
+                appVersion,
+                locale,
+                unzipPath
+            )
+            // Delete zipped file
+            File(filePath).delete()
+        } else {
+            Log.e(LOG_TAG, "error occurred in unzipping the file")
+            throw IllegalStateException(EXCEPTION_UNZIPPING_FILE)
+        }
+        return unzipPath
     }
 
     private fun readStream(inputStream: BufferedReader): String {
