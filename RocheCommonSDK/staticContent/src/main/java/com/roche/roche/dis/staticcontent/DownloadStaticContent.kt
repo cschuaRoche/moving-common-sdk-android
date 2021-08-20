@@ -67,7 +67,12 @@ object DownloadStaticContent {
      *
      * @return downloaded and unzipped static asset's path
      */
-    @Throws(IllegalStateException::class, IllegalArgumentException::class, JSONException::class)
+    @Throws(
+        IllegalStateException::class,
+        IllegalArgumentException::class,
+        IOException::class,
+        JSONException::class
+    )
     suspend fun downloadStaticAssets(
         context: Context,
         manifestUrl: String,
@@ -88,7 +93,13 @@ object DownloadStaticContent {
                 zippedFilePath.lastIndexOf("/") + 1,
                 zippedFilePath.lastIndexOf(".")
             )
-            return unzipFile(context, appVersion, locale, zippedFilePath, directoryName)
+            return unzipFile(
+                context,
+                appVersion,
+                locale,
+                zippedFilePath,
+                targetSubDir ?: directoryName
+            )
         } catch (e: IllegalStateException) {
             if (e.message == EXCEPTION_NOT_MODIFIED) {
                 return DownloadStaticContentSharedPref.getDownloadedFilePath(
@@ -109,7 +120,12 @@ object DownloadStaticContent {
      * @param appVersion Application version
      * @param locale Locale
      */
-    @Throws(IllegalStateException::class, IllegalArgumentException::class, JSONException::class)
+    @Throws(
+        IllegalStateException::class,
+        IllegalArgumentException::class,
+        IOException::class,
+        JSONException::class
+    )
     suspend fun getUrlFromManifest(
         context: Context,
         manifestUrl: String,
@@ -172,6 +188,7 @@ object DownloadStaticContent {
      *
      * @return downloaded zipped file's path
      */
+    @Throws(IOException::class)
     suspend fun downloadFromUrl(
         context: Context,
         fileURL: String,
