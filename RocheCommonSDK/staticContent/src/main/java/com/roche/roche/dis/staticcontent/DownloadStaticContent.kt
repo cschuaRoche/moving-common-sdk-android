@@ -47,7 +47,9 @@ object DownloadStaticContent {
     }
 
     private const val LOG_TAG = "DownloadStaticContent"
+    private const val ZIPPED_FILE_EXTENSION = ".zip"
     private const val EXCEPTION_NOT_MODIFIED = "Not Modified"
+    private const val EXCEPTION_INVALID_MANIFEST_FILE_FORMAT = "Invalid Manifest File Format"
     private const val EXCEPTION_APP_VERSION_NOT_FOUND = "Manifest App Version Not Found"
     private const val EXCEPTION_MANIFEST_LOCALE_NOT_FOUND = "Manifest Locale Not Found"
     private const val EXCEPTION_UNZIPPING_FILE = "Error In Unzipping The File"
@@ -76,6 +78,11 @@ object DownloadStaticContent {
     ): String {
         try {
             val fileUrl = getUrlFromManifest(context, manifestUrl, appVersion, locale)
+            // check if the url is not a zip file type then throw exception
+            val fileExtension = fileUrl.substring(fileUrl.lastIndexOf("."))
+            if (fileExtension.equals(ZIPPED_FILE_EXTENSION, true).not()) {
+                throw IllegalStateException(EXCEPTION_INVALID_MANIFEST_FILE_FORMAT)
+            }
             val zippedFilePath = downloadFromUrl(context, fileUrl, progress, targetSubDir)
             val directoryName = zippedFilePath.substring(
                 zippedFilePath.lastIndexOf("/") + 1,
@@ -84,7 +91,11 @@ object DownloadStaticContent {
             return unzipFile(context, appVersion, locale, zippedFilePath, directoryName)
         } catch (e: IllegalStateException) {
             if (e.message == EXCEPTION_NOT_MODIFIED) {
-                return DownloadStaticContentSharedPref.getDownloadedFilePath(context, appVersion, locale)
+                return DownloadStaticContentSharedPref.getDownloadedFilePath(
+                    context,
+                    appVersion,
+                    locale
+                )
             }
             throw e
         }
