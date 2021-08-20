@@ -1,24 +1,21 @@
 package com.roche.roche.dis
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.navigation.NavController
-import androidx.navigation.NavOptions
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupActionBarWithNavController
-import com.google.android.material.navigation.NavigationView
 import com.roche.roche.dis.databinding.ActivityMainBinding
-import com.roche.roche.dis.utils.UnZipUtils
-import java.io.File
+import androidx.navigation.ui.setupWithNavController
+import androidx.navigation.ui.onNavDestinationSelected
+import androidx.navigation.ui.navigateUp
 
-class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var appBarConfiguration: AppBarConfiguration
@@ -34,7 +31,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         navController = navHostFragment.navController
 
         appBarConfiguration = AppBarConfiguration.Builder(
-            R.id.biometrics_nav_f
+            R.id.homeFragment
         ) //Pass the ids of fragments from nav_graph which you d'ont want to show back button in toolbar
             .setOpenableLayout(binding.mainDrawerLayout) //Pass the drawer layout id from activity xml
             .build()
@@ -44,50 +41,17 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowTitleEnabled(false)// remove default titles of the fragments
         setupActionBarWithNavController(navController, appBarConfiguration)
-
-        // set
-        binding.mainNavigationView.setNavigationItemSelectedListener(this)
+        binding.mainNavigationView.setupWithNavController(navController)
     }
 
-    override fun onSupportNavigateUp(): Boolean { //Setup appBarConfiguration for back arrow
-        return NavigationUI.navigateUp(navController, appBarConfiguration)
+    override fun onSupportNavigateUp(): Boolean {
+//        // Allows NavigationUI to support proper up navigation or the drawer layout
+//        // drawer menu, depending on the situation
+        return findNavController(R.id.main_nav_host).navigateUp(appBarConfiguration)
     }
 
-    /**
-     * menu Item select listener
-     */
-    override fun onNavigationItemSelected(menuItem: MenuItem): Boolean {
-        menuItem.isCheckable = false
-        when (menuItem.itemId) {
-            R.id.menu_biometrics -> {
-                val action = MainNavGraphDirections.actionToBiometrics()
-                val options = NavOptions.Builder().setLaunchSingleTop(true).build()
-                findNavController(R.id.main_nav_host).navigate(action, options)
-            }
-            R.id.menu_unzip -> {
-                var path: File = filesDir
-                val targetDirectory = "usermanuals"
-                path = File(path.toString() + File.separator + targetDirectory)
-                if (path.list().isNullOrEmpty()) {
-                    Log.d("files", "Creating files")
-                    UnZipUtils.unzipFromAsset("de_DE.zip", targetDirectory, applicationContext)
-                } else {
-                    Log.d("files", "Directory is not empty!")
-                    getFilesRecursive(path)
-                }
-            }
-        }
-        binding.mainDrawerLayout.close()
-        return true
-    }
-
-    private fun getFilesRecursive(pFile: File) {
-        for (files in pFile.listFiles()) {
-            if (files.isDirectory) {
-                getFilesRecursive(files)
-            } else {
-                Log.d("files", "$files")
-            }
-        }
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return item.onNavDestinationSelected(findNavController(R.id.main_nav_host))
+                || super.onOptionsItemSelected(item)
     }
 }

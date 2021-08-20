@@ -3,4 +3,8 @@
     <string name="biometric_confirm_title">Do you want to allow "RocheCommonSampleApp" to use biometrics?</string>
     <string name="biometric_enable_desc">In order to be able to use Biometrics login, you have to enable that from device Settings.</string>
     <string name="toggle_biometrics">Toggle Biometrics</string>
+    <string name="biometrics">Biometrics</string>
+    <string name="unzip">UnZip</string>
+    <string name="is_rooted">Is Rooted</string>
+    <string name="select_the_menu">Select the menu to check all utilities</string>
 </resources>
