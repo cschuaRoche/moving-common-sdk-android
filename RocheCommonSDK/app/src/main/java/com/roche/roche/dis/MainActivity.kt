@@ -20,15 +20,12 @@ import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupActionBarWithNavController
 import com.google.android.material.navigation.NavigationView
 import com.roche.roche.dis.databinding.ActivityMainBinding
+import com.roche.roche.dis.staticcontent.DownloadStaticContent
 import com.roche.roche.dis.utils.UnZipUtils
 import kotlinx.coroutines.launch
 import java.io.File
-import com.roche.roche.dis.staticcontent.DownloadStaticContentCallback
-import com.roche.roche.dis.staticcontent.DownloadStaticContent
-import java.lang.IllegalArgumentException
-import java.lang.IllegalStateException
 
-class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, DownloadStaticContentCallback {
+class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var appBarConfiguration: AppBarConfiguration
@@ -146,19 +143,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     private fun showProgress(progress: Int) {
-        Log.d("sanket", "Downloading Progress: $progress")
-    }
-
-    override fun success() {
-        Toast.makeText(this, "Downloading content is successful", Toast.LENGTH_SHORT).show()
-    }
-
-    override fun failure(errorMessage: String) {
-        Toast.makeText(this, "Downloading content is failed due to $errorMessage", Toast.LENGTH_SHORT).show()
-    }
-
-    override fun publishProgress(progress: Int) {
-        Log.d("Downloading Content", "Progress $progress")
+        Log.d("usermanual", "Downloading Progress: $progress")
     }
 
     private fun isStoragePermissionGranted(): Boolean {
