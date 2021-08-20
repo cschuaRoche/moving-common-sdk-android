@@ -74,13 +74,20 @@ object DownloadStaticContent {
         progress: (Int) -> Unit,
         targetSubDir: String? = null
     ): String {
-        val fileUrl = getUrlFromManifest(context, manifestUrl, appVersion, locale)
-        val zippedFilePath = downloadFromUrl(context, fileUrl, progress, targetSubDir)
-        val directoryName = zippedFilePath.substring(
-            zippedFilePath.lastIndexOf("/") + 1,
-            zippedFilePath.lastIndexOf(".")
-        )
-        return unzipFile(context, appVersion, locale, zippedFilePath, directoryName)
+        try {
+            val fileUrl = getUrlFromManifest(context, manifestUrl, appVersion, locale)
+            val zippedFilePath = downloadFromUrl(context, fileUrl, progress, targetSubDir)
+            val directoryName = zippedFilePath.substring(
+                zippedFilePath.lastIndexOf("/") + 1,
+                zippedFilePath.lastIndexOf(".")
+            )
+            return unzipFile(context, appVersion, locale, zippedFilePath, directoryName)
+        } catch (e: IllegalStateException) {
+            if (e.message == EXCEPTION_NOT_MODIFIED) {
+                return DownloadStaticContentSharedPref.getDownloadedFilePath(context, appVersion, locale)
+            }
+            throw e
+        }
     }
 
     /**
