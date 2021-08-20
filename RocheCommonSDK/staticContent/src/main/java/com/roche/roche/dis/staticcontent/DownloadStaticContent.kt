@@ -48,12 +48,13 @@ object DownloadStaticContent {
 
     private const val LOG_TAG = "DownloadStaticContent"
     private const val ZIPPED_FILE_EXTENSION = ".zip"
-    private const val EXCEPTION_NOT_MODIFIED = "Not Modified"
-    private const val EXCEPTION_INVALID_MANIFEST_FILE_FORMAT = "Invalid Manifest File Format"
-    private const val EXCEPTION_APP_VERSION_NOT_FOUND = "Manifest App Version Not Found"
-    private const val EXCEPTION_MANIFEST_LOCALE_NOT_FOUND = "Manifest Locale Not Found"
-    private const val EXCEPTION_UNZIPPING_FILE = "Error In Unzipping The File"
     private const val HEADER_KEY_ETAG = "ETag"
+
+    const val EXCEPTION_NOT_MODIFIED = "Not Modified"
+    const val EXCEPTION_INVALID_MANIFEST_FILE_FORMAT = "Invalid Manifest File Format"
+    const val EXCEPTION_APP_VERSION_NOT_FOUND = "Manifest App Version Not Found"
+    const val EXCEPTION_MANIFEST_LOCALE_NOT_FOUND = "Manifest Locale Not Found"
+    const val EXCEPTION_UNZIPPING_FILE = "Error In Unzipping The File"
 
     /**
      * Download static assets and unzips them
