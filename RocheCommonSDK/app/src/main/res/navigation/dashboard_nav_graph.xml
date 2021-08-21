@@ -11,7 +11,7 @@
 
     <fragment
         android:id="@+id/biometrics_nav_f"
-        android:name="com.roche.roche.dis.MainFragment"
+        android:name="com.roche.roche.dis.biometrics.BiometricsFragment"
         tools:layout="@layout/biometrics_fragment">
     </fragment>
 </navigation>
