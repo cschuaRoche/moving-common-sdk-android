@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.provider.Settings
+import androidx.annotation.VisibleForTesting
 import androidx.biometric.BiometricManager
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
@@ -11,6 +12,7 @@ import com.roche.roche.dis.biometrics.callback.OnAuthenticationCallback
 import com.roche.roche.dis.biometrics.sensors.Face
 import com.roche.roche.dis.biometrics.sensors.Fingerprint
 import com.roche.roche.dis.biometrics.sensors.Iris
+import java.util.Locale
 
 /**
  * Interacts with the Biometrics API and displays the Biometrics prompt on top of a Fragment.
@@ -27,7 +29,32 @@ class RocheBiometricsManager(
     private val biometricsDialogs: BiometricsDialogs =
         BiometricsDialogs(allowedAuthenticators.value)
 
-    private var isBiometricsDialogShowing = false
+    var type: BiometricsType
+
+    var isBiometricsDialogShowing = false
+
+    @Deprecated("", ReplaceWith("isBiometricsEnrolled()"), DeprecationLevel.WARNING)
+    var isAvailable = isBiometricsEnrolled()
+
+    init {
+        type = when {
+            hasMultipleBiometrics() -> {
+                BiometricsType.MULTIPLE
+            }
+            isFaceSupported() -> {
+                BiometricsType.FINGERPRINT
+            }
+            isFaceSupported() -> {
+                BiometricsType.FACE_UNLOCK
+            }
+            isIrisSupported() -> {
+                BiometricsType.IRIS
+            }
+            else -> {
+                BiometricsType.NONE
+            }
+        }
+    }
 
     /**
      * Verifies whether the device has biometric hardware to perform authentication.
@@ -117,4 +144,79 @@ class RocheBiometricsManager(
         isBiometricsDialogShowing = false
         biometricsDialogs.dismissBiometricDialog()
     }
+
+    /**
+     * verifies whether the user's biometric or device credential is not enrolled.
+     * @return true if biometrics is not yet setup on the device and the user can set one up now, otherwise false
+     * Note: if hardware is not supported, this will return false
+     */
+    fun canSetupBiometrics(): Boolean {
+        val biometricManager = BiometricManager.from(context)
+        return biometricManager.canAuthenticate(allowedAuthenticators.value) == BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED
+
+    }
+
+    /**
+     * verifies whether fingerprint is available or can be setup in the device settings
+     * @return true if fingerprint is available or can be setup in the device settings
+     */
+    fun hasFingerprintSetup(): Boolean {
+        return BiometricsType.FINGERPRINT == type && (isBiometricsEnrolled() || canSetupBiometrics())
+    }
+
+    /**
+     * verifies whether face unlock is available or can be setup in the device settings
+     * @return true if face unlock is available or can be setup in the device settings
+     */
+    fun hasFaceUnlockSetup(): Boolean {
+        return BiometricsType.FACE_UNLOCK == type && (isBiometricsEnrolled() || canSetupBiometrics())
+    }
+
+    /**
+     * verifies whether iris is available or can be setup in the device settings
+     * @return true if iris is available or can be setup in the device settings
+     */
+    fun hasIrisSetup(): Boolean {
+        return BiometricsType.IRIS == type && (isBiometricsEnrolled() || canSetupBiometrics())
+    }
+
+    /**
+     * verifies whether multiple biometrics is available or can be setup in the device settings
+     * @return true if multiple biometrics is available or can be setup in the device settings
+     */
+    fun hasMultipleBiometricsSetup(): Boolean {
+        return BiometricsType.MULTIPLE == type && (isAvailable || canSetupBiometrics())
+    }
+
+
+    /**
+     * verifies whether multiple biometrics are supported in the device
+     * @return true if multiple biometrics are supported, otherwise false if only one or None
+     */
+    fun hasMultipleBiometrics(): Boolean {
+        if (isNotSupportedDevice()) {
+            // For all other manufacturers use multiple biometric.  Android framework cannot
+            // accurately determine which ones are available on the the system settings.
+            return true
+        }
+        var count = 0
+        if (isFingerprintSupported()) count++
+        if (isFaceSupported()) count++
+        if (isIrisSupported()) count++
+        return count > 1
+    }
+
+    @VisibleForTesting
+    internal fun isNotSupportedDevice(): Boolean {
+        return !Build.MANUFACTURER.toUpperCase(Locale.getDefault()).contains("GOOGLE")
+    }
+
+}
+
+enum class BiometricsType {
+    FINGERPRINT,
+    FACE_UNLOCK,
+    IRIS,
+    MULTIPLE,
+    NONE
 }
