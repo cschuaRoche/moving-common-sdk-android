@@ -13,5 +13,9 @@
             android:id="@+id/menu_unzip"
             android:title="UnZip"
             app:actionLayout="@layout/action_view_arrow" />
+        <item
+            android:id="@+id/menu_user_manual"
+            android:title="GetStaticUserManual"
+            app:actionLayout="@layout/action_view_arrow" />
     </group>
 </menu>
