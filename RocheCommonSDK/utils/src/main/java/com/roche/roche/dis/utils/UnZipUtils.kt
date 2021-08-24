@@ -57,19 +57,19 @@ object UnZipUtils {
      * i.e. someDirectory/file.tar.gz
      * @param targetDirectory the location of where the files will be unzipped to
      * @param context the application context
-     * @return returns true if zip file was successfully unzipped to the app's directory,
-     *  otherwise false
+     * @return returns unzip file path if zip file was successfully unzipped to the app's directory,
+     *  otherwise null
      */
-    fun unzipFromAppFiles(filePath: String, targetDirectory: String, context: Context): Boolean {
-        var isSuccess = true
+    fun unzipFromAppFiles(filePath: String, targetDirectory: String, context: Context): String? {
         val destDirectory = getOutputDirectory(targetDirectory, context)
         var inputStream: FileInputStream? = null
-        try {
+        return try {
             inputStream = FileInputStream(filePath)
             generateDirectoryContent(inputStream, destDirectory)
+            destDirectory.path
         } catch (e: FileNotFoundException) {
-            isSuccess = false
             Log.e(TAG, Constants.FILE_NOT_FOUND.plus(": $filePath"), e)
+            null
         } finally {
             try {
                 inputStream?.close()
@@ -77,7 +77,6 @@ object UnZipUtils {
                 Log.d(TAG, Constants.COULD_NOT_CLOSE_STREAM, e)
             }
         }
-        return isSuccess
     }
 
     /**
