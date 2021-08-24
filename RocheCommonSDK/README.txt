@@ -19,9 +19,8 @@ This Project provide below utility functionality those made project scalable, se
 
 ### Bio-metric APIs
 #### How to use BioMetric
- - Create the object of RocheBiometricsManager which require the context and the allowedAuthenticators(BIOMETRIC_STRONG)
- - The we can use some of the important properties which help use to implement the bio-metric in client app like isAvailable, type, hasFingerprintSetup(), canSetupBiometrics
- - Can set up biometric with showConfirmationDialog method with activity or fragment and OnAuthenticationCallback.
+ - Create the object of RocheBiometricsManager which require the context and the allowedAuthenticator
+ - RocheBiometricsManager has multiple methods to check if Biometric status of the device
  - Authenticate with the showAuthDialog method with activity or fragment and OnAuthenticationCallback.
  - Need to override the onAuthComplete of the call back in that we receives the statusCodes 
   * BiometricStatusConstants.SUCCESS,
@@ -31,9 +30,9 @@ This Project provide below utility functionality those made project scalable, se
   * BiometricStatusConstants.ERROR_LOCKOUT,
   * BiometricStatusConstants.ERROR_UNKNOWN,
   * BiometricStatusConstants.FAILED_ATTEMPT
-  - With hasFingerprintSetup() check that fingerprint is available or can be setup in the device settings
-  - With hasFaceUnlockSetup() check that face unlock is available or can be setup in the device settings
-  - With hasIrisSetup() check that iris is available or can be setup in the device settings
+  - With isFingerprintSupported() check that fingerprint is available or can be setup in the device settings
+  - With isFaceSupported() check that face unlock is available or can be setup in the device settings
+  - With isIrisSupported() check that iris is available or can be setup in the device settings
 
 ### MVVM Structure
 #### How to use Clean Architecture
