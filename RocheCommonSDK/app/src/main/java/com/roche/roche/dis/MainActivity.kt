@@ -83,11 +83,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
             R.id.menu_unzip -> {
                 var path: File = filesDir
-                val targetDirectory = "usermanuals"
-                path = File(path.toString() + File.separator + targetDirectory)
+                val subDirectoryPath = "usermanuals"
+                path = File(path.toString() + File.separator + subDirectoryPath)
                 if (path.list().isNullOrEmpty()) {
                     Log.d("files", "Creating files")
-                    UnZipUtils.unzipFromAsset("de_DE.zip", targetDirectory, applicationContext)
+                    UnZipUtils.unzipFromAsset("de_DE.zip", applicationContext, subDirectoryPath)
                 } else {
                     Log.d("files", "Directory is not empty!")
                     getFilesRecursive(path)

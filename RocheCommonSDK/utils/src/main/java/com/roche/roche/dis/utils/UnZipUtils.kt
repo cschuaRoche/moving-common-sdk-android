@@ -18,15 +18,15 @@ object UnZipUtils {
      * @param filePath the location of the file in the app's assets directory
      * i.e. file.tar.gz
      * i.e. someDirectory/file.tar.gz
-     * @param targetDirectory the location of where the files will be unzipped to
      * @param context the application context
+     * @param subDirPath the sub directory of where the files will be unzipped to
      * @return returns true if zip file was successfully unzipped to the app's file directory,
      *  otherwise false
      */
-    fun unzipFromAsset(filePath: String, targetDirectory: String, context: Context): Boolean {
+    fun unzipFromAsset(filePath: String, context: Context, subDirPath: String? = null): Boolean {
         var isSuccess = true
         var inputStream: InputStream? = null
-        val destDirectory = getOutputDirectory(targetDirectory, context)
+        val destDirectory = getOutputDirectory(subDirPath, context)
         try {
             inputStream = context.assets.open(filePath)
             generateDirectoryContent(inputStream, destDirectory)
@@ -55,13 +55,13 @@ object UnZipUtils {
      * @param filePath the location of the file in the app's file directory
      * i.e. file.tar.gz
      * i.e. someDirectory/file.tar.gz
-     * @param targetDirectory the location of where the files will be unzipped to
      * @param context the application context
+     * @param subDirPath the sub directory of where the files will be unzipped to
      * @return returns unzip file path if zip file was successfully unzipped to the app's directory,
      *  otherwise null
      */
-    fun unzipFromAppFiles(filePath: String, targetDirectory: String, context: Context): String? {
-        val destDirectory = getOutputDirectory(targetDirectory, context)
+    fun unzipFromAppFiles(filePath: String, context: Context, subDirPath: String? = null): String? {
+        val destDirectory = getOutputDirectory(subDirPath, context)
         var inputStream: FileInputStream? = null
         return try {
             inputStream = FileInputStream(filePath)
@@ -128,7 +128,7 @@ object UnZipUtils {
     /**
      * creates the directory in which the files will be copied too
      */
-    private fun getOutputDirectory(targetDirectory: String, context: Context): File {
+    private fun getOutputDirectory(targetDirectory: String?, context: Context): File {
         var destDirectory: File = context.filesDir
         destDirectory = File(destDirectory.toString() + File.separator + targetDirectory)
         destDirectory.mkdirs()
