@@ -180,10 +180,10 @@ object DownloadStaticContent {
     }
 
     /**
-     * Download the zipped file to the app's files directory.
+     * Download a file to the app's files directory.
      *
      * @param context application context
-     * @param fileURL zipped file url
+     * @param fileURL the file url
      * @param progress callback which will return the progress of the download
      * @param targetSubDir optional sub directory where the files will be downloaded to
      *
@@ -251,7 +251,7 @@ object DownloadStaticContent {
         filePath: String,
         targetSubDir: String? = null
     ): String {
-        val unzipPath = UnZipUtils.unzipFromAppFiles(filePath, targetSubDir ?: "", context)
+        val unzipPath = UnZipUtils.unzipFromAppFiles(filePath, context, targetSubDir)
         if (unzipPath != null) {
             // save unzipping file path to the shared pref
             DownloadStaticContentSharedPref.saveDownloadedFilePath(
