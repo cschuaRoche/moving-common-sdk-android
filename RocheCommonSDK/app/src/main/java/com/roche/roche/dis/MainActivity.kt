@@ -31,7 +31,7 @@ class MainActivity : AppCompatActivity() {
         navController = navHostFragment.navController
 
         appBarConfiguration = AppBarConfiguration.Builder(
-            R.id.homeFragment
+            R.id.mainFragment
         ) //Pass the ids of fragments from nav_graph which you d'ont want to show back button in toolbar
             .setOpenableLayout(binding.mainDrawerLayout) //Pass the drawer layout id from activity xml
             .build()
