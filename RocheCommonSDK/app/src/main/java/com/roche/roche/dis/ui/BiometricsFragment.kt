@@ -35,9 +35,6 @@ class BiometricsFragment : Fragment(), OnAuthenticationCallback,
             btnFaceSupported.setOnClickListener(this@BiometricsFragment)
             btnIrisSupported.setOnClickListener(this@BiometricsFragment)
             btnBiometricEnrolled.setOnClickListener(this@BiometricsFragment)
-            btnFingerprintEnable.setOnClickListener(this@BiometricsFragment)
-            btnFaceEnable.setOnClickListener(this@BiometricsFragment)
-            btnIrisEnable.setOnClickListener(this@BiometricsFragment)
             btnEnrollBiometric.setOnClickListener(this@BiometricsFragment)
             btnAuthenticate.setOnClickListener(this@BiometricsFragment)
         }
@@ -48,7 +45,7 @@ class BiometricsFragment : Fragment(), OnAuthenticationCallback,
     override fun onAuthComplete(statusCode: Int) {
         Toast.makeText(requireContext(), "statusCode: $statusCode", Toast.LENGTH_SHORT).show()
         requireBinding {
-            txtStatusAuthenticate.text="$statusCode"
+            txtStatusAuthenticate.text = "$statusCode"
         }
         // User does not have any biometrics created on the device, go to settings
         if (OnAuthenticationCallback.ERROR_NO_BIOMETRICS == statusCode) {
@@ -84,23 +81,11 @@ class BiometricsFragment : Fragment(), OnAuthenticationCallback,
                         if (biometricsManager.isBiometricsEnrolled()) getString(R.string.status_true) else getString(R.string.status_false)
                     txtStatusBiometricEnrolled.text = status
                 }
-                btnFingerprintEnable.id -> {
-                    val status =
-                        if (biometricsManager.hasFingerprintSetup()) getString(R.string.status_true) else getString(R.string.status_false)
-                    txtStatusFingerprintEnable.text = status
-                }
-                btnFaceEnable.id -> {
-                    val status =
-                        if (biometricsManager.hasFaceUnlockSetup()) getString(R.string.status_true) else getString(R.string.status_false)
-                    txtStatusFaceEnable.text = status
-                }
-                btnIrisEnable.id -> {
-                    val status =
-                        if (biometricsManager.hasIrisSetup()) getString(R.string.status_true) else getString(R.string.status_false)
-                    txtStatusIrisEnable.text = status
-                }
                 btnEnrollBiometric.id -> {
-                    biometricsManager.enrollBiometric()
+                    if (!biometricsManager.isBiometricsEnrolled())
+                        biometricsManager.enrollBiometric()
+                    else
+                        Toast.makeText(requireContext(), "Biometric is already enrolled", Toast.LENGTH_SHORT).show()
                 }
                 btnAuthenticate.id -> {
                     biometricsManager.showAuthDialog(this@BiometricsFragment, this@BiometricsFragment)

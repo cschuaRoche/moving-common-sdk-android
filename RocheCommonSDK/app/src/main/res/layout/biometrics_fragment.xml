@@ -7,7 +7,7 @@
     <androidx.constraintlayout.helper.widget.Flow
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:constraint_referenced_ids="btn_fingerprint_supported,txt_status_fingerprint_supported,btn_face_supported,txt_status_face_supported,btn_iris_supported,txt_status_iris_supported,btn_biometric_enrolled,txt_status_biometric_enrolled,btn_fingerprint_enable,txt_status_fingerprint_enable,btn_face_enable,txt_status_face_enable,btn_iris_enable,txt_status_iris_enable,btn_enroll_biometric,txt_status_enroll,btn_authenticate,txt_status_authenticate"
+        app:constraint_referenced_ids="btn_fingerprint_supported,txt_status_fingerprint_supported,btn_face_supported,txt_status_face_supported,btn_iris_supported,txt_status_iris_supported,btn_biometric_enrolled,txt_status_biometric_enrolled,btn_enroll_biometric,txt_status_enroll,btn_authenticate,txt_status_authenticate"
         app:flow_maxElementsWrap="2"
         app:flow_wrapMode="aligned"
         app:layout_constraintStart_toStartOf="parent"
@@ -64,48 +64,6 @@
 
     <TextView
         android:id="@+id/txt_status_biometric_enrolled"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:textAlignment="center"
-        app:layout_constraintHorizontal_weight="0.3" />
-
-    <Button
-        android:id="@+id/btn_fingerprint_enable"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="@string/fingerprint_enable"
-        app:layout_constraintHorizontal_weight="0.7" />
-
-    <TextView
-        android:id="@+id/txt_status_fingerprint_enable"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:textAlignment="center"
-        app:layout_constraintHorizontal_weight="0.3" />
-
-    <Button
-        android:id="@+id/btn_face_enable"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="@string/face_supported"
-        app:layout_constraintHorizontal_weight="0.7" />
-
-    <TextView
-        android:id="@+id/txt_status_face_enable"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:textAlignment="center"
-        app:layout_constraintHorizontal_weight="0.3" />
-
-    <Button
-        android:id="@+id/btn_iris_enable"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="@string/iris_supported"
-        app:layout_constraintHorizontal_weight="0.7" />
-
-    <TextView
-        android:id="@+id/txt_status_iris_enable"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:textAlignment="center"
