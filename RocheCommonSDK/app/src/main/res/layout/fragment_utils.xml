@@ -1,40 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:tools="http://schemas.android.com/tools">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+    <data>
+
+        <import type="android.view.View" />
+
+        <import type="android.text.TextUtils" />
+
+        <variable
+            name="statusRooted"
+            type="String" />
+
+        <variable
+            name="statusUnzip"
+            type="String" />
+
+        <variable
+            name="statusUserManual"
+            type="String" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".ui.UtilsFragment">
 
         <Button
-            android:id="@+id/btn_unzip"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/unzip"
-            tools:ignore="MissingConstraints" />
-
-        <Button
             android:id="@+id/btn_is_rooted"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/is_rooted" />
 
+        <TextView
+            android:id="@+id/txt_rooted_status"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@{statusRooted}"
+            android:visibility="@{(TextUtils.isEmpty(statusRooted) ? View.GONE : View.VISIBLE)}" />
+
+        <Button
+            android:id="@+id/btn_unzip"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/unzip" />
+
+        <TextView
+            android:id="@+id/txt_unzip_status"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@{statusUnzip}"
+            android:visibility="@{(TextUtils.isEmpty(statusUnzip) ? View.GONE : View.VISIBLE)}" />
+
         <Button
             android:id="@+id/btn_user_manual"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/get_static_user_manual"
-            tools:ignore="MissingConstraints" />
+            android:text="@string/get_static_user_manual" />
+
+        <TextView
+            android:id="@+id/txt_user_manual_status"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@{statusUserManual}"
+            android:visibility="@{(TextUtils.isEmpty(statusUserManual) ? View.GONE : View.VISIBLE)}" />
 
         <androidx.constraintlayout.helper.widget.Flow
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:constraint_referenced_ids="btn_is_rooted, btn_unzip, btn_user_manual"
+            app:constraint_referenced_ids="btn_is_rooted,txt_rooted_status,btn_unzip,txt_unzip_status,btn_user_manual,txt_user_manual_status"
+            app:flow_maxElementsWrap="1"
             app:flow_wrapMode="aligned"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 

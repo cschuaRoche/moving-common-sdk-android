@@ -18,4 +18,5 @@
     <string name="status_true">True</string>
     <string name="status_false">False</string>
     <string name="is_biometric_enrolled">Is Biometric Enrolled</string>
+    <string name="error">Error</string>
 </resources>
