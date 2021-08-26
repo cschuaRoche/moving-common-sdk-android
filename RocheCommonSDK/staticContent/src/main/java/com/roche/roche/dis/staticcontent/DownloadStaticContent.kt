@@ -3,6 +3,7 @@ package com.roche.roche.dis.staticcontent
 import android.content.Context
 import android.util.Log
 import androidx.annotation.StringDef
+import androidx.annotation.VisibleForTesting
 import com.roche.roche.dis.utils.UnZipUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -49,12 +50,13 @@ object DownloadStaticContent {
 
     private const val LOG_TAG = "DownloadStaticContent"
     private const val ZIPPED_FILE_EXTENSION = ".zip"
-    private const val EXCEPTION_NOT_MODIFIED = "Not Modified"
-    private const val EXCEPTION_INVALID_MANIFEST_FILE_FORMAT = "Invalid Manifest File Format"
-    private const val EXCEPTION_APP_VERSION_NOT_FOUND = "Manifest App Version Not Found"
-    private const val EXCEPTION_MANIFEST_LOCALE_NOT_FOUND = "Manifest Locale Not Found"
-    private const val EXCEPTION_UNZIPPING_FILE = "Error In Unzipping The File"
     private const val HEADER_KEY_ETAG = "ETag"
+
+    const val EXCEPTION_NOT_MODIFIED = "Not Modified"
+    const val EXCEPTION_INVALID_MANIFEST_FILE_FORMAT = "Invalid Manifest File Format"
+    const val EXCEPTION_APP_VERSION_NOT_FOUND = "Manifest App Version Not Found"
+    const val EXCEPTION_MANIFEST_LOCALE_NOT_FOUND = "Manifest Locale Not Found"
+    const val EXCEPTION_UNZIPPING_FILE = "Error In Unzipping The File"
 
     /**
      * Download static assets and unzips them
@@ -137,8 +139,7 @@ object DownloadStaticContent {
         return withContext(Dispatchers.IO) {
             var urlConnection: HttpURLConnection? = null
             try {
-                val url = URL(manifestUrl)
-                urlConnection = url.openConnection() as HttpURLConnection
+                urlConnection = getUrlConnection(manifestUrl)
 
                 // get etag and downloaded file path value from secure shared preference
                 val etag = DownloadStaticContentSharedPref.getETag(context, appVersion, locale)
@@ -184,10 +185,10 @@ object DownloadStaticContent {
     }
 
     /**
-     * Download the zipped file to the app's files directory.
+     * Download a file to the app's files directory.
      *
      * @param context application context
-     * @param fileURL zipped file url
+     * @param fileURL the file url
      * @param progress callback which will return the progress of the download
      * @param targetSubDir optional sub directory where the files will be downloaded to
      *
@@ -201,8 +202,7 @@ object DownloadStaticContent {
         targetSubDir: String? = null
     ): String {
         return withContext(Dispatchers.IO) {
-            val url = URL(fileURL)
-            val connection = url.openConnection() as HttpURLConnection
+            val connection = getUrlConnection(fileURL)
             connection.connect()
 
             val fileLength = connection.contentLength
@@ -221,29 +221,14 @@ object DownloadStaticContent {
 
             // download the file
             val input: InputStream = BufferedInputStream(connection.inputStream)
-            val output: OutputStream = FileOutputStream(path)
             try {
-                val data = ByteArray(4096)
-                var total: Long = 0
-                var count: Int
-                while (input.read(data).also { count = it } != -1) {
-                    // publishing the progress....
-                    total += count
-                    if (fileLength > 0) { // only if total length is known
-                        withContext(Dispatchers.Main) {
-                            progress(((total * 100 / fileLength).toInt()))
-                        }
-                    }
-                    output.write(data, 0, count)
-                }
+                writeStream(input, path, fileLength, progress)
                 path
             } catch (e: IOException) {
                 Log.e(LOG_TAG, "Exception ${e.localizedMessage}")
                 throw e
             } finally {
                 // close streams
-                output.flush()
-                output.close()
                 input.close()
                 connection.disconnect()
             }
@@ -271,7 +256,7 @@ object DownloadStaticContent {
         filePath: String,
         targetSubDir: String? = null
     ): String {
-        val unzipPath = UnZipUtils.unzipFromAppFiles(filePath, targetSubDir ?: "", context)
+        val unzipPath = UnZipUtils.unzipFromAppFiles(filePath, context, targetSubDir)
         if (unzipPath != null) {
             // save unzipping file path to the shared pref
             DownloadStaticContentSharedPref.saveDownloadedFilePath(
@@ -289,7 +274,14 @@ object DownloadStaticContent {
         return unzipPath
     }
 
-    private fun readStream(inputStream: BufferedReader): String {
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    internal fun getUrlConnection(manifestUrl: String): HttpURLConnection {
+        val url = URL(manifestUrl)
+        return url.openConnection() as HttpURLConnection
+    }
+
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    internal fun readStream(inputStream: BufferedReader): String {
         val sb = StringBuilder()
         var line: String?
         while (inputStream.readLine().also { line = it } != null) {
@@ -297,6 +289,36 @@ object DownloadStaticContent {
             Log.i("readStream", line!!)
         }
         return sb.toString()
+    }
+
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    internal suspend fun writeStream(
+        input: InputStream,
+        path: String,
+        fileLength: Int,
+        progress: (Int) -> Unit
+    ) {
+        val output: OutputStream = FileOutputStream(path)
+        try {
+            val data = ByteArray(4096)
+            var total: Long = 0
+            var count: Int
+            while (input.read(data).also { count = it } != -1) {
+                // publishing the progress....
+                total += count
+                if (fileLength > 0) { // only if total length is known
+                    withContext(Dispatchers.Main) {
+                        progress(((total * 100 / fileLength).toInt()))
+                    }
+                }
+                output.write(data, 0, count)
+            }
+        } catch (e: IOException) {
+            throw e
+        } finally {
+            output.flush()
+            output.close()
+        }
     }
 
     @Throws(IllegalArgumentException::class, JSONException::class)
