@@ -56,7 +56,7 @@ class UtilsFragment : Fragment() {
         path = File(path.toString() + File.separator + targetDirectory)
         if (path.list().isNullOrEmpty()) {
             Log.d("files", "Creating files")
-            UnZipUtils.unzipFromAsset("de_DE.zip", targetDirectory, requireContext())
+            UnZipUtils.unzipFromAsset("de_DE.zip", requireContext(), targetDirectory)
         } else {
             Log.d("files", "Directory is not empty!")
             getFilesRecursive(path)
