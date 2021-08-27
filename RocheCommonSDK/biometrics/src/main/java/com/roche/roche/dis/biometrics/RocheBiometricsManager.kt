@@ -91,7 +91,8 @@ class RocheBiometricsManager(
     }
 
     /**
-     * Launch the setting app to enroll the Biometric
+     * Launch the setting app to enroll the Biometric only if biometric is not already enrolled on device.
+     * To check if biometric is already enrolled use [isBiometricsEnrolled]
      */
     fun enrollBiometric() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {

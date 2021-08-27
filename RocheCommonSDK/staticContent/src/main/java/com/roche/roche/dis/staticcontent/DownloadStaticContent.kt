@@ -19,6 +19,7 @@ import java.io.InputStreamReader
 import java.io.OutputStream
 import java.net.HttpURLConnection
 import java.net.URL
+import java.net.UnknownHostException
 
 object DownloadStaticContent {
     @Retention(AnnotationRetention.SOURCE)
@@ -73,7 +74,8 @@ object DownloadStaticContent {
         IllegalStateException::class,
         IllegalArgumentException::class,
         IOException::class,
-        JSONException::class
+        JSONException::class,
+        UnknownHostException::class
     )
     suspend fun downloadStaticAssets(
         context: Context,
@@ -102,7 +104,7 @@ object DownloadStaticContent {
                 zippedFilePath,
                 targetSubDir ?: directoryName
             )
-        } catch (e: IllegalStateException) {
+        } catch (e: Exception) {
             if (e.message == EXCEPTION_NOT_MODIFIED) {
                 return DownloadStaticContentSharedPref.getDownloadedFilePath(
                     context,
@@ -135,22 +137,24 @@ object DownloadStaticContent {
         @LocaleType locale: String
     ): String {
         return withContext(Dispatchers.IO) {
-            val urlConnection: HttpURLConnection = getUrlConnection(manifestUrl)
+            var urlConnection: HttpURLConnection? = null
+            try {
+                urlConnection = getUrlConnection(manifestUrl)
 
-            // get etag and downloaded file path value from secure shared preference
-            val etag = DownloadStaticContentSharedPref.getETag(context, appVersion, locale)
-            val filePath =
-                DownloadStaticContentSharedPref.getDownloadedFilePath(context, appVersion, locale)
-            if (etag.isNotBlank() && filePath.isNotBlank()) {
-                // If both eTag and file path are available then add etag in header
-                urlConnection.addRequestProperty("If-None-Match", etag)
-                urlConnection.useCaches = false
-            }
+                // get etag and downloaded file path value from secure shared preference
+                val etag = DownloadStaticContentSharedPref.getETag(context, appVersion, locale)
+                val filePath =
+                    DownloadStaticContentSharedPref.getDownloadedFilePath(context, appVersion, locale)
+                if (etag.isNotBlank() && filePath.isNotBlank()) {
+                    // If both eTag and file path are available then add etag in header
+                    urlConnection.addRequestProperty("If-None-Match", etag)
+                    urlConnection.useCaches = false
+                }
 
-            if (HttpURLConnection.HTTP_NOT_MODIFIED == urlConnection.responseCode) {
-                throw IllegalStateException(EXCEPTION_NOT_MODIFIED)
-            } else {
-                try {
+                if (HttpURLConnection.HTTP_NOT_MODIFIED == urlConnection.responseCode) {
+                    throw IllegalStateException(EXCEPTION_NOT_MODIFIED)
+                } else {
+
                     val newETag = urlConnection.headerFields[HEADER_KEY_ETAG]
                     val inputStream = BufferedReader(
                         InputStreamReader(
@@ -169,12 +173,13 @@ object DownloadStaticContent {
                         )
                     }
                     zipContentUrl
-                } catch (e: IOException) {
-                    Log.d(LOG_TAG, "error: $e")
-                    throw e
-                } finally {
-                    urlConnection.disconnect()
+
                 }
+            } catch (e: IOException) {
+                Log.d(LOG_TAG, "error: $e")
+                throw e
+            } finally {
+                urlConnection?.disconnect()
             }
         }
     }
