@@ -1,0 +1,9 @@
+<resources>
+    <string name="text_app_name">RocheCommonSampleApp</string>
+    <string name="text_biometric_confirm_title">Do you want to allow RocheCommonSampleApp to use biometrics?</string>
+    <string name="text_biometric_enable_desc">In order to be able to use Biometrics login, you have to enable that from device Settings.</string>
+    <string name="text_toggle_biometrics">Toggle Biometrics</string>
+    <string name="text_biometric_menu">Biometrics</string>
+    <string name="text_unzip_menu">UnZip</string>
+    <string name="text_getstatical_usermanual_menu">GetStaticUserManual</string>
+</resources>
