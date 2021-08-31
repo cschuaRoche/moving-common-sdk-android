@@ -2,16 +2,28 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_nav_graph"
-    app:startDestination="@id/biometrics_nav_f">
-
-    <action
-        android:id="@+id/action_to_biometrics"
-        app:destination="@id/biometrics_nav_f"
-        app:popUpToInclusive="true" />
+    app:startDestination="@id/mainFragment">
 
     <fragment
         android:id="@+id/biometrics_nav_f"
-        android:name="com.roche.roche.dis.biometrics.BiometricsFragment"
-        tools:layout="@layout/biometrics_fragment">
-    </fragment>
+        android:name="com.roche.roche.dis.ui.BiometricsFragment"
+        tools:layout="@layout/biometrics_fragment" />
+
+    <fragment
+        android:id="@+id/recallFragment"
+        android:name="com.roche.roche.dis.ui.RecallFragment"
+        android:label="fragment_recall"
+        tools:layout="@layout/fragment_recall" />
+
+    <fragment
+        android:id="@+id/mainFragment"
+        android:name="com.roche.roche.dis.ui.MainFragment"
+        android:label="fragment_main"
+        tools:layout="@layout/fragment_main" />
+
+    <fragment
+        android:id="@+id/utilsFragment"
+        android:name="com.roche.roche.dis.ui.UtilsFragment"
+        android:label="fragment_utils"
+        tools:layout="@layout/fragment_utils" />
 </navigation>

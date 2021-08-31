@@ -1,21 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <!--Each item id should be same as in the nav_graph fragment id-->
     <group>
         <item
-            android:id="@+id/menu_biometrics"
-            android:title="Biometrics"
+            android:id="@+id/biometrics_nav_f"
+            android:title="@string/biometrics"
             app:actionLayout="@layout/action_view_arrow" />
+
         <item
-            android:id="@+id/menu_unzip"
-            android:title="UnZip"
+            android:id="@+id/recallFragment"
+            android:title="@string/recall"
             app:actionLayout="@layout/action_view_arrow" />
+
         <item
-            android:id="@+id/menu_user_manual"
-            android:title="GetStaticUserManual"
+            android:id="@+id/utilsFragment"
+            android:title="@string/utilities"
             app:actionLayout="@layout/action_view_arrow" />
     </group>
 </menu>
