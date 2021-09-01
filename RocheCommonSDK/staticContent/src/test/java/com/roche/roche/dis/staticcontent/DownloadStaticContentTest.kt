@@ -275,7 +275,6 @@ class DownloadStaticContentTest : BaseMockkTest() {
         every {
             UnZipUtils.unzipFromAppFiles(
                 getZippedFilePath(),
-                "",
                 appContext
             )
         } returns getUnzippedFilePath()
@@ -306,7 +305,6 @@ class DownloadStaticContentTest : BaseMockkTest() {
         every {
             UnZipUtils.unzipFromAppFiles(
                 getZippedFilePath(),
-                "",
                 appContext
             )
         } returns null
