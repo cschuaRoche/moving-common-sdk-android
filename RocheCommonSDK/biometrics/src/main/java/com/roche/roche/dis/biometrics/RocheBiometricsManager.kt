@@ -41,7 +41,7 @@ class RocheBiometricsManager(
             hasMultipleBiometrics() -> {
                 BiometricsType.MULTIPLE
             }
-            isFaceSupported() -> {
+            isFingerprintSupported() -> {
                 BiometricsType.FINGERPRINT
             }
             isFaceSupported() -> {
