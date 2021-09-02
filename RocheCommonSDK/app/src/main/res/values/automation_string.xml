@@ -1,9 +1,30 @@
 <resources>
+    <string name="test_app_package_name">com.roche.roche.dis.biometrics</string>
+    <string name="test_app_activity_name">com.roche.roche.dis.MainActivity</string>
     <string name="text_app_name">RocheCommonSampleApp</string>
     <string name="text_biometric_confirm_title">Do you want to allow RocheCommonSampleApp to use biometrics?</string>
     <string name="text_biometric_enable_desc">In order to be able to use Biometrics login, you have to enable that from device Settings.</string>
     <string name="text_toggle_biometrics">Toggle Biometrics</string>
     <string name="text_biometric_menu">Biometrics</string>
-    <string name="text_unzip_menu">UnZip</string>
-    <string name="text_getstatical_usermanual_menu">GetStaticUserManual</string>
+    <string name="text_main_description">This Sample App will demo the features and functionalities of the SSG Android common libraries.</string>
+    <string name="text_recall">Recall</string>
+    <string name="text_utilities">Utilities</string>
+    <string name="text_fingerprint_supported">Fingerprint Supported</string>
+    <string name="text_face_supported">Face Supported</string>
+    <string name="text_iris_supported">Iris Supported</string>
+    <string name="text_is_biometric_enrolled">Is Biometric Enrolled</string>
+    <string name="text_enroll_biometric">Enroll Biometric</string>
+    <string name="text_authenticate">Authenticate</string>
+    <string name="text_status_true">True</string>
+    <string name="text_status_false">False</string>
+    <string name="text_unzip">UnZip</string>
+    <string name="text_get_statical_user_manual">Get Static User Manual</string>
+    <string name="text_is_rooted">Check If Device Rooted</string>
+    <string name="text_cancel">Cancel</string>
+    <string name="text_settings">Settings</string>
+    <string name="text_biometric_already_enroll">Biometric is already enrolled</string>
+    <string name="text_successful_status_number">0</string>
+    <string name="text_unsuccessful_status_number">1</string>
+    <string name="text_user_manual_status">Error</string>
+    <string name="text_unzip_status_path">/data/user/0/com.roche.roche.dis.biometrics/files/usermanuals</string>
 </resources>

@@ -27,30 +27,21 @@ object HomeScreenPage : BaseTest(){
        verifyIsDisplayed(withId(R.id.toolbar_right_button),isSleepRequired = true)
    }
 
-   fun verifyBiometricToogleBtn() {
-       verifyIsDisplayed(withId(R.id.biometric_btn),isSleepRequired = true)
-   }
-
-   fun clickOnBiometricToogleBtn() {
-       clickOnButton(withId(R.id.biometric_btn),isSleepRequired = true)
-   }
+    fun verifySampleAppMainText() {
+        verifyText(withText(R.string.text_main_description),"This Sample App will demo the features and functionalities of the SSG Android common libraries.",isSleepRequired = true)
+    }
 
     fun VerifyAndClickBiometricMenu() {
-       onView(allOf(withId(R.id.menu_biometrics), withChild(withText(R.string.text_biometric_menu)))).performClick()
+       onView(allOf(withId(R.id.biometrics_nav_f), withChild(withText(R.string.text_biometric_menu)))).performClick()
     }
 
-    fun VerifyAndClickUnZipMenu() {
-        onView(allOf(withId(R.id.menu_unzip), withChild(withText(R.string.text_unzip_menu)))).performClick()
+    fun verifyAndClickRecallMenu() {
+        onView(allOf(withId(R.id.recallFragment), withChild(withText(R.string.text_recall)))).performClick()
     }
 
-    fun VerifyandClickMenuUserManual() {
-        onView(allOf(withId(R.id.menu_user_manual), withChild(withText(R.string.text_getstatical_usermanual_menu)))).performClick()
+    fun verifyAndClickUtilitiesMenu() {
+        onView(allOf(withId(R.id.utilsFragment), withChild(withText(R.string.text_utilities)))).performClick()
     }
-
-    fun verifyPopHeaderText() {
-        verifyText(withText(R.string.text_biometric_confirm_title), "Do you want to allow \"RocheCommonSampleApp\" to use biometrics?",isSleepRequired = true)
-    }
-
 
 }
 

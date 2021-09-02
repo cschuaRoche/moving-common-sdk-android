@@ -7,6 +7,7 @@ import androidx.test.espresso.NoMatchingViewException
 import androidx.test.espresso.ViewInteraction
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.uiautomator.*
 import junit.framework.AssertionFailedError
 import org.hamcrest.Matcher
 

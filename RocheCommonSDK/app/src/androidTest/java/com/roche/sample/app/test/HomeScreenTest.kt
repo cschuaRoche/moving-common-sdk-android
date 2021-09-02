@@ -4,6 +4,7 @@ import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.roche.roche.dis.MainActivity
 import com.roche.roche.dis.R
+import com.roche.sample.app.pages.BiometricScreenPage
 import com.roche.sample.app.pages.HomeScreenPage
 import com.roche.sample.app.utilites.AppUtils
 import com.roche.sample.app.utilites.BaseTest
@@ -22,24 +23,14 @@ class HomeScreenTest : BaseTest(){
     @Test
     fun testSampleAppHomeScreen() {
        HomeScreenPage.verifyHomeScreenTitle()
-       HomeScreenPage.verifyHomeScreenTitleText()
+      HomeScreenPage.verifyHomeScreenTitleText()
        HomeScreenPage.verifyRocheIconIsDisplayed()
-       HomeScreenPage.verifyBiometricToogleBtn()
+       HomeScreenPage.verifySampleAppMainText()
        clickonMainMenu()
        HomeScreenPage.VerifyAndClickBiometricMenu()
-       clickonMainMenu()
-       HomeScreenPage.VerifyAndClickUnZipMenu()
-       clickonMainMenu()
-       HomeScreenPage.VerifyandClickMenuUserManual()
+        BiometricScreenPage.verifyBiometricsPage()
+        AppUtils.pressDeviceBack()
+        HomeScreenPage.verifySampleAppMainText()
     }
-
-    @Test
-    fun testClickOnToogleBiometric() {
-        HomeScreenPage.verifyHomeScreenTitle()
-        HomeScreenPage.verifyBiometricToogleBtn()
-        HomeScreenPage.clickOnBiometricToogleBtn()
-        HomeScreenPage.verifyPopHeaderText()
-    }
-
 
 }

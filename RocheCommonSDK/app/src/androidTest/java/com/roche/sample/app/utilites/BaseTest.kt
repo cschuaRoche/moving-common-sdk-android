@@ -13,12 +13,20 @@ import androidx.test.espresso.contrib.DrawerActions
 import androidx.test.espresso.contrib.NavigationViewActions
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.platform.app.InstrumentationRegistry
+import androidx.test.uiautomator.*
 import com.roche.roche.dis.R
 import junit.framework.AssertionFailedError
 import org.hamcrest.Matcher
+import org.junit.Rule
+import org.junit.rules.TestName
 
 
 open class BaseTest : UtiliteTest() {
+
+    @get:Rule
+    val testName = TestName()
+
 
     fun clickOnButton(matcher: Matcher<View>, isSleepRequired: Boolean = false) {
         if (isSleepRequired) {
@@ -44,9 +52,7 @@ open class BaseTest : UtiliteTest() {
     fun clickonMainMenu() {
         // Open Drawer to click on navigation.
         onView(withId(R.id.main_drawer_layout)).perform(DrawerActions.open());
-//        Espresso.onView(ViewMatchers.withId(R.id.main_drawer_layout))
-//            .check(matches(isClosed(Gravity.LEFT))) // Left Drawer should be closed.
-//            .perform(DrawerActions.open()); // Open Drawer
     }
 
-    }
+
+}
