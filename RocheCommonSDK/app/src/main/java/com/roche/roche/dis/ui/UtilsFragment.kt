@@ -8,8 +8,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.roche.roche.dis.R
-import com.roche.roche.dis.UserManualViewModel
 import com.roche.roche.dis.databinding.FragmentUtilsBinding
+import com.roche.roche.dis.security.utils.RootDetectUtil
 import com.roche.roche.dis.staticcontent.DownloadStaticContent
 import com.roche.roche.dis.utils.UnZipUtils
 import kotlinx.coroutines.launch
@@ -18,7 +18,6 @@ import java.io.File
 
 class UtilsFragment : Fragment() {
 
-    private lateinit var downloadViewModel: UserManualViewModel
     private lateinit var binding: FragmentUtilsBinding
 
     override fun onCreateView(
@@ -27,8 +26,6 @@ class UtilsFragment : Fragment() {
     ): View {
         binding = FragmentUtilsBinding.inflate(inflater, container, false)
         setClickEvent()
-
-        downloadViewModel = UserManualViewModel(requireActivity().application)
 
         return binding.root
     }
@@ -46,6 +43,10 @@ class UtilsFragment : Fragment() {
 
         binding.btnIsRooted.setOnClickListener {
             binding.statusRooted = ""
+            if (RootDetectUtil.isDeviceRooted())
+                binding.statusRooted = getString(R.string.status_true)
+            else
+                binding.statusRooted = getString(R.string.status_false)
         }
 
     }
