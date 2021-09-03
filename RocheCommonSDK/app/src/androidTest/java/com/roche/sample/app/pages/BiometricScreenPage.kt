@@ -97,12 +97,10 @@ object BiometricScreenPage : BaseTest() {
     }
 
     fun verifyPopTitleText() {
-       // verifyText(ViewMatchers.withText(R.string.text_biometric_confirm_title), "Do you want to allow RocheCommonSampleApp to use biometrics?",isSleepRequired = true)
         verifyText(ViewMatchers.withId(R.id.dialog_title),AppUtils.string(R.string.text_biometric_confirm_title))
     }
 
     fun verifyPopDescriptionText() {
-        //verifyText(withText(R.string.text_biometric_enable_desc),"In order to be able to use Biometrics login, you have to enable that from device Settings.")
         verifyText(withId(R.id.dialog_description),AppUtils.string(R.string.text_biometric_enable_desc))
     }
 
@@ -128,7 +126,5 @@ object BiometricScreenPage : BaseTest() {
     fun verifyBiometricSuccessMsg() {
         verifyText(withId(R.string.text_biometric_already_enroll),"Biometric is already enrolled")
     }
-
-
 
 }

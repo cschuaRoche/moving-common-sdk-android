@@ -93,17 +93,17 @@ object AppUtils {
     }
 
     fun authenticateWithFingerprint(){
-               Thread.sleep(2000)
-                Log.i(TAG, "Authenticate Fingerprint")
-                Thread.sleep(3000)
-                Log.i(TAG, "Authenticate Fingerprint done")
-            }
+        Thread.sleep(2000)
+        Log.i(TAG, "Authenticate Fingerprint")
+        Thread.sleep(3000)
+        Log.i(TAG, "Authenticate Fingerprint done")
+    }
 
     fun authenticateWrongFingerprint() {
-                Thread.sleep(2000)
-                Log.i(TAG, "Authenticate Wrong Fingerprint")
-                Thread.sleep(4000)
-                Log.i(TAG, "Authenticate Wrong Fingerprint done")
+          Thread.sleep(2000)
+          Log.i(TAG, "Authenticate Wrong Fingerprint")
+          Thread.sleep(4000)
+          Log.i(TAG, "Authenticate Wrong Fingerprint done")
     }
 
     fun redirectToFingerEnrollmentScreen() {
@@ -186,8 +186,6 @@ object AppUtils {
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         context.startActivity(intent)
-
     }
-
 
 }

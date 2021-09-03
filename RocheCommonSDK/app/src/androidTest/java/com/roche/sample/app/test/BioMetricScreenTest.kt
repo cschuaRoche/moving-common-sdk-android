@@ -63,7 +63,6 @@ class BioMetricScreenTest : BaseTest(){
 
     @Test
     fun testEnrollBiometricButtonAndAuthenticateButtonFunctionality() {
-
         BiometricScreenPage.clickOnEnrollBiometric()
         AppUtils.redirectToFingerEnrollmentScreen()
         BiometricScreenPage.verifyEnrollBiometricButtonText()
