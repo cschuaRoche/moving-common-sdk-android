@@ -16,7 +16,9 @@ fun Matcher<View>.performClick(): ViewInteraction = matchView().performClick()
 
 fun Matcher<View>.isDisplayed(): ViewInteraction = matchView().check(
     ViewAssertions.matches(
-        ViewMatchers.isDisplayed()))
+        ViewMatchers.isDisplayed()
+    )
+)
 
 fun Matcher<View>.performTextType(input: String): ViewInteraction = matchView().perform(
     ViewActions.typeText(input),
@@ -33,8 +35,9 @@ fun Matcher<View>.hasText(expectedText: String): ViewInteraction = matchView().c
 
 fun Matcher<View>.isEnabled(): ViewInteraction = matchView().check(
     ViewAssertions.matches(
-        ViewMatchers.isEnabled()))
-
+        ViewMatchers.isEnabled()
+    )
+)
 
 fun Matcher<View>.substringText(expectedText: String): ViewInteraction = matchView().check(
     ViewAssertions.matches(

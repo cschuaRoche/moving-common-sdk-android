@@ -36,26 +36,26 @@ object MenuUtilitesScreenPage : BaseTest() {
 
 
     fun clickOnCheckDeviceRootedButton() {
-        clickOnButton(ViewMatchers.withId(R.id.btn_is_rooted),isSleepRequired = true)
+        clickOnButton(ViewMatchers.withId(R.id.btn_is_rooted), isSleepRequired = true)
     }
 
     fun clickOnUnZIPButton() {
-        clickOnButton(ViewMatchers.withId(R.id.btn_unzip),isSleepRequired = true)
+        clickOnButton(ViewMatchers.withId(R.id.btn_unzip), isSleepRequired = true)
     }
 
     fun clickOnGetUserManualButton() {
-        clickOnButton(ViewMatchers.withId(R.id.btn_user_manual),isSleepRequired = true)
+        clickOnButton(ViewMatchers.withId(R.id.btn_user_manual), isSleepRequired = true)
     }
 
-    fun verifyUnZipStatus( status : String) {
+    fun verifyUnZipStatus(status: String) {
         verifyText(ViewMatchers.withId(R.id.txt_unzip_status), status, isSleepRequired = true)
     }
 
-    fun verifyGetUserManualStatus( status : String) {
+    fun verifyGetUserManualStatus(status: String) {
         verifyText(ViewMatchers.withId(R.id.txt_user_manual_status), status, isSleepRequired = true)
     }
 
-    fun verifyDeviceRootedStatus( status : String) {
+    fun verifyDeviceRootedStatus(status: String) {
         verifyText(ViewMatchers.withId(R.id.txt_rooted_status), status, isSleepRequired = true)
     }
 }

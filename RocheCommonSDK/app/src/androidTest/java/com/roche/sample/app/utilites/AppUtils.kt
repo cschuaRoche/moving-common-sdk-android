@@ -20,7 +20,8 @@ object AppUtils {
     /**
      * Returns string value of given string resource id
      */
-    fun string(@IdRes res: Int): String = InstrumentationRegistry.getInstrumentation().targetContext.getString(res)
+    fun string(@IdRes res: Int): String =
+        InstrumentationRegistry.getInstrumentation().targetContext.getString(res)
 
     /**
      * Returns string value of given string resource id
@@ -87,12 +88,12 @@ object AppUtils {
     private fun waitUntilFingerprintIsEnrolled() {
         Log.i(TAG, "Enroll Fingerprint")
         val btnDone: UiObject2? =
-            AppUtils.uiDevice.wait(Until.findObject(By.text("DONE").enabled(true)), 60000)
+            uiDevice.wait(Until.findObject(By.text("DONE").enabled(true)), 60000)
         btnDone?.click()
         Log.i(TAG, "Enroll Fingerprint is done")
     }
 
-    fun authenticateWithFingerprint(){
+    fun authenticateWithFingerprint() {
         Thread.sleep(2000)
         Log.i(TAG, "Authenticate Fingerprint")
         Thread.sleep(3000)
@@ -100,10 +101,10 @@ object AppUtils {
     }
 
     fun authenticateWrongFingerprint() {
-          Thread.sleep(2000)
-          Log.i(TAG, "Authenticate Wrong Fingerprint")
-          Thread.sleep(4000)
-          Log.i(TAG, "Authenticate Wrong Fingerprint done")
+        Thread.sleep(2000)
+        Log.i(TAG, "Authenticate Wrong Fingerprint")
+        Thread.sleep(4000)
+        Log.i(TAG, "Authenticate Wrong Fingerprint done")
     }
 
     fun redirectToFingerEnrollmentScreen() {
@@ -114,23 +115,23 @@ object AppUtils {
         pressDeviceBack(2000)
     }
 
-    fun pressDeviceBack(sleepTime: Long = 0L){
+    fun pressDeviceBack(sleepTime: Long = 0L) {
         if (sleepTime > 0L) {
             Thread.sleep(sleepTime)
         }
         uiDevice.pressBack()
     }
 
-   fun pressDeviceHome() {
-       uiDevice.pressHome()
-   }
+    fun pressDeviceHome() {
+        uiDevice.pressHome()
+    }
 
-   fun openRecentSampleSDKApp() {
-       uiDevice.pressRecentApps()
-       val selector = UiSelector()
-       AppUtils.uiDevice.findObject(selector.descriptionStartsWith(AppUtils.string(R.string.test_app_package_name)))
-           .clickAndWaitForNewWindow()
-   }
+    fun openRecentSampleSDKApp() {
+        uiDevice.pressRecentApps()
+        val selector = UiSelector()
+        AppUtils.uiDevice.findObject(selector.descriptionStartsWith(AppUtils.string(R.string.test_app_package_name)))
+            .clickAndWaitForNewWindow()
+    }
 
     fun setSecurityLockToNone() {
         openSettings(uiDevice, Settings.ACTION_SECURITY_SETTINGS)

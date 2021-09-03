@@ -27,7 +27,6 @@ open class BaseTest : UtiliteTest() {
     @get:Rule
     val testName = TestName()
 
-
     fun clickOnButton(matcher: Matcher<View>, isSleepRequired: Boolean = false) {
         if (isSleepRequired) {
             waitForID(matcher)
@@ -42,7 +41,7 @@ open class BaseTest : UtiliteTest() {
         matcher.isDisplayed()
     }
 
-    fun verifyText(matcher: Matcher<View>, expectedText: String, isSleepRequired: Boolean = false){
+    fun verifyText(matcher: Matcher<View>, expectedText: String, isSleepRequired: Boolean = false) {
         if (isSleepRequired) {
             waitForText(matcher, expectedText)
         }

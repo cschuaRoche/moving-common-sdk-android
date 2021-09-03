@@ -14,7 +14,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
-class MenuUtilitesScreenTest : BaseTest(){
+class MenuUtilitesScreenTest : BaseTest() {
 
     @get:Rule
     val activityTestRuleMain = ActivityScenarioRule(MainActivity::class.java)

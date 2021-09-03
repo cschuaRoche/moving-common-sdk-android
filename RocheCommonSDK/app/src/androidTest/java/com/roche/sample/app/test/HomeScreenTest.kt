@@ -13,7 +13,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
-class HomeScreenTest : BaseTest(){
+class HomeScreenTest : BaseTest() {
 
     @get:Rule
 
@@ -22,12 +22,12 @@ class HomeScreenTest : BaseTest(){
 
     @Test
     fun testSampleAppHomeScreen() {
-       HomeScreenPage.verifyHomeScreenTitle()
-      HomeScreenPage.verifyHomeScreenTitleText()
-       HomeScreenPage.verifyRocheIconIsDisplayed()
-       HomeScreenPage.verifySampleAppMainText()
-       clickonMainMenu()
-       HomeScreenPage.VerifyAndClickBiometricMenu()
+        HomeScreenPage.verifyHomeScreenTitle()
+        HomeScreenPage.verifyHomeScreenTitleText()
+        HomeScreenPage.verifyRocheIconIsDisplayed()
+        HomeScreenPage.verifySampleAppMainText()
+        clickonMainMenu()
+        HomeScreenPage.VerifyAndClickBiometricMenu()
         BiometricScreenPage.verifyBiometricsPage()
         AppUtils.pressDeviceBack()
         HomeScreenPage.verifySampleAppMainText()

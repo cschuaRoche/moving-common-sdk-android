@@ -16,7 +16,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
-class BioMetricScreenTest : BaseTest(){
+class BioMetricScreenTest : BaseTest() {
 
     @get:Rule
 
@@ -34,7 +34,7 @@ class BioMetricScreenTest : BaseTest(){
     @After
     fun stopScript() {
         Log.i(AppUtils.TAG, "Stop Fingerprint")
-        if (testName.methodName == "testEnrollBiometricButtonAndAuthenticateButtonFunctionality" || testName.methodName == "testEnrollBiometricButtonAndWrongAuthenticateButtonFunctionality" || testName.methodName =="testEnrollBiometricAndVerifyAllStatus")
+        if (testName.methodName == "testEnrollBiometricButtonAndAuthenticateButtonFunctionality" || testName.methodName == "testEnrollBiometricButtonAndWrongAuthenticateButtonFunctionality" || testName.methodName == "testEnrollBiometricAndVerifyAllStatus")
             AppUtils.setSecurityLockToNone()
     }
 
