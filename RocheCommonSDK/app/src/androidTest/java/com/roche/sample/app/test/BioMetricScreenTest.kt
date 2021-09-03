@@ -10,6 +10,7 @@ import com.roche.sample.app.pages.HomeScreenPage
 import com.roche.sample.app.utilites.AppUtils
 import com.roche.sample.app.utilites.BaseTest
 import org.junit.After
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -21,6 +22,15 @@ class BioMetricScreenTest : BaseTest(){
 
     val activityTestRuleMain = ActivityScenarioRule(MainActivity::class.java)
 
+
+    @Before
+    fun openBiometricPage() {
+        HomeScreenPage.verifySampleAppMainText()
+        clickonMainMenu()
+        HomeScreenPage.VerifyAndClickBiometricMenu()
+    }
+
+
     @After
     fun stopScript() {
         Log.i(AppUtils.TAG, "Stop Fingerprint")
@@ -30,9 +40,6 @@ class BioMetricScreenTest : BaseTest(){
 
     @Test
     fun testBioMetricScreenAndStatusAll() {
-        HomeScreenPage.verifySampleAppMainText()
-        clickonMainMenu()
-        HomeScreenPage.VerifyAndClickBiometricMenu()
         BiometricScreenPage.verifyBiometricsPage()
         BiometricScreenPage.clickOnFingerPrintSupported()
         BiometricScreenPage.clickOnFaceSupported()
@@ -47,9 +54,6 @@ class BioMetricScreenTest : BaseTest(){
 
     @Test
     fun testAuthenticateButtonPopUpFunctionality() {
-        HomeScreenPage.verifySampleAppMainText()
-        clickonMainMenu()
-        HomeScreenPage.VerifyAndClickBiometricMenu()
         BiometricScreenPage.verifyBiometricsPage()
         BiometricScreenPage.clickOnAuthenticate()
         BiometricScreenPage.verifyPopUpUI()
@@ -59,9 +63,7 @@ class BioMetricScreenTest : BaseTest(){
 
     @Test
     fun testEnrollBiometricButtonAndAuthenticateButtonFunctionality() {
-        HomeScreenPage.verifySampleAppMainText()
-        clickonMainMenu()
-        HomeScreenPage.VerifyAndClickBiometricMenu()
+
         BiometricScreenPage.clickOnEnrollBiometric()
         AppUtils.redirectToFingerEnrollmentScreen()
         BiometricScreenPage.verifyEnrollBiometricButtonText()
@@ -74,9 +76,6 @@ class BioMetricScreenTest : BaseTest(){
 
     @Test
     fun testEnrollBiometricButtonAndWrongAuthenticateButtonFunctionality() {
-        HomeScreenPage.verifySampleAppMainText()
-        clickonMainMenu()
-        HomeScreenPage.VerifyAndClickBiometricMenu()
         BiometricScreenPage.clickOnEnrollBiometric()
         AppUtils.redirectToFingerEnrollmentScreen()
         BiometricScreenPage.verifyEnrollBiometricButtonText()
@@ -87,9 +86,6 @@ class BioMetricScreenTest : BaseTest(){
 
     @Test
     fun testEnrollBiometricAndVerifyAllStatus() {
-        HomeScreenPage.verifySampleAppMainText()
-        clickonMainMenu()
-        HomeScreenPage.VerifyAndClickBiometricMenu()
         BiometricScreenPage.clickOnEnrollBiometric()
         AppUtils.redirectToFingerEnrollmentScreen()
         BiometricScreenPage.verifyEnrollBiometricButtonText()
@@ -102,6 +98,5 @@ class BioMetricScreenTest : BaseTest(){
         BiometricScreenPage.verifyIrisSupportedStatus(AppUtils.string(R.string.text_status_false))
         BiometricScreenPage.verifyIsBiometricEnrolledStatus(AppUtils.string(R.string.text_status_true))
     }
-
 
 }
