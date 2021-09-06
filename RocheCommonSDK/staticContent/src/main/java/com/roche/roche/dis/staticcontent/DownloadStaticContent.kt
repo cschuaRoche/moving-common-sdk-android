@@ -36,15 +36,15 @@ object DownloadStaticContent {
     )
     annotation class LocaleType {
         companion object {
-            const val SV_FI = "sv-fi"
-            const val DE_DE = "de-de"
-            const val EN_AU = "en-au"
-            const val EN_GB = "en-gb"
-            const val EN_US = "en-us"
-            const val FI_FI = "fi_fi"
-            const val FR_FR = "fr_fr"
-            const val IT_IT = "it_it"
-            const val PT_PT = "pt_pt"
+            const val SV_FI = "sv-FI"
+            const val DE_DE = "de-DE"
+            const val EN_AU = "en-AU"
+            const val EN_GB = "en-GB"
+            const val EN_US = "en-US"
+            const val FI_FI = "fi_FI"
+            const val FR_FR = "fr_FR"
+            const val IT_IT = "it_IT"
+            const val PT_PT = "pt_PT"
         }
     }
 
