@@ -28,6 +28,10 @@ class BioMetricScreenTest : BaseTest() {
         HomeScreenPage.verifySampleAppMainText()
         clickonMainMenu()
         HomeScreenPage.VerifyAndClickBiometricMenu()
+        if (testName.methodName == "testEnrollBiometricButtonAndAuthenticateButtonFunctionality" || testName.methodName == "testEnrollBiometricButtonAndWrongAuthenticateButtonFunctionality" || testName.methodName == "testEnrollBiometricAndVerifyAllStatus"){
+            BiometricScreenPage.clickOnEnrollBiometric()
+            AppUtils.redirectToFingerEnrollmentScreen()
+        }
     }
 
 
@@ -63,8 +67,6 @@ class BioMetricScreenTest : BaseTest() {
 
     @Test
     fun testEnrollBiometricButtonAndAuthenticateButtonFunctionality() {
-        BiometricScreenPage.clickOnEnrollBiometric()
-        AppUtils.redirectToFingerEnrollmentScreen()
         BiometricScreenPage.verifyEnrollBiometricButtonText()
         BiometricScreenPage.verifyAuthenticateButtonText()
         BiometricScreenPage.clickOnAuthenticate()
@@ -75,8 +77,6 @@ class BioMetricScreenTest : BaseTest() {
 
     @Test
     fun testEnrollBiometricButtonAndWrongAuthenticateButtonFunctionality() {
-        BiometricScreenPage.clickOnEnrollBiometric()
-        AppUtils.redirectToFingerEnrollmentScreen()
         BiometricScreenPage.verifyEnrollBiometricButtonText()
         BiometricScreenPage.verifyAuthenticateButtonText()
         BiometricScreenPage.clickOnAuthenticate()
@@ -85,8 +85,6 @@ class BioMetricScreenTest : BaseTest() {
 
     @Test
     fun testEnrollBiometricAndVerifyAllStatus() {
-        BiometricScreenPage.clickOnEnrollBiometric()
-        AppUtils.redirectToFingerEnrollmentScreen()
         BiometricScreenPage.verifyEnrollBiometricButtonText()
         BiometricScreenPage.clickOnFingerPrintSupported()
         BiometricScreenPage.clickOnFaceSupported()
