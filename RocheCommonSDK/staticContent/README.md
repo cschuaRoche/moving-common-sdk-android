@@ -27,11 +27,6 @@ How to retrieve a file URL based on the app version and locale
     ```
     val fileUrl = DownloadStaticContent.getUrlFromManifest(context, manifestUrl, appVersion, locale)
     ```
-How to retrieve a file URL based on the app version and locale
-----------
-    ```
-    val fileUrl = DownloadStaticContent.getUrlFromManifest(context, manifestUrl, appVersion, locale)
-    ```
 How to download a file to the app's files directory
 ----------
     ```

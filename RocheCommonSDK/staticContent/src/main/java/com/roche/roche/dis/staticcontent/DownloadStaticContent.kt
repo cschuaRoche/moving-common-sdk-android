@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import androidx.annotation.StringDef
 import androidx.annotation.VisibleForTesting
+import com.roche.roche.dis.utils.NetworkUtils
 import com.roche.roche.dis.utils.UnZipUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -52,6 +53,8 @@ object DownloadStaticContent {
     private const val ZIPPED_FILE_EXTENSION = ".zip"
     private const val HEADER_KEY_ETAG = "ETag"
 
+    const val EXCEPTION_WIFI_NOT_AVAILABLE = "Wifi Not Available"
+    const val EXCEPTION_NETWORK_NOT_AVAILABLE = "Network Not Available"
     const val EXCEPTION_NOT_MODIFIED = "Not Modified"
     const val EXCEPTION_INVALID_MANIFEST_FILE_FORMAT = "Invalid Manifest File Format"
     const val EXCEPTION_APP_VERSION_NOT_FOUND = "Manifest App Version Not Found"
@@ -83,20 +86,26 @@ object DownloadStaticContent {
         appVersion: String,
         @LocaleType locale: String,
         progress: (Int) -> Unit,
-        targetSubDir: String? = null
+        targetSubDir: String? = null,
+        allowWifiOnly: Boolean = false
     ): String {
         try {
-            val fileUrl = getUrlFromManifest(context, manifestUrl, appVersion, locale)
+            // read manifest file and get the url
+            val fileUrl =
+                getUrlFromManifest(context, manifestUrl, appVersion, locale, allowWifiOnly)
             // check if the url is not a zip file type then throw exception
             val fileExtension = fileUrl.substring(fileUrl.lastIndexOf("."))
             if (fileExtension.equals(ZIPPED_FILE_EXTENSION, true).not()) {
                 throw IllegalStateException(EXCEPTION_INVALID_MANIFEST_FILE_FORMAT)
             }
-            val zippedFilePath = downloadFromUrl(context, fileUrl, progress, targetSubDir)
+            // download the file
+            val zippedFilePath =
+                downloadFromUrl(context, fileUrl, progress, targetSubDir, allowWifiOnly)
             val directoryName = zippedFilePath.substring(
                 zippedFilePath.lastIndexOf("/") + 1,
                 zippedFilePath.lastIndexOf(".")
             )
+            // unzip the file
             return unzipFile(
                 context,
                 appVersion,
@@ -134,8 +143,10 @@ object DownloadStaticContent {
         context: Context,
         manifestUrl: String,
         appVersion: String,
-        @LocaleType locale: String
+        @LocaleType locale: String,
+        allowWifiOnly: Boolean = false
     ): String {
+        checkConnection(context, allowWifiOnly)
         return withContext(Dispatchers.IO) {
             var urlConnection: HttpURLConnection? = null
             try {
@@ -144,7 +155,11 @@ object DownloadStaticContent {
                 // get etag and downloaded file path value from secure shared preference
                 val etag = DownloadStaticContentSharedPref.getETag(context, appVersion, locale)
                 val filePath =
-                    DownloadStaticContentSharedPref.getDownloadedFilePath(context, appVersion, locale)
+                    DownloadStaticContentSharedPref.getDownloadedFilePath(
+                        context,
+                        appVersion,
+                        locale
+                    )
                 if (etag.isNotBlank() && filePath.isNotBlank()) {
                     // If both eTag and file path are available then add etag in header
                     urlConnection.addRequestProperty("If-None-Match", etag)
@@ -173,7 +188,6 @@ object DownloadStaticContent {
                         )
                     }
                     zipContentUrl
-
                 }
             } catch (e: IOException) {
                 Log.d(LOG_TAG, "error: $e")
@@ -199,8 +213,10 @@ object DownloadStaticContent {
         context: Context,
         fileURL: String,
         progress: (Int) -> Unit,
-        targetSubDir: String? = null
+        targetSubDir: String? = null,
+        allowWifiOnly: Boolean = false
     ): String {
+        checkConnection(context, allowWifiOnly)
         return withContext(Dispatchers.IO) {
             val connection = getUrlConnection(fileURL)
             connection.connect()
@@ -344,6 +360,19 @@ object DownloadStaticContent {
         } catch (e: JSONException) {
             Log.e(LOG_TAG, "error: $e")
             throw e
+        }
+    }
+
+    @Throws(IllegalStateException::class)
+    private fun checkConnection(context: Context, allowWifiOnly: Boolean) {
+        if (allowWifiOnly) {
+            if (NetworkUtils.isWifiConnected(context).not()) {
+                throw IllegalStateException(EXCEPTION_WIFI_NOT_AVAILABLE)
+            }
+        } else {
+            if (NetworkUtils.hasInternetConnection(context).not()) {
+                throw IllegalStateException(EXCEPTION_NETWORK_NOT_AVAILABLE)
+            }
         }
     }
 }
