@@ -21,7 +21,7 @@ while true; do
     sleep 1
     $ANDROID_SDK_ROOT/platform-tools/adb -e emu finger touch 2
   fi
-  #echo "Sleeping for 2 seconds"
+
   sleep 2
 done
 
