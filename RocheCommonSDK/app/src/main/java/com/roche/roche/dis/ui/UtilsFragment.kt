@@ -82,8 +82,9 @@ class UtilsFragment : Fragment() {
                     DownloadStaticContent.downloadStaticAssets(
                         requireContext(),
                         "https://passport-static-content.tpp1-dev.platform.navify.com/com.roche.nrm_passport/docs/floodlight.json",
-                        "1.2.1",
+                        "1.2.0",
                         DownloadStaticContent.LocaleType.EN_US,
+                        "user-manuals",
                         ::showProgress
                     )
                 Log.d("usermanual", "file path: $path")

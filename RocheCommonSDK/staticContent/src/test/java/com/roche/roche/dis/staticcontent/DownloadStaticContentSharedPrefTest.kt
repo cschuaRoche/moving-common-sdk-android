@@ -67,7 +67,7 @@ class DownloadStaticContentSharedPrefTest : BaseMockkTest() {
     @Test
     fun `saveETag should not crash`() {
         try {
-            DownloadStaticContentSharedPref.saveETag(appContext, APP_VERSION, LOCALE, getETag())
+            DownloadStaticContentSharedPref.setETag(appContext, APP_VERSION, LOCALE, getETag())
         } catch (e: Exception) {
             Assert.fail(e.message)
         }
@@ -78,7 +78,7 @@ class DownloadStaticContentSharedPrefTest : BaseMockkTest() {
         every { pref.get(generateKey(PREF_KEY_FILE_PATH_PREFIX), "") } returns getDownloadedPath()
         Assert.assertEquals(
             getDownloadedPath(),
-            DownloadStaticContentSharedPref.getDownloadedFilePath(appContext, APP_VERSION, LOCALE)
+            DownloadStaticContentSharedPref.getFilePath(appContext, APP_VERSION, LOCALE)
         )
     }
 
@@ -87,14 +87,14 @@ class DownloadStaticContentSharedPrefTest : BaseMockkTest() {
         every { pref.get(generateKey(PREF_KEY_FILE_PATH_PREFIX), "") } returns null
         Assert.assertEquals(
             "",
-            DownloadStaticContentSharedPref.getDownloadedFilePath(appContext, APP_VERSION, LOCALE)
+            DownloadStaticContentSharedPref.getFilePath(appContext, APP_VERSION, LOCALE)
         )
     }
 
     @Test
     fun `saveDownloadedFilePath should not crash`() {
         try {
-            DownloadStaticContentSharedPref.saveDownloadedFilePath(
+            DownloadStaticContentSharedPref.setFilePath(
                 appContext,
                 APP_VERSION,
                 LOCALE,

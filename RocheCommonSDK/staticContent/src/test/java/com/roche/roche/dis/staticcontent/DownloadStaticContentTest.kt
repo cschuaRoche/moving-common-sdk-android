@@ -144,7 +144,7 @@ class DownloadStaticContentTest : BaseMockkTest() {
                 )
             } throws IllegalStateException(DownloadStaticContent.EXCEPTION_NOT_MODIFIED)
             every {
-                DownloadStaticContentSharedPref.getDownloadedFilePath(
+                DownloadStaticContentSharedPref.getFilePath(
                     appContext,
                     APP_VERSION,
                     LOCALE
@@ -168,7 +168,7 @@ class DownloadStaticContentTest : BaseMockkTest() {
                 )
             }
             verify(exactly = 1) {
-                DownloadStaticContentSharedPref.getDownloadedFilePath(
+                DownloadStaticContentSharedPref.getFilePath(
                     appContext,
                     APP_VERSION,
                     LOCALE
@@ -194,7 +194,7 @@ class DownloadStaticContentTest : BaseMockkTest() {
             )
         } returns ""
         every {
-            DownloadStaticContentSharedPref.getDownloadedFilePath(
+            DownloadStaticContentSharedPref.getFilePath(
                 appContext,
                 APP_VERSION,
                 LOCALE
@@ -204,7 +204,7 @@ class DownloadStaticContentTest : BaseMockkTest() {
         every { httpURLConnection.headerFields } returns mapOf(HEADER_KEY_ETAG to listOf(getETag()))
         every { DownloadStaticContent.readStream(any()) } returns getManifestContent()
         every {
-            DownloadStaticContentSharedPref.saveETag(
+            DownloadStaticContentSharedPref.setETag(
                 appContext,
                 APP_VERSION,
                 LOCALE,
@@ -234,7 +234,7 @@ class DownloadStaticContentTest : BaseMockkTest() {
                 )
             } returns getETag()
             every {
-                DownloadStaticContentSharedPref.getDownloadedFilePath(
+                DownloadStaticContentSharedPref.getFilePath(
                     appContext,
                     APP_VERSION,
                     LOCALE
@@ -279,7 +279,7 @@ class DownloadStaticContentTest : BaseMockkTest() {
             )
         } returns getUnzippedFilePath()
         every {
-            DownloadStaticContentSharedPref.saveDownloadedFilePath(
+            DownloadStaticContentSharedPref.setFilePath(
                 appContext,
                 APP_VERSION,
                 LOCALE,
@@ -290,7 +290,7 @@ class DownloadStaticContentTest : BaseMockkTest() {
         val unzippedPath =
             DownloadStaticContent.unzipFile(appContext, APP_VERSION, LOCALE, getZippedFilePath())
         verify(exactly = 1) {
-            DownloadStaticContentSharedPref.saveDownloadedFilePath(
+            DownloadStaticContentSharedPref.setFilePath(
                 appContext,
                 APP_VERSION,
                 LOCALE,
@@ -316,7 +316,7 @@ class DownloadStaticContentTest : BaseMockkTest() {
             Assert.assertEquals(DownloadStaticContent.EXCEPTION_UNZIPPING_FILE, e.message)
         }
         verify(exactly = 0) {
-            DownloadStaticContentSharedPref.saveDownloadedFilePath(
+            DownloadStaticContentSharedPref.setFilePath(
                 appContext,
                 APP_VERSION,
                 LOCALE,
