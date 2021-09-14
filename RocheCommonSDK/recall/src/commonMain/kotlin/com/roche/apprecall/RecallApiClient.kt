@@ -1,19 +1,28 @@
 package com.roche.apprecall
 
 import io.github.aakira.napier.Napier
-import io.ktor.client.*
-import io.ktor.client.features.*
-import io.ktor.client.features.json.*
-import io.ktor.client.features.json.serializer.*
-import io.ktor.client.features.logging.*
-import io.ktor.client.request.*
-import io.ktor.http.*
-import io.ktor.utils.io.core.*
+import io.ktor.client.HttpClient
+import io.ktor.client.features.ResponseException
+import io.ktor.client.features.HttpTimeout
+import io.ktor.client.features.json.JsonFeature
+import io.ktor.client.features.json.serializer.KotlinxSerializer
+import io.ktor.client.features.logging.Logging
+import io.ktor.client.features.logging.LogLevel
+import io.ktor.client.features.logging.Logger
+import io.ktor.client.request.get
+import io.ktor.client.request.parameter
+import io.ktor.http.ContentType
+import io.ktor.http.contentType
+import io.ktor.utils.io.core.use
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.boolean
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.jsonPrimitive
 
-object RecallApiClient {
+class RecallApiClient {
 
     private val TIME_OUT: Long = 60_000
-    private val APP_RECAL_END_POINT = "/recall/application"
+    private val APP_RECALL_END_POINT = "/recall/application"
     private val SaMD_RECALL_END_POINT = "/recall/samd"
 
     private val httpClient: HttpClient = HttpClient {
@@ -43,7 +52,7 @@ object RecallApiClient {
 
     suspend fun getAppRecall(baseURL: String, appId: String, appVersion: String, country: String) {
         return httpClient.use {
-            httpClient.get(baseURL.plus(APP_RECAL_END_POINT)) {
+            httpClient.get(baseURL.plus(APP_RECALL_END_POINT)) {
                 parameter("os", getOS())
                 parameter("osVersion", getOSVersion())
                 parameter("device", getDevice())
@@ -55,17 +64,38 @@ object RecallApiClient {
         }
     }
 
-    suspend fun getSaMDRecall(baseURL: String, samds: String, country: String) {
-        return httpClient.use {
-            httpClient.get(baseURL.plus(SaMD_RECALL_END_POINT)) {
-                parameter("os", getOS())
-                parameter("osVersion", getOSVersion())
-                parameter("device", getDevice())
-                parameter("samds",samds)
-                parameter("country",country)
-                contentType(ContentType.Application.Json)
-                contentType(ContentType.Application.Json)
+    suspend fun getSaMDRecall(baseURL: String, country: String, samdIds: List<String>): Result<List<SamdResponse>> {
+        try {
+            httpClient.use {
+                val rawSamd: String =
+                    httpClient.get(baseURL.plus(SaMD_RECALL_END_POINT)) {
+                        parameter("os", getOS())
+                        parameter("osVersion", getOSVersion())
+                        parameter("device", getDevice())
+                        parameter("samds", samdIds.joinToString(","))
+                        parameter("country", country)
+                        contentType(ContentType.Application.Json)
+                    }
+                /*val rawSamd = "{\n" +
+                        "\t\"com.roche.pinchtomatoes\": {\n" +
+                        "\t\t\"recall\": true\n" +
+                        "\t},\n" +
+                        "\t\"com.roche.walktest\": {\n" +
+                        "\t\t\"recall\": false\n" +
+                        "\t}\n" +
+                        "}"*/
+                val format = Json
+                val jsonObject = format.parseToJsonElement(rawSamd)
+                val responseList = mutableListOf<SamdResponse>()
+                for (samdId in samdIds) {
+                    val recallStatus =
+                        jsonObject.jsonObject[samdId]?.jsonObject?.get("recall")?.jsonPrimitive?.boolean!!
+                    responseList.add(SamdResponse(samdId, recallStatus))
+                }
+                return Result.success(responseList)
             }
+        } catch (ex: ResponseException) {
+            return Result.failure(ex)
         }
     }
 }

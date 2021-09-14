@@ -60,14 +60,12 @@ class MainActivity : AppCompatActivity() {
 //        }
 
         mainSope.launch {
-            kotlin.runCatching {
-                RecallApiClient.getSaMDRecall("https://floodlight.dhp-dev.dhs.platform.navify.com","com.roche.ssg.test.samd.one:1.0.0,com.roche.ssg.test.samd.two:1.0.1","fr")
-            }.onSuccess {
-                Log.e("Success", it.toString())
-            }.onFailure {
-                Log.e("TAG","Error")
-            }
-
+            val response = RecallApiClient().getSaMDRecall(
+                "https://floodlight.dhp-dev.dhs.platform.navify.com",
+                "fr",
+                listOf("com.roche.pinchtomatoes", "com.roche.walktest")
+            )
+            Log.i("Response from client", "$response")
         }
     }
 
