@@ -31,7 +31,7 @@ class MenuUtilitesScreenTest : BaseTest() {
         MenuUtilitesScreenPage.clickOnUnZIPButton()
         MenuUtilitesScreenPage.verifyDeviceRootedStatus(AppUtils.string(R.string.text_device_rooted))
         MenuUtilitesScreenPage.verifyUnZipStatus(AppUtils.string(R.string.text_unzip_status_path))
-        MenuUtilitesScreenPage.verifyGetUserManualStatus(AppUtils.string(R.string.text_user_manual_status))
+        //MenuUtilitesScreenPage.verifyGetUserManualStatus(AppUtils.string(R.string.text_user_manual_status))
     }
 
 }
