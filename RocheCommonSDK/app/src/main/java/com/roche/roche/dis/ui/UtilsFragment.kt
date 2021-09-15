@@ -81,11 +81,12 @@ class UtilsFragment : Fragment() {
                 val path =
                     DownloadStaticContent.downloadStaticAssets(
                         requireContext(),
-                        "https://passport-static-content.tpp1-dev.platform.navify.com/com.roche.nrm_passport/docs/floodlight.json",
-                        "1.2.0",
+                        "https://static-content.dhp-dev.dhs.platform.navify.com/com.roche.floodlight/docs/floodlight.json",
+                        "0.7.0",
                         DownloadStaticContent.LocaleType.EN_US,
-                        "user-manuals",
-                        ::showProgress
+                        "privacy_policy",
+                        ::showProgress,
+                        "subdirectory"
                     )
                 Log.d("usermanual", "file path: $path")
                 binding.statusUserManual = path

@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.annotation.VisibleForTesting
 import com.roche.roche.dis.utils.PreferenceUtil
 import com.roche.roche.dis.utils.get
+import com.roche.roche.dis.utils.remove
 import com.roche.roche.dis.utils.set
 
 object DownloadStaticContentSharedPref {
@@ -73,6 +74,17 @@ object DownloadStaticContentSharedPref {
         val key = generateKey(PREF_KEY_FILE_PATH_PREFIX, appVersion, locale, fileKey)
         val pref = PreferenceUtil.createOrGetPreference(context, USER_MANUALS_PREFS)
         pref.set(key, filePath)
+    }
+
+    fun removeAllKeysOfAppVersion(context: Context, appVersion: String) {
+        val pref = PreferenceUtil.createOrGetPreference(context, USER_MANUALS_PREFS)
+        for (key in pref.all.keys) {
+            if (key.startsWith("${PREF_KEY_ETAG_PREFIX}_${getAppVersionKey(appVersion)}") ||
+                key.startsWith("${PREF_KEY_FILE_PATH_PREFIX}_${getAppVersionKey(appVersion)}_")
+            ) {
+                pref.remove(key)
+            }
+        }
     }
 
     private fun generateKey(

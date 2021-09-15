@@ -37,11 +37,11 @@ object DownloadStaticContent {
     )
     annotation class LocaleType {
         companion object {
-            const val SV_FI = "sv-FI"
-            const val DE_DE = "de-DE"
-            const val EN_AU = "en-AU"
-            const val EN_GB = "en-GB"
-            const val EN_US = "en-US"
+            const val SV_FI = "sv_FI"
+            const val DE_DE = "de_DE"
+            const val EN_AU = "en_AU"
+            const val EN_GB = "en_GB"
+            const val EN_US = "en_US"
             const val FI_FI = "fi_FI"
             const val FR_FR = "fr_FR"
             const val IT_IT = "it_IT"
@@ -103,9 +103,9 @@ object DownloadStaticContent {
             }
 
             val subDirPath = if (targetSubDir != null) {
-                appVersion + File.separator + targetSubDir + File.separator + locale + File.separator + fileKey
+                appVersion + File.separator + targetSubDir
             } else {
-                appVersion + File.separator + locale + File.separator + fileKey
+                appVersion
             }
             // download the file
             val zipPath =
@@ -127,8 +127,8 @@ object DownloadStaticContent {
             )
             // Delete zipped file
             File(zipPath).delete()
-
-
+            // check and delete old version
+            checkAndDeleteOldVersionData(context, appVersion)
             return unzipPath
         } catch (e: Exception) {
             if (e.message == EXCEPTION_NOT_MODIFIED) {
@@ -387,6 +387,20 @@ object DownloadStaticContent {
             if (NetworkUtils.hasInternetConnection(context).not()) {
                 throw IllegalStateException(EXCEPTION_NETWORK_NOT_AVAILABLE)
             }
+        }
+    }
+
+    private fun checkAndDeleteOldVersionData(context: Context, appVersion: String) {
+        val existingVersion = DownloadStaticContentSharedPref.getVersion(context)
+        if (existingVersion != appVersion) {
+            if (existingVersion.isNotBlank()) {
+                // delete old version's data
+                File(context.filesDir.toString() + File.separator + existingVersion).deleteRecursively()
+                // remove shared pref data
+                DownloadStaticContentSharedPref.removeAllKeysOfAppVersion(context, existingVersion)
+            }
+            // update new version
+            DownloadStaticContentSharedPref.setVersion(context, appVersion)
         }
     }
 }
