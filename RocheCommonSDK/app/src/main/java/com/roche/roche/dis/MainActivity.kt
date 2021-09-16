@@ -16,6 +16,7 @@ import androidx.navigation.ui.setupWithNavController
 import androidx.navigation.ui.onNavDestinationSelected
 import androidx.navigation.ui.navigateUp
 import com.roche.apprecall.RecallApiClient
+import com.roche.apprecall.RecallException
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
@@ -60,12 +61,22 @@ class MainActivity : AppCompatActivity() {
 //        }
 
         mainSope.launch {
-            val response = RecallApiClient().getSaMDRecall(
-                "https://floodlight.dhp-dev.dhs.platform.navify.com",
-                "fr",
-                listOf("com.roche.pinchtomatoes", "com.roche.walktest")
-            )
-            Log.i("Response from client", "$response")
+            try {
+                val response = RecallApiClient().checkSaMDRecall(
+                    "https://floodlight.dhp-dev.dhs.platform.navify.com",
+                    "fr",
+                    listOf("com.roche.ssg.test.samd.one:1.0.0", "com.roche.ssg.test.samd.two:1.0.1")
+                )
+
+                /*val response = RecallApiClient().checkAppRecall(
+                    "https://floodlight.dhp-dev.dhs.platform.navify.com", "com.roche.ssg.test.application", "1.0", "fr"
+                )
+                Log.i("Response from client", "${response.updateAvailable}")*/
+            } catch (e: RecallException) {
+                Log.i("Response from client", "${e.message}")
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
     }
 

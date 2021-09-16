@@ -21,9 +21,6 @@ import kotlinx.serialization.json.jsonPrimitive
 
 class RecallApiClient {
 
-    private val TIME_OUT: Long = 60_000
-    private val APP_RECALL_END_POINT = "/recall/application"
-    private val SaMD_RECALL_END_POINT = "/recall/samd"
 
     private val httpClient: HttpClient = HttpClient {
         install(HttpTimeout) {
@@ -39,7 +36,7 @@ class RecallApiClient {
             }
         }
         install(JsonFeature) {
-            val json = kotlinx.serialization.json.Json {
+            val json = Json {
                 ignoreUnknownKeys = true
                 prettyPrint = true
                 isLenient = true
@@ -50,23 +47,36 @@ class RecallApiClient {
         }
     }
 
-    suspend fun getAppRecall(baseURL: String, appId: String, appVersion: String, country: String) {
-        return httpClient.use {
-            httpClient.get(baseURL.plus(APP_RECALL_END_POINT)) {
-                parameter("os", getOS())
-                parameter("osVersion", getOSVersion())
-                parameter("device", getDevice())
-                parameter("appId",appId)
-                parameter("appVersion",appVersion)
-                parameter("country",country)
-                contentType(ContentType.Application.Json)
+    suspend fun checkAppRecall(baseURL: String, appId: String, appVersion: String, country: String): AppRecallResponse {
+        try {
+            return httpClient.use {
+                val response: AppRecallResponse = httpClient.get(baseURL.plus(APP_RECALL_END_POINT)) {
+                    parameter("os", getOS())
+                    parameter("osVersion", getOSVersion())
+                    parameter("device", getDevice())
+                    parameter("appId", appId)
+                    parameter("appVersion", appVersion)
+                    parameter("country", country)
+                    contentType(ContentType.Application.Json)
+                }
+                return@use response
             }
+
+        } catch (ex: ResponseException) {
+            val exception =
+                RecallException(
+                    ex.response.status.value,
+                    ex
+                )
+            throw exception
+        } catch (ex: Exception) {
+            throw ex
         }
     }
 
-    suspend fun getSaMDRecall(baseURL: String, country: String, samdIds: List<String>): Result<List<SamdResponse>> {
+    suspend fun checkSaMDRecall(baseURL: String, country: String, samdIds: List<String>): List<SamdResponse> {
         try {
-            httpClient.use {
+            return httpClient.use {
                 val rawSamd: String =
                     httpClient.get(baseURL.plus(SaMD_RECALL_END_POINT)) {
                         parameter("os", getOS())
@@ -76,26 +86,32 @@ class RecallApiClient {
                         parameter("country", country)
                         contentType(ContentType.Application.Json)
                     }
-                /*val rawSamd = "{\n" +
-                        "\t\"com.roche.pinchtomatoes\": {\n" +
-                        "\t\t\"recall\": true\n" +
-                        "\t},\n" +
-                        "\t\"com.roche.walktest\": {\n" +
-                        "\t\t\"recall\": false\n" +
-                        "\t}\n" +
-                        "}"*/
+
                 val format = Json
-                val jsonObject = format.parseToJsonElement(rawSamd)
+                val jsonObject = format.parseToJsonElement(rawSamd).jsonObject
                 val responseList = mutableListOf<SamdResponse>()
-                for (samdId in samdIds) {
+                for (samdId in jsonObject.keys) {
                     val recallStatus =
                         jsonObject.jsonObject[samdId]?.jsonObject?.get("recall")?.jsonPrimitive?.boolean!!
                     responseList.add(SamdResponse(samdId, recallStatus))
                 }
-                return Result.success(responseList)
+                return@use responseList
             }
         } catch (ex: ResponseException) {
-            return Result.failure(ex)
+            val exception =
+                RecallException(
+                    ex.response.status.value,
+                    ex
+                )
+            throw exception
+        } catch (ex: Exception) {
+            throw ex
         }
+    }
+
+    companion object {
+        private const val TIME_OUT: Long = 60_000
+        private const val APP_RECALL_END_POINT = "/recall/application"
+        private const val SaMD_RECALL_END_POINT = "/recall/samd"
     }
 }
