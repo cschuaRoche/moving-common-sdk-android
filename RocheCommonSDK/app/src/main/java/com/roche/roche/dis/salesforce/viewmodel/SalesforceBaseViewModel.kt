@@ -5,6 +5,7 @@ import android.app.Application
 import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
+import com.roche.roche.dis.BuildConfig
 import com.roche.roche.dis.R
 import com.salesforce.android.chat.core.ChatConfiguration
 import com.salesforce.android.chat.core.ChatCore
@@ -14,15 +15,14 @@ import com.salesforce.android.chat.core.model.ChatEndReason
 import com.salesforce.android.chat.core.model.ChatSessionState
 import com.salesforce.android.service.common.utilities.control.Async
 
-abstract class SalesforceBaseViewModel(app: Application) : AndroidViewModel(app), SessionStateListener, Async.ResultHandler<AvailabilityState> {
-    // TODO store these securely
-    private val ORG_ID = "00D0E000000EEbX"
-    private val DEPLOYMENT_ID = "5720E0000004CP1"
-    private val BUTTON_ID = "5730E0000004Clq"
-    private val LIVE_AGENT_POD = "d.la2-c1cs-fra.salesforceliveagent.com"
+abstract class SalesforceBaseViewModel(app: Application) : AndroidViewModel(app),
+    SessionStateListener, Async.ResultHandler<AvailabilityState> {
+
     internal val chatConfiguration: ChatConfiguration =
-        ChatConfiguration.Builder(ORG_ID, BUTTON_ID,
-            DEPLOYMENT_ID, LIVE_AGENT_POD)
+        ChatConfiguration.Builder(
+            BuildConfig.SALESFORCE_ORG_ID, BuildConfig.SALESFORCE_BUTTON_ID,
+            BuildConfig.SALESFORCE_DEPLOYMENT_ID, BuildConfig.SALESFORCE_LIVE_AGENT_POD
+        )
             .build()
 
     internal abstract fun initChat(activity: Activity)
@@ -37,7 +37,8 @@ abstract class SalesforceBaseViewModel(app: Application) : AndroidViewModel(app)
         isShowing = true
 
         val requestEstimatedWaitTime = true
-        val agentAvailability = ChatCore.configureAgentAvailability(chatConfiguration, requestEstimatedWaitTime)
+        val agentAvailability =
+            ChatCore.configureAgentAvailability(chatConfiguration, requestEstimatedWaitTime)
         agentAvailability.check().onResult(this)
 
         initChat(activity)
@@ -46,7 +47,8 @@ abstract class SalesforceBaseViewModel(app: Application) : AndroidViewModel(app)
     override fun onSessionStateChange(state: ChatSessionState?) {
         if (state == ChatSessionState.Disconnected) {
             isShowing = false
-            Toast.makeText(getApplication(), R.string.chat_session_disconnected, Toast.LENGTH_SHORT).show()
+            Toast.makeText(getApplication(), R.string.chat_session_disconnected, Toast.LENGTH_SHORT)
+                .show()
         }
         Log.w("Salesforce", "onSessionStateChange: $state")
     }
