@@ -109,7 +109,7 @@ class RecallApiClient {
     }
 
     companion object {
-        private const val TIME_OUT: Long = 60_000
+        private const val TIME_OUT: Long = 15_000
         private const val APP_RECALL_END_POINT = "recall/application"
         private const val SaMD_RECALL_END_POINT = "recall/samd"
     }
