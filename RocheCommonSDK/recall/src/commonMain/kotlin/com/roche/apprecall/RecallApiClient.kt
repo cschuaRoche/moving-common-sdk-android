@@ -50,7 +50,7 @@ class RecallApiClient {
     suspend fun checkAppRecall(baseURL: String, appId: String, appVersion: String, country: String): AppRecallResponse {
         try {
             return httpClient.use {
-                val response: AppRecallResponse = httpClient.get(baseURL.plus(APP_RECALL_END_POINT)) {
+                val response: AppRecallResponse = httpClient.get(getCallingUrl(baseURL, APP_RECALL_END_POINT)) {
                     parameter("os", getOS())
                     parameter("osVersion", getOSVersion())
                     parameter("device", getDevice())
@@ -61,13 +61,8 @@ class RecallApiClient {
                 }
                 return@use response
             }
-
         } catch (ex: ResponseException) {
-            val exception =
-                RecallException(
-                    ex.response.status.value,
-                    ex
-                )
+            val exception = RecallException(ex.response.status.value, ex)
             throw exception
         } catch (ex: Exception) {
             throw ex
@@ -78,7 +73,7 @@ class RecallApiClient {
         try {
             return httpClient.use {
                 val rawSamd: String =
-                    httpClient.get(baseURL.plus(SaMD_RECALL_END_POINT)) {
+                    httpClient.get(getCallingUrl(baseURL, SaMD_RECALL_END_POINT)) {
                         parameter("os", getOS())
                         parameter("osVersion", getOSVersion())
                         parameter("device", getDevice())
@@ -109,9 +104,13 @@ class RecallApiClient {
         }
     }
 
+    private fun getCallingUrl(baseUrl: String, endpoint: String): String {
+        return if (baseUrl.endsWith("/")) baseUrl.plus(endpoint) else baseUrl.plus("/").plus(endpoint)
+    }
+
     companion object {
         private const val TIME_OUT: Long = 60_000
-        private const val APP_RECALL_END_POINT = "/recall/application"
-        private const val SaMD_RECALL_END_POINT = "/recall/samd"
+        private const val APP_RECALL_END_POINT = "recall/application"
+        private const val SaMD_RECALL_END_POINT = "recall/samd"
     }
 }

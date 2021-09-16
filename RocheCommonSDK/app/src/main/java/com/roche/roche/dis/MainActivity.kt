@@ -1,7 +1,6 @@
 package com.roche.roche.dis
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
@@ -15,10 +14,6 @@ import com.roche.roche.dis.databinding.ActivityMainBinding
 import androidx.navigation.ui.setupWithNavController
 import androidx.navigation.ui.onNavDestinationSelected
 import androidx.navigation.ui.navigateUp
-import com.roche.apprecall.RecallApiClient
-import com.roche.apprecall.RecallException
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
@@ -47,37 +42,6 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.setDisplayShowTitleEnabled(false)// remove default titles of the fragments
         setupActionBarWithNavController(navController, appBarConfiguration)
         binding.mainNavigationView.setupWithNavController(navController)
-
-        val mainSope = MainScope()
-//        mainSope.launch {
-//            kotlin.runCatching {
-//                RecallApiClient.getAppRecall("https://floodlight.dhp-dev.dhs.platform.navify.com","com.roche.ssg.test.application","1.0","fr")
-//            }.onSuccess {
-//                Log.e("Success", it.toString())
-//            }.onFailure {
-//                Log.e("TAG","Error")
-//            }
-//
-//        }
-
-        mainSope.launch {
-            try {
-                val response = RecallApiClient().checkSaMDRecall(
-                    "https://floodlight.dhp-dev.dhs.platform.navify.com",
-                    "fr",
-                    listOf("com.roche.ssg.test.samd.one:1.0.0", "com.roche.ssg.test.samd.two:1.0.1")
-                )
-
-                /*val response = RecallApiClient().checkAppRecall(
-                    "https://floodlight.dhp-dev.dhs.platform.navify.com", "com.roche.ssg.test.application", "1.0", "fr"
-                )
-                Log.i("Response from client", "${response.updateAvailable}")*/
-            } catch (e: RecallException) {
-                Log.i("Response from client", "${e.message}")
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }
     }
 
     override fun onSupportNavigateUp(): Boolean {

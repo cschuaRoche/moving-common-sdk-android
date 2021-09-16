@@ -9,7 +9,7 @@
     <string name="unzip">UnZip</string>
     <string name="is_rooted">Check If Device Rooted</string>
     <string name="main_description">This Sample App will demo the features and functionalities of the SSG Android common libraries.</string>
-    <string name="recall">Recall</string>
+    <string name="recall">App/SaMD Recall</string>
     <string name="utilities">Utilities</string>
     <string name="get_static_user_manual">Get Static User Manual</string>
     <string name="fingerprint_enable">Fingerprint Enable</string>
@@ -19,4 +19,11 @@
     <string name="status_false">False</string>
     <string name="is_biometric_enrolled">Is Biometric Enrolled</string>
     <string name="error">Error</string>
+    <string name="app_recall">App Recall</string>
+    <string name="base_url">Base URL</string>
+    <string name="samd_recall">SaMD Recall</string>
+    <string name="app_id">App ID</string>
+    <string name="app_version">App Version</string>
+    <string name="country">Country</string>
+    <string name="samds">Comma Separated SaMDs</string>
 </resources>
