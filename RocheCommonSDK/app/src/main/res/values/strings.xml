@@ -11,6 +11,7 @@
     <string name="main_description">This Sample App will demo the features and functionalities of the SSG Android common libraries.</string>
     <string name="recall">Recall</string>
     <string name="utilities">Utilities</string>
+    <string name="release_less_material">Release-less Material</string>
     <string name="get_static_user_manual">Get Static User Manual</string>
     <string name="fingerprint_enable">Fingerprint Enable</string>
     <string name="enroll_biometric">Enroll Biometric</string>
@@ -18,5 +19,10 @@
     <string name="status_true">True</string>
     <string name="status_false">False</string>
     <string name="is_biometric_enrolled">Is Biometric Enrolled</string>
-    <string name="error">Error</string>
+    <string name="error">Error: %1$s</string>
+    <string name="hint_app_version">App Version</string>
+    <string name="hint_locale">Locale</string>
+    <string name="hint_file_type">File Type</string>
+    <string name="txt_wifi_only">Wifi Only</string>
+    <string name="txt_download">Download</string>
 </resources>

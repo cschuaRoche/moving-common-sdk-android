@@ -26,4 +26,10 @@
         android:name="com.roche.roche.dis.ui.UtilsFragment"
         android:label="fragment_utils"
         tools:layout="@layout/fragment_utils" />
+
+    <fragment
+        android:id="@+id/releaseLessMaterialFragment"
+        android:name="com.roche.roche.dis.ui.ReleaseLessMaterialFragment"
+        android:label="fragment_utils"
+        tools:layout="@layout/fragment_releaseless_material" />
 </navigation>
