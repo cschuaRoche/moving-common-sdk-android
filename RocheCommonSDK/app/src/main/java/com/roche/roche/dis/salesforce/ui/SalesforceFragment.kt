@@ -40,5 +40,7 @@ class SalesforceFragment : Fragment() {
         binding.btnChatCustom.setOnClickListener {
             findNavController().navigate(R.id.action_to_custom_chat_ui)
         }
+        // TODO this will be enabled next sprint work
+        binding.btnChatCustom.visibility = View.INVISIBLE
     }
 }
