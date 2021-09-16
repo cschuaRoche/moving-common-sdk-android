@@ -64,14 +64,17 @@ object DownloadStaticContent {
     const val EXCEPTION_UNZIPPING_FILE = "Error In Unzipping The File"
 
     /**
-     * Download static assets and unzips them
+     * Download static assets and unzips them of given app version, locale and file key.
+     * Deletes older app version's content if newer app version's data is requested.
      *
      * @param context application context
      * @param manifestUrl url of the manifest file
      * @param appVersion application version
      * @param locale locale for which static assets needs to be downloaded
+     * @param fileKey file key for which static assets needs to be downloaded (e.g. user_manual)
      * @param progress callback which will return the progress of the download
      * @param targetSubDir optional sub directory where the files will be downloaded to
+     * @param allowWifiOnly download asset on WIFI only (Default is false).
      *
      * @return downloaded and unzipped static asset's path
      */
@@ -96,27 +99,23 @@ object DownloadStaticContent {
             // read manifest file and get the url
             val fileUrl =
                 getUrlFromManifest(context, manifestUrl, appVersion, locale, fileKey, allowWifiOnly)
+
             // check if the url is not a zip file type then throw exception
             val fileExtension = fileUrl.substring(fileUrl.lastIndexOf("."))
             if (fileExtension.equals(ZIPPED_FILE_EXTENSION, true).not()) {
                 throw IllegalStateException(EXCEPTION_INVALID_MANIFEST_FILE_FORMAT)
             }
-
             val subDirPath = if (targetSubDir != null) {
                 appVersion + File.separator + targetSubDir
             } else {
                 appVersion
             }
+
             // download the file
             val zipPath =
                 downloadFromUrl(context, fileUrl, progress, subDirPath, allowWifiOnly)
-
             // unzip the file
-            val unzipPath = unzipFile(
-                context,
-                zipPath,
-                subDirPath
-            )
+            val unzipPath = unzipFile(context, zipPath, subDirPath)
             // save unzipping file path to shared pref
             DownloadStaticContentSharedPref.setFilePath(
                 context,
@@ -132,6 +131,7 @@ object DownloadStaticContent {
             return unzipPath
         } catch (e: Exception) {
             if (e.message == EXCEPTION_NOT_MODIFIED) {
+                // return existing file path as manifest is not modified
                 return DownloadStaticContentSharedPref.getFilePath(
                     context,
                     appVersion,
@@ -144,12 +144,14 @@ object DownloadStaticContent {
     }
 
     /**
-     * Get zip content url from the given manifest url.
+     * Retrieve a file URL based on the app version, locale and file key from given manifest
      *
      * @param context Context
      * @param manifestUrl Url of the manifest file
      * @param appVersion Application version
      * @param locale Locale
+     * @param fileKey file key for which static assets needs to be downloaded (e.g. user_manual)
+     * @param allowWifiOnly download asset on WIFI only (Default is false).
      */
     @Throws(
         IllegalStateException::class,
@@ -174,13 +176,12 @@ object DownloadStaticContent {
                 // get etag and downloaded file path value from secure shared preference
                 val etag =
                     DownloadStaticContentSharedPref.getETag(context, appVersion, locale, fileKey)
-                val filePath =
-                    DownloadStaticContentSharedPref.getFilePath(
-                        context,
-                        appVersion,
-                        locale,
-                        fileKey
-                    )
+                val filePath = DownloadStaticContentSharedPref.getFilePath(
+                    context,
+                    appVersion,
+                    locale,
+                    fileKey
+                )
                 if (etag.isNotBlank() && filePath.isNotBlank()) {
                     // If both eTag and file path are available then add etag in header
                     urlConnection.addRequestProperty("If-None-Match", etag)
@@ -226,6 +227,7 @@ object DownloadStaticContent {
      * @param fileURL the file url
      * @param progress callback which will return the progress of the download
      * @param targetSubDir optional sub directory where the files will be downloaded to
+     * @param allowWifiOnly download asset on WIFI only (Default is false).
      *
      * @return downloaded zipped file's path
      */
