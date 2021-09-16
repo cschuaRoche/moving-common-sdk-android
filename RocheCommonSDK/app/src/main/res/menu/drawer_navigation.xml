@@ -18,5 +18,10 @@
             android:id="@+id/utilsFragment"
             android:title="@string/utilities"
             app:actionLayout="@layout/action_view_arrow" />
+
+        <item
+            android:id="@+id/salesforceFragment"
+            android:title="@string/salesforce"
+            app:actionLayout="@layout/action_view_arrow" />
     </group>
 </menu>

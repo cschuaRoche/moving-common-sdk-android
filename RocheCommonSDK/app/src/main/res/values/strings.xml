@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">RocheCommonSampleApp</string>
+    <string name="app_name">Common Sample App</string>
     <string name="biometric_confirm_title">Do you want to allow "RocheCommonSampleApp" to use biometrics?</string>
     <string name="biometric_enable_desc">In order to be able to use Biometrics login, you have to enable that from device Settings.</string>
     <string name="fingerprint_supported">Fingerprint Supported</string>
@@ -8,9 +8,14 @@
     <string name="biometrics">Biometrics</string>
     <string name="unzip">UnZip</string>
     <string name="is_rooted">Check If Device Rooted</string>
+    <string name="start_chat">Start Chat</string>
+    <string name="enter">Enter</string>
+    <string name="start_full_chat">Start Chat - Full Screen</string>
+    <string name="start_custom_chat">Start Chat - Custom UI</string>
     <string name="main_description">This Sample App will demo the features and functionalities of the SSG Android common libraries.</string>
     <string name="recall">Recall</string>
     <string name="utilities">Utilities</string>
+    <string name="salesforce">Salesforce</string>
     <string name="get_static_user_manual">Get Static User Manual</string>
     <string name="fingerprint_enable">Fingerprint Enable</string>
     <string name="enroll_biometric">Enroll Biometric</string>
@@ -19,4 +24,6 @@
     <string name="status_false">False</string>
     <string name="is_biometric_enrolled">Is Biometric Enrolled</string>
     <string name="error">Error</string>
+    <string name="chat_session_disconnected">Chat session is now disconnected.</string>
+    <string name="chat_session_ended">Chat session has ended.</string>
 </resources>
