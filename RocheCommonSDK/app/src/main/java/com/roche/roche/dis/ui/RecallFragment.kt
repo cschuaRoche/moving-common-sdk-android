@@ -5,7 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.roche.apprecall.RecallApiClient
+import com.roche.apprecall.data.RecallApiClient
 import com.roche.apprecall.RecallException
 import com.roche.roche.dis.databinding.FragmentRecallBinding
 import kotlinx.coroutines.MainScope

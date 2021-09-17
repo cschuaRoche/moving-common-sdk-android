@@ -1,5 +1,12 @@
-package com.roche.apprecall
+package com.roche.apprecall.data
 
+import com.roche.apprecall.AppRecallResponse
+import com.roche.apprecall.RecallException
+import com.roche.apprecall.SamdResponse
+import com.roche.apprecall.getDevice
+import com.roche.apprecall.getOS
+import com.roche.apprecall.getOSVersion
+import com.roche.apprecall.initLogger
 import io.github.aakira.napier.Napier
 import io.ktor.client.HttpClient
 import io.ktor.client.features.ResponseException
