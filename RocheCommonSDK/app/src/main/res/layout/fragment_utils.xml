@@ -16,10 +16,6 @@
         <variable
             name="statusUnzip"
             type="String" />
-
-        <variable
-            name="statusUserManual"
-            type="String" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -53,23 +49,10 @@
             android:text="@{statusUnzip}"
             android:visibility="@{(TextUtils.isEmpty(statusUnzip) ? View.GONE : View.VISIBLE)}" />
 
-        <Button
-            android:id="@+id/btn_user_manual"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@string/get_static_user_manual" />
-
-        <TextView
-            android:id="@+id/txt_user_manual_status"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@{statusUserManual}"
-            android:visibility="@{(TextUtils.isEmpty(statusUserManual) ? View.GONE : View.VISIBLE)}" />
-
         <androidx.constraintlayout.helper.widget.Flow
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:constraint_referenced_ids="btn_is_rooted,txt_rooted_status,btn_unzip,txt_unzip_status,btn_user_manual,txt_user_manual_status"
+            app:constraint_referenced_ids="btn_is_rooted,txt_rooted_status,btn_unzip,txt_unzip_status"
             app:flow_maxElementsWrap="1"
             app:flow_wrapMode="aligned"
             app:layout_constraintStart_toStartOf="parent"
