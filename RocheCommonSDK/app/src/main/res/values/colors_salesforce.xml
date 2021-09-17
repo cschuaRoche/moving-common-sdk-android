@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- https://developer.salesforce.com/docs/atlas.en-us.noversion.service_sdk_android.meta/service_sdk_android/android_customize_colors.htm -->
+    <color name="salesforce_toolbar">#0066cc</color>
+    <color name="salesforce_toolbar_inverted">#deffffff</color>
+    <color name="salesforce_brand_primary">#4a90e2</color>
+    <color name="salesforce_brand_contrast">#deffffff</color>
+    <color name="salesforce_brand_secondary">#a9f7ef</color>
+    <color name="salesforce_contrast_primary">#333333</color>
+    <color name="salesforce_contrast_secondary">#767676</color>
+    <color name="salesforce_contrast_tertiary">#8c9395</color>
+    <color name="salesforce_contrast_quaternary">#F1F1F1</color>
+    <color name="salesforce_contrast_inverted">#deffffff</color>
+    <color name="salesforce_feedback_primary">#e74c3c</color>
+    <color name="salesforce_feedback_secondary">#00CCCC</color>
+    <color name="salesforce_feedback_tertiary">#F5AC2C</color>
+    <color name="salesforce_title_color">#deffffff</color>
+    <color name="salesforce_overlay">#9f000000</color>
+</resources>
