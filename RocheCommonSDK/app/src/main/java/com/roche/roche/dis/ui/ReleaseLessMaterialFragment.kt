@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.roche.roche.dis.R
@@ -32,6 +33,7 @@ class ReleaseLessMaterialFragment : Fragment() {
 
     private fun downloadStaticContent() {
         with(binding) {
+            progressBar.progressBarHolder.isVisible = true
             txtStatus.text = ""
             lifecycleScope.launch {
                 txtStatus.text = try {
@@ -48,6 +50,7 @@ class ReleaseLessMaterialFragment : Fragment() {
                 } catch (e: Exception) {
                     getString(R.string.error, e.message)
                 }
+                progressBar.progressBarHolder.isVisible = false
             }
         }
     }
