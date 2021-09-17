@@ -35,7 +35,7 @@ class ReleaseLessMaterialFragment : Fragment() {
             txtStatus.text = ""
             lifecycleScope.launch {
                 txtStatus.text = try {
-                    DownloadStaticContent.downloadStaticAssets(
+                    val path = DownloadStaticContent.downloadStaticAssets(
                         requireContext(),
                         MANIFEST_URL,
                         etAppVersion.text.toString(),
@@ -44,6 +44,7 @@ class ReleaseLessMaterialFragment : Fragment() {
                         ::showProgress,
                         allowWifiOnly = switchWifiOnly.isChecked
                     )
+                    getString(R.string.downloaded_path, path)
                 } catch (e: Exception) {
                     getString(R.string.error, e.message)
                 }

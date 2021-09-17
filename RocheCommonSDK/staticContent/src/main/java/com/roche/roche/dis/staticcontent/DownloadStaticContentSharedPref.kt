@@ -79,7 +79,7 @@ object DownloadStaticContentSharedPref {
     fun removeAllKeysOfAppVersion(context: Context, appVersion: String) {
         val pref = PreferenceUtil.createOrGetPreference(context, USER_MANUALS_PREFS)
         for (key in pref.all.keys) {
-            if (key.startsWith("${PREF_KEY_ETAG_PREFIX}_${getAppVersionKey(appVersion)}") ||
+            if (key.startsWith("${PREF_KEY_ETAG_PREFIX}_${getAppVersionKey(appVersion)}_") ||
                 key.startsWith("${PREF_KEY_FILE_PATH_PREFIX}_${getAppVersionKey(appVersion)}_")
             ) {
                 pref.remove(key)
