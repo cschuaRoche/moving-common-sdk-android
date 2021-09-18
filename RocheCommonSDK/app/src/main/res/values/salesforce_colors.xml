@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Enable custom colors for salesforce -->
     <!-- https://developer.salesforce.com/docs/atlas.en-us.noversion.service_sdk_android.meta/service_sdk_android/android_customize_colors.htm -->
+    <!--
     <color name="salesforce_toolbar">#0066cc</color>
     <color name="salesforce_toolbar_inverted">#deffffff</color>
     <color name="salesforce_brand_primary">#4a90e2</color>
@@ -16,4 +18,5 @@
     <color name="salesforce_feedback_tertiary">#F5AC2C</color>
     <color name="salesforce_title_color">#deffffff</color>
     <color name="salesforce_overlay">#9f000000</color>
+    -->
 </resources>
