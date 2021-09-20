@@ -7,3 +7,4 @@ project(':lvl_library').projectDir = new File(rootDir, 'play-licensing/lvl_libra
 rootProject.name = "RocheCommonSampleApp"
 include ':utils'
 include ':staticContent'
+include ':recall'
