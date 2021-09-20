@@ -1,12 +1,110 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".ui.RecallFragment">
+        android:layout_height="wrap_content">
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:context=".ui.RecallFragment">
+
+            <EditText
+                android:id="@+id/et_app_recall_url"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/base_url"
+                android:importantForAutofill="no"
+                android:inputType="textUri" />
+
+            <EditText
+                android:id="@+id/et_app_id"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/app_id"
+                android:importantForAutofill="no"
+                android:inputType="textUri" />
+
+            <EditText
+                android:id="@+id/et_app_version"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/app_version"
+                android:importantForAutofill="no"
+                android:inputType="textUri" />
+
+            <EditText
+                android:id="@+id/et_app_recall_country"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/country"
+                android:importantForAutofill="no"
+                android:inputType="textUri" />
+
+            <TextView
+                android:id="@+id/txt_status_app_recall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone" />
+
+            <Button
+                android:id="@+id/btn_app_recall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/app_recall" />
+
+            <View
+                android:id="@+id/spacing"
+                android:layout_width="match_parent"
+                android:layout_height="60dp" />
+
+            <EditText
+                android:id="@+id/et_samd_recall_url"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/base_url"
+                android:importantForAutofill="no"
+                android:inputType="textUri" />
+
+            <EditText
+                android:id="@+id/et_samd_country"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/country"
+                android:importantForAutofill="no"
+                android:inputType="textUri" />
+
+            <EditText
+                android:id="@+id/et_samds"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/samds"
+                android:importantForAutofill="no"
+                android:inputType="textUri" />
+
+            <TextView
+                android:id="@+id/txt_status_samd_recall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone" />
+
+            <Button
+                android:id="@+id/btn_samd_recall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/samd_recall" />
+
+            <androidx.constraintlayout.helper.widget.Flow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:constraint_referenced_ids="et_app_recall_url,et_app_id,et_app_version,et_app_recall_country,txt_status_app_recall,btn_app_recall,spacing,et_samd_recall_url,et_samd_country,et_samds,txt_status_samd_recall,btn_samd_recall"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
 </layout>
