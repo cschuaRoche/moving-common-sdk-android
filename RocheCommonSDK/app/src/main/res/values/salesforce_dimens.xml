@@ -1,4 +1,7 @@
 <resources>
     <!-- Enable custom dimens for salesforce -->
     <!-- https://forcedotcom.github.io/ServiceSDK-Android/releases/chat/4.1.1/api/reference/doc-files/resource_overrides.html#Dimensions -->
+    <!--
+    <dimen name="chat_minimized_chat_bubble_height">50dp</dimen>
+    -->
 </resources>
