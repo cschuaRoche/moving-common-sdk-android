@@ -6,6 +6,7 @@ import android.content.SharedPreferences
 import androidx.security.crypto.EncryptedSharedPreferences
 import com.roche.roche.dis.staticcontent.DownloadStaticContentSharedPref.PREF_KEY_ETAG_PREFIX
 import com.roche.roche.dis.staticcontent.DownloadStaticContentSharedPref.PREF_KEY_FILE_PATH_PREFIX
+import com.roche.roche.dis.staticcontent.DownloadStaticContentSharedPref.PREF_KEY_VERSION
 import com.roche.roche.dis.utils.PreferenceUtil
 import com.roche.roche.dis.utils.get
 import io.mockk.every
@@ -47,11 +48,32 @@ class DownloadStaticContentSharedPrefTest : BaseMockkTest() {
     }
 
     @Test
+    fun `getVersion should return value from sharedPreferences`() {
+        every { pref.get(PREF_KEY_VERSION, "") } returns APP_VERSION
+        Assert.assertEquals(APP_VERSION, DownloadStaticContentSharedPref.getVersion(appContext))
+    }
+
+    @Test
+    fun `getVersion should return empty if not set`() {
+        every { pref.get(PREF_KEY_VERSION, "") } returns null
+        Assert.assertEquals("", DownloadStaticContentSharedPref.getVersion(appContext))
+    }
+
+    @Test
+    fun `setVersion should not crash`() {
+        try {
+            DownloadStaticContentSharedPref.setVersion(appContext, APP_VERSION)
+        } catch (e: Exception) {
+            Assert.fail(e.message)
+        }
+    }
+
+    @Test
     fun `getETag should return value from sharedPreferences`() {
         every { pref.get(generateKey(PREF_KEY_ETAG_PREFIX), "") } returns getETag()
         Assert.assertEquals(
             getETag(),
-            DownloadStaticContentSharedPref.getETag(appContext, APP_VERSION, LOCALE)
+            DownloadStaticContentSharedPref.getETag(appContext, APP_VERSION, LOCALE, FILE_KEY)
         )
     }
 
@@ -60,44 +82,51 @@ class DownloadStaticContentSharedPrefTest : BaseMockkTest() {
         every { pref.get(generateKey(PREF_KEY_ETAG_PREFIX), "") } returns null
         Assert.assertEquals(
             "",
-            DownloadStaticContentSharedPref.getETag(appContext, APP_VERSION, LOCALE)
+            DownloadStaticContentSharedPref.getETag(appContext, APP_VERSION, LOCALE, FILE_KEY)
         )
     }
 
     @Test
-    fun `saveETag should not crash`() {
+    fun `setETag should not crash`() {
         try {
-            DownloadStaticContentSharedPref.setETag(appContext, APP_VERSION, LOCALE, getETag())
+            DownloadStaticContentSharedPref.setETag(
+                appContext,
+                APP_VERSION,
+                LOCALE,
+                FILE_KEY,
+                getETag()
+            )
         } catch (e: Exception) {
             Assert.fail(e.message)
         }
     }
 
     @Test
-    fun `getDownloadedFilePath should return value from sharedPreferences`() {
+    fun `getFilePath should return value from sharedPreferences`() {
         every { pref.get(generateKey(PREF_KEY_FILE_PATH_PREFIX), "") } returns getDownloadedPath()
         Assert.assertEquals(
             getDownloadedPath(),
-            DownloadStaticContentSharedPref.getFilePath(appContext, APP_VERSION, LOCALE)
+            DownloadStaticContentSharedPref.getFilePath(appContext, APP_VERSION, LOCALE, FILE_KEY)
         )
     }
 
     @Test
-    fun `getDownloadedFilePath should return empty if not set`() {
+    fun `getFilePath should return empty if not set`() {
         every { pref.get(generateKey(PREF_KEY_FILE_PATH_PREFIX), "") } returns null
         Assert.assertEquals(
             "",
-            DownloadStaticContentSharedPref.getFilePath(appContext, APP_VERSION, LOCALE)
+            DownloadStaticContentSharedPref.getFilePath(appContext, APP_VERSION, LOCALE, FILE_KEY)
         )
     }
 
     @Test
-    fun `saveDownloadedFilePath should not crash`() {
+    fun `setFilePath should not crash`() {
         try {
             DownloadStaticContentSharedPref.setFilePath(
                 appContext,
                 APP_VERSION,
                 LOCALE,
+                FILE_KEY,
                 getDownloadedPath()
             )
         } catch (e: Exception) {
@@ -105,15 +134,15 @@ class DownloadStaticContentSharedPrefTest : BaseMockkTest() {
         }
     }
 
-    private fun generateKey(prefix: String): String =
-        prefix + UNDERSCORE + APP_VERSION.replace(".", "_") + UNDERSCORE + LOCALE
+    private fun generateKey(prefix: String) =
+        "${prefix}_${APP_VERSION.replace(".", "_")}_${LOCALE}_${FILE_KEY}"
 
     private fun getETag() = "8dc0c63a38126f59dadde2a309805d52"
     private fun getDownloadedPath() = "DOWNLOADED_PATH"
 
     companion object {
-        private const val UNDERSCORE = "_"
         private const val APP_VERSION = "1.0.0"
         private const val LOCALE = DownloadStaticContent.LocaleType.EN_US
+        private const val FILE_KEY = "user-manuals"
     }
 }
