@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Disable / Enable custom font style for salesforce -->
+    <!--
+    <style name="SalesforceFontStyle">
+        <item name="android:fontFamily">roboto_regular.ttf</item>
+    </style>
+    -->
+</resources>

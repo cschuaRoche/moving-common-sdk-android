@@ -41,4 +41,10 @@
     <string name="hint_file_type">File Type</string>
     <string name="txt_wifi_only">Wifi Only</string>
     <string name="txt_download">Download</string>
+
+    <!-- Salesforce strings must be included if you want to localize them -->
+    <!--
+    <string name="chatbot_transfer_no_agents_available_message">Sorry, no agents are available now.\nPlease try again later.</string>
+    <string name="chat_minimized_connecting">Connecting to chat\.\.\.</string>
+    -->
 </resources>
