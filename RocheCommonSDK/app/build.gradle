@@ -15,6 +15,11 @@ android {
         pickFirst  'META-INF/*'
     }
 
+    // Load values from config.properties file
+    def configPropertiesFile = rootProject.file("app/config.properties")
+    def configProperties = new Properties()
+    configProperties.load(new FileInputStream(configPropertiesFile))
+
     defaultConfig {
         applicationId "com.roche.roche.dis.biometrics"
         minSdkVersion 24
@@ -23,6 +28,11 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField "String", "SALESFORCE_ORG_ID", configProperties["SALESFORCE_ORG_ID"]
+        buildConfigField "String", "SALESFORCE_DEPLOYMENT_ID", configProperties["SALESFORCE_DEPLOYMENT_ID"]
+        buildConfigField "String", "SALESFORCE_BUTTON_ID", configProperties["SALESFORCE_BUTTON_ID"]
+        buildConfigField "String", "SALESFORCE_LIVE_AGENT_POD", configProperties["SALESFORCE_LIVE_AGENT_POD"]
     }
 
     buildTypes {
@@ -74,19 +84,32 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'com.google.android.material:material:1.2.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
-    testImplementation 'junit:junit:4.+'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
-    androidTestImplementation 'com.android.support.test:rules:1.0.2'
-    androidTestCompile 'com.android.support.test.espresso:espresso-contrib:2.2.2'
+
+    // salesforce
+    implementation 'com.salesforce.service:chat-core:4.2.0'
+    implementation 'com.salesforce.service:chat-ui:4.2.0'
+    // required by salesforce to fix a dependency crash
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+
+    // internal libs
+    implementation project(path: ':staticContent')
+    implementation project(path: ':biometrics')
+    implementation project(path: ':security')
+
+
+    implementation project(path: ':recall')
+    implementation "androidx.biometric:biometric:1.2.0-alpha03"
+    implementation "androidx.security:security-crypto:1.1.0-alpha02"
+
     //uiautomator
     androidTestImplementation 'androidx.test.uiautomator:uiautomator:2.2.0'
     implementation project(path: ':rocheCommon')
     implementation project(path: ':utils')
 
-    implementation project(path: ':staticContent')
-    implementation project(path: ':biometrics')
-    implementation project(path: ':security')
-    implementation "androidx.biometric:biometric:1.2.0-alpha03"
-    implementation "androidx.security:security-crypto:1.1.0-alpha02"
+    // testing
+    testImplementation 'junit:junit:4.+'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+    androidTestImplementation 'com.android.support.test:rules:1.0.2'
+    androidTestCompile 'com.android.support.test.espresso:espresso-contrib:2.2.2'
 }
