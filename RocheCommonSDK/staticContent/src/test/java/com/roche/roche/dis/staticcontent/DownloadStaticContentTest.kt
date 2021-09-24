@@ -35,7 +35,7 @@ class DownloadStaticContentTest : BaseMockkTest() {
     @Test
     fun `when downloadStaticAssets is successful then returns unzipped file path`() = runBlocking {
         coEvery {
-            DownloadStaticContent.getUrlFromManifest(
+            DownloadStaticContent.getInfoFromManifest(
                 appContext,
                 getManifestUrl(),
                 APP_VERSION,
@@ -86,7 +86,7 @@ class DownloadStaticContentTest : BaseMockkTest() {
         )
         Assert.assertEquals(getUnzippedFilePath(), path)
         coVerify(exactly = 1) {
-            DownloadStaticContent.getUrlFromManifest(
+            DownloadStaticContent.getInfoFromManifest(
                 appContext,
                 getManifestUrl(),
                 APP_VERSION,
@@ -132,7 +132,7 @@ class DownloadStaticContentTest : BaseMockkTest() {
     fun `when downloadStaticAssets throws EXCEPTION_INVALID_MANIFEST_FILE_FORMAT exception when file extension is not zip type`() =
         runBlocking {
             coEvery {
-                DownloadStaticContent.getUrlFromManifest(
+                DownloadStaticContent.getInfoFromManifest(
                     appContext,
                     getManifestUrl(),
                     APP_VERSION,
@@ -159,7 +159,7 @@ class DownloadStaticContentTest : BaseMockkTest() {
                 )
             }
             coVerify(exactly = 1) {
-                DownloadStaticContent.getUrlFromManifest(
+                DownloadStaticContent.getInfoFromManifest(
                     appContext,
                     getManifestUrl(),
                     APP_VERSION,
@@ -180,7 +180,7 @@ class DownloadStaticContentTest : BaseMockkTest() {
     fun `when downloadStaticAssets returns existing unzipped file path if EXCEPTION_NOT_MODIFIED received`() =
         runBlocking {
             coEvery {
-                DownloadStaticContent.getUrlFromManifest(
+                DownloadStaticContent.getInfoFromManifest(
                     appContext,
                     getManifestUrl(),
                     APP_VERSION,
@@ -208,7 +208,7 @@ class DownloadStaticContentTest : BaseMockkTest() {
             )
             Assert.assertEquals(getUnzippedFilePath(), path)
             coVerify(exactly = 1) {
-                DownloadStaticContent.getUrlFromManifest(
+                DownloadStaticContent.getInfoFromManifest(
                     appContext,
                     getManifestUrl(),
                     APP_VERSION,
@@ -266,7 +266,7 @@ class DownloadStaticContentTest : BaseMockkTest() {
             )
         } returns Unit
 
-        val zippedUrl = DownloadStaticContent.getUrlFromManifest(
+        val zippedUrl = DownloadStaticContent.getInfoFromManifest(
             appContext,
             getManifestUrl(),
             APP_VERSION,
@@ -300,7 +300,7 @@ class DownloadStaticContentTest : BaseMockkTest() {
             every { httpURLConnection.responseCode } returns HttpURLConnection.HTTP_NOT_MODIFIED
 
             try {
-                DownloadStaticContent.getUrlFromManifest(
+                DownloadStaticContent.getInfoFromManifest(
                     appContext,
                     getManifestUrl(),
                     APP_VERSION,
@@ -340,7 +340,7 @@ class DownloadStaticContentTest : BaseMockkTest() {
             every { DownloadStaticContent.readStream(any()) } returns getManifestContent()
 
             try {
-                DownloadStaticContent.getUrlFromManifest(
+                DownloadStaticContent.getInfoFromManifest(
                     appContext,
                     getManifestUrl(),
                     incorrectAppVersion,
@@ -392,7 +392,7 @@ class DownloadStaticContentTest : BaseMockkTest() {
             every { DownloadStaticContent.readStream(any()) } returns getManifestContent()
 
             try {
-                DownloadStaticContent.getUrlFromManifest(
+                DownloadStaticContent.getInfoFromManifest(
                     appContext,
                     getManifestUrl(),
                     APP_VERSION,
@@ -444,7 +444,7 @@ class DownloadStaticContentTest : BaseMockkTest() {
             every { DownloadStaticContent.readStream(any()) } returns getManifestContent()
 
             try {
-                DownloadStaticContent.getUrlFromManifest(
+                DownloadStaticContent.getInfoFromManifest(
                     appContext,
                     getManifestUrl(),
                     APP_VERSION,
@@ -474,7 +474,7 @@ class DownloadStaticContentTest : BaseMockkTest() {
         runBlocking {
             every { NetworkUtils.hasInternetConnection(appContext) } returns false
             try {
-                DownloadStaticContent.getUrlFromManifest(
+                DownloadStaticContent.getInfoFromManifest(
                     appContext,
                     getManifestUrl(),
                     APP_VERSION,
@@ -497,7 +497,7 @@ class DownloadStaticContentTest : BaseMockkTest() {
         runBlocking {
             every { NetworkUtils.isWifiConnected(appContext) } returns false
             try {
-                DownloadStaticContent.getUrlFromManifest(
+                DownloadStaticContent.getInfoFromManifest(
                     appContext,
                     getManifestUrl(),
                     APP_VERSION,

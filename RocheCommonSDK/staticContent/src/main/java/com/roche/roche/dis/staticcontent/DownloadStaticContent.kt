@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import androidx.annotation.StringDef
 import androidx.annotation.VisibleForTesting
+import com.roche.roche.dis.staticcontent.entity.ManifestInfo
 import com.roche.roche.dis.utils.NetworkUtils
 import com.roche.roche.dis.utils.UnZipUtils
 import kotlinx.coroutines.Dispatchers
@@ -53,6 +54,8 @@ object DownloadStaticContent {
     private const val ZIPPED_FILE_EXTENSION = ".zip"
     private const val HEADER_KEY_ETAG = "ETag"
     private const val JSON_KEY_PATH = "path"
+    private const val JSON_KEY_FILE_SIZE = "fileSize"
+    private const val JSON_KEY_ORIGINAL_SIZE = "originalSize"
 
     const val EXCEPTION_WIFI_NOT_AVAILABLE = "Wifi Not Available"
     const val EXCEPTION_NETWORK_NOT_AVAILABLE = "Network Not Available"
@@ -62,6 +65,7 @@ object DownloadStaticContent {
     const val EXCEPTION_MANIFEST_LOCALE_NOT_FOUND = "Manifest Locale Not Found"
     const val EXCEPTION_MANIFEST_FILE_KEY_NOT_FOUND = "Manifest File Key Not Found"
     const val EXCEPTION_UNZIPPING_FILE = "Error In Unzipping The File"
+    const val EXCEPTION_INSUFFICIENT_STORAGE = "Insufficient Storage"
 
     /**
      * Download static assets and unzips them of given app version, locale and file key.
@@ -97,11 +101,17 @@ object DownloadStaticContent {
     ): String {
         try {
             // read manifest file and get the url
-            val fileUrl =
-                getUrlFromManifest(context, manifestUrl, appVersion, locale, fileKey, allowWifiOnly)
+            val manifestInfo = getInfoFromManifest(
+                context,
+                manifestUrl,
+                appVersion,
+                locale,
+                fileKey,
+                allowWifiOnly
+            )
 
             // check if the url is not a zip file type then throw exception
-            val fileExtension = fileUrl.substring(fileUrl.lastIndexOf("."))
+            val fileExtension = manifestInfo.path.substring(manifestInfo.path.lastIndexOf("."))
             if (fileExtension.equals(ZIPPED_FILE_EXTENSION, true).not()) {
                 throw IllegalStateException(EXCEPTION_INVALID_MANIFEST_FILE_FORMAT)
             }
@@ -111,9 +121,16 @@ object DownloadStaticContent {
                 appVersion
             }
 
+            if (context.filesDir.usableSpace <= manifestInfo.fileSize) {
+                throw IllegalStateException(EXCEPTION_INSUFFICIENT_STORAGE)
+            }
             // download the file
             val zipPath =
-                downloadFromUrl(context, fileUrl, progress, subDirPath, allowWifiOnly)
+                downloadFromUrl(context, manifestInfo.path, progress, subDirPath, allowWifiOnly)
+
+            if (context.filesDir.usableSpace <= manifestInfo.originalSize) {
+                throw IllegalStateException(EXCEPTION_INSUFFICIENT_STORAGE)
+            }
             // unzip the file
             val unzipPath = unzipFile(context, zipPath, subDirPath)
             // save unzipping file path to shared pref
@@ -159,14 +176,14 @@ object DownloadStaticContent {
         IOException::class,
         JSONException::class
     )
-    suspend fun getUrlFromManifest(
+    suspend fun getInfoFromManifest(
         context: Context,
         manifestUrl: String,
         appVersion: String,
         @LocaleType locale: String,
         fileKey: String,
         allowWifiOnly: Boolean = false
-    ): String {
+    ): ManifestInfo {
         checkConnection(context, allowWifiOnly)
         return withContext(Dispatchers.IO) {
             var urlConnection: HttpURLConnection? = null
@@ -198,7 +215,7 @@ object DownloadStaticContent {
                         )
                     )
                     val jsonResponse = readStream(inputStream)
-                    val zipContentUrl = parseManifest(jsonResponse, appVersion, locale, fileKey)
+                    val manifestInfo = parseManifest(jsonResponse, appVersion, locale, fileKey)
                     // Cache new eTag to secured shared pref
                     if (newETag != null && newETag.isNotEmpty()) {
                         DownloadStaticContentSharedPref.setETag(
@@ -209,7 +226,7 @@ object DownloadStaticContent {
                             newETag[0]
                         )
                     }
-                    zipContentUrl
+                    manifestInfo
                 }
             } catch (e: IOException) {
                 Log.d(LOG_TAG, "error: $e")
@@ -351,7 +368,7 @@ object DownloadStaticContent {
         appVersion: String,
         @LocaleType locale: String,
         fileKey: String
-    ): String {
+    ): ManifestInfo {
         return try {
             val jsonObject = JSONObject(jsonResponse)
             if (jsonObject.has(appVersion)) {
@@ -360,7 +377,11 @@ object DownloadStaticContent {
                     val localeObj = versionObj.getJSONObject(locale)
                     if (localeObj.has(fileKey)) {
                         val fileObj = localeObj.getJSONObject(fileKey)
-                        fileObj.getString(JSON_KEY_PATH)
+                        ManifestInfo(
+                            fileObj.getString(JSON_KEY_PATH),
+                            fileObj.getLong(JSON_KEY_FILE_SIZE),
+                            fileObj.getLong(JSON_KEY_ORIGINAL_SIZE)
+                        )
                     } else {
                         Log.e(LOG_TAG, "Content not found for $fileKey key")
                         throw IllegalArgumentException(EXCEPTION_MANIFEST_FILE_KEY_NOT_FOUND)
