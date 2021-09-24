@@ -73,7 +73,6 @@ Add a buildConfigField in your app's build.gradle file:
     }
 ```
 ### In your Splash Screen or Main Activity you can extend the SecurityCheckerActivity.
-Note that you should check for the license when the app is restarted / foregrounded again.
 ```
 class SplashActivity : SecurityCheckerActivity() {
     
@@ -104,34 +103,37 @@ class SplashActivity : YourBaseActivity() {
         securityViewModel.viewState.observe(this) {
             when (it) {
                 SecurityCheckerViewState.DeviceIsRooted -> {
-                    // TODO
+                    // take action if device is rooted
                 }
                 SecurityCheckerViewState.InvalidLicense -> {
-                    // TODO
+                    // take action if app has an invalid license
                 }
                 SecurityCheckerViewState.Retry -> {
-                    // TODO
+                    // take action if state is Retry, which usually means a network failure.
+                    // you may add retry logic and call securityViewModel.validate again.
                 }
-                SecurityCheckerViewState.ValidLicense, SecurityCheckerViewState.IgnoreSecurityCheck -> {
-                    // TODO
+                SecurityCheckerViewState.ValidLicense, SecurityCheckerViewState.IgnoreLicenseCheck -> {
+                    // take action when license is valid
+                    // if shouldValidateLicense is false, the IgnoreLicenseCheck will trigger instead
                 }
             }
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        securityViewModel.onDestroy()
-    }
-
     override fun onResume() {
         super.onResume()
 
+        // you should validate every time the UI is resumed
         securityViewModel.validate(
             licensingKey, // string pulic license key from your GooglePlay account.
             baseUrl, // string URL for your app's BE license API
             shouldValidateLicense, // boolean
             isOfflineMode // boolean
         )
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        securityViewModel.onDestroy() // make sure to call destroy to avoid memory leaks
     }
 ```
