@@ -7,38 +7,42 @@ import com.roche.apprecall.getDevice
 import com.roche.apprecall.getOS
 import com.roche.apprecall.getOSVersion
 import com.roche.apprecall.initLogger
-import io.github.aakira.napier.Napier
 import io.ktor.client.HttpClient
-import io.ktor.client.features.ResponseException
+import io.ktor.client.engine.HttpClientEngine
+import io.ktor.client.features.HttpRequestTimeoutException
 import io.ktor.client.features.HttpTimeout
+import io.ktor.client.features.ResponseException
 import io.ktor.client.features.json.JsonFeature
 import io.ktor.client.features.json.serializer.KotlinxSerializer
-import io.ktor.client.features.logging.Logging
-import io.ktor.client.features.logging.LogLevel
 import io.ktor.client.features.logging.Logger
+import io.ktor.client.features.logging.Logging
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import io.ktor.http.ContentType
+import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
+import io.ktor.network.sockets.ConnectTimeoutException
+import io.ktor.network.sockets.SocketTimeoutException
 import io.ktor.utils.io.core.use
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.boolean
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 
-class RecallApiClient {
+class RecallApiClient(httpClientEngine: HttpClientEngine) {
 
+    constructor() : this(HttpClient().engine)
 
-    private val httpClient: HttpClient = HttpClient {
+    private val httpClient: HttpClient = HttpClient(httpClientEngine) {
         install(HttpTimeout) {
             requestTimeoutMillis = TIME_OUT
             connectTimeoutMillis = TIME_OUT
         }
         install(Logging) {
-            level = LogLevel.ALL
+            level = io.ktor.client.features.logging.LogLevel.ALL
             logger = object : Logger {
                 override fun log(message: String) {
-                    Napier.v(tag = "HTTP Client", message = message)
+                    //Napier.v(tag = "HTTP Client", message = message)
                 }
             }
         }
@@ -72,22 +76,28 @@ class RecallApiClient {
             val exception = RecallException(ex.response.status.value, ex)
             throw exception
         } catch (ex: Exception) {
-            throw ex
+            when (ex) {
+                is HttpRequestTimeoutException, is SocketTimeoutException, is ConnectTimeoutException -> {
+                    val recallException = RecallException(HttpStatusCode.RequestTimeout.value, ex)
+                    throw recallException
+                }
+                else ->
+                    throw ex
+            }
         }
     }
 
     suspend fun checkSaMDRecall(baseURL: String, country: String, samdIds: List<String>): List<SamdResponse> {
         try {
             return httpClient.use {
-                val rawSamd: String =
-                    httpClient.get(getCallingUrl(baseURL, SaMD_RECALL_END_POINT)) {
-                        parameter("os", getOS())
-                        parameter("osVersion", getOSVersion())
-                        parameter("device", getDevice())
-                        parameter("samds", samdIds.joinToString(","))
-                        parameter("country", country)
-                        contentType(ContentType.Application.Json)
-                    }
+                val rawSamd: String = httpClient.get(getCallingUrl(baseURL, SAMD_RECALL_END_POINT)) {
+                    parameter("os", getOS())
+                    parameter("osVersion", getOSVersion())
+                    parameter("device", getDevice())
+                    parameter("samds", samdIds.joinToString(","))
+                    parameter("country", country)
+                    contentType(ContentType.Application.Json)
+                }
 
                 val format = Json
                 val jsonObject = format.parseToJsonElement(rawSamd).jsonObject
@@ -107,17 +117,28 @@ class RecallApiClient {
                 )
             throw exception
         } catch (ex: Exception) {
-            throw ex
+            when (ex) {
+                is HttpRequestTimeoutException, is SocketTimeoutException, is ConnectTimeoutException -> {
+                    val recallException = RecallException(HttpStatusCode.RequestTimeout.value, ex)
+                    throw recallException
+                }
+                else ->
+                    throw ex
+            }
         }
     }
 
     private fun getCallingUrl(baseUrl: String, endpoint: String): String {
-        return if (baseUrl.endsWith("/")) baseUrl.plus(endpoint) else baseUrl.plus("/").plus(endpoint)
+        val url = if (baseUrl.endsWith("/")) {
+            baseUrl.replace(Regex("/$"), "").plus(endpoint)
+        } else
+            baseUrl.plus(endpoint)
+        return url
     }
 
     companion object {
-        private const val TIME_OUT: Long = 15_000
-        private const val APP_RECALL_END_POINT = "recall/application"
-        private const val SaMD_RECALL_END_POINT = "recall/samd"
+        const val TIME_OUT: Long = 15_000
+        const val APP_RECALL_END_POINT = "/recall/application"
+        const val SAMD_RECALL_END_POINT = "/recall/samd"
     }
 }
