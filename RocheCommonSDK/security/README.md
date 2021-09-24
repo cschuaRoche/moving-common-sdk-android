@@ -1,6 +1,11 @@
 # Security
 
-## How To Add Library
+## How To Add the Library
+### Add the following properties in the project's gradle.properties file
+```
+artifactory.user=********** // replace with your JFrog's user name
+artifactory.password=********** // replace with your JFrog's password
+```
 ### Add maven to project's build.gradle inside allprojects sections:
 ```
   allprojects {
@@ -23,13 +28,15 @@
 ```
 implementation "RocheCommonComponent:security:1.0"
 ```
-###  Add following properties in gradle.properties(Project Properties) file
+### Currently, the security library requires the following dependencies:
 ```
-artifactory.user=**********
-artifactory.password=**********
+// Retrofit for License Validation
+implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+implementation 'com.squareup.okhttp3:logging-interceptor:3.11.0'
+implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
 ```
 
-## How to check if device is Rooted
+## How to check if the device is Rooted
 ```
 RootDetectUtil.isDeviceRooted()
 ```

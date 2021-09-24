@@ -1,28 +1,28 @@
 # GooglePlay Licensing Library - LicenseChecker
-The play-licensing library is a modified project from https://github.com/google/play-licensing
+<p>The play-licensing library is a modified project from https://github.com/google/play-licensing</p>
+<p>The play-license library is enhanced to include a server side validation.</p>
+<p>You can control the behavior to only use the client-side validation as well.</p>
 
 [For more details, visit our confluence page.](https://navifypoc.atlassian.net/wiki/spaces/DHS/pages/1328152806/Google+Play+Licensing)
-
-The play-license library is enhanced to include server side validation.  
-For offline-mode, it will default to client-side check.
 
 Note:
 If you would like to use online-mode only, you can check for network connectivity when your app is 
 launched.  You may use the NetworkUtils from the utils library to verify the network connectivity.
 
-## How To Add Library
-The play-license library is part of the SSG Security library.  Therefore, to add play-licensing check
-to your app, please include the security library.
+
+## How To Add the Library
+The play-license library is part of the SSG Security library.  Therefore, to add the play-licensing check
+in your app, please include the security library.
 
 [For more details, visit the security library.](https://bitbucket.org/rochedis/common-sdk-android/src/dev/RocheCommonSDK/security/)
 
-### Add following properties in gradle.properties file
+### Add the following properties in the project's gradle.properties file
 ```
 // request access to JFrog from your manager / tech lead
 artifactory.user=********** // replace with your JFrog's user name
 artifactory.password=********** // replace with your JFrog's password
 ```
-### Integrate Library
+### Integrate the Library
 * From JFrog, Add maven to project's build.gradle inside allprojects sections:
 ```
 allprojects {
@@ -45,13 +45,13 @@ allprojects {
 ```
 implementation "RocheCommonComponent:security:1.0"
 ```
-### Or you can download the library manually from JFrog, add the AAR file to your libs folder.
-* [Add the security library project by following the instructions here.](https://developer.android.com/studio/projects/android-library#CreateLibrary)
-* Then add the dependency in the app's build.gradle
+### Or you can download the library manually from JFrog, and add the AAR file to your project's libs folder.
+* [Adding a library project by following the instructions here.](https://developer.android.com/studio/projects/android-library#CreateLibrary)
+* Then add the dependency in the app's build.gradle file
 ```
 implementation project(path: ':security')
 ```
-### Currently, the play-licensing requires the following dependencies:
+### Currently, the security library requires the following dependencies:
 ```
 // Retrofit for License Validation
 implementation 'com.squareup.retrofit2:retrofit:2.9.0'
@@ -59,7 +59,7 @@ implementation 'com.squareup.okhttp3:logging-interceptor:3.11.0'
 implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
 ```
 
-## How To Use
+## How To Use the Library
 ### To enable or disable the license check for a specific build variant or flavor 
 Add a buildConfigField in your app's build.gradle file:
 ```
