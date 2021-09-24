@@ -1,6 +1,6 @@
-Biometric
+Biometrics Library
 ========
-A library used for Authentication
+A library that contains a wrapper to the [Android Biometric API](https://developer.android.com/training/sign-in/biometric-auth)
 
 How To Use
 ----------
