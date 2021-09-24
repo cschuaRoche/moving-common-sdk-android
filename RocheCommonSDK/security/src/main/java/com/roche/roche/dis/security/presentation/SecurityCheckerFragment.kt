@@ -42,7 +42,7 @@ abstract class SecurityCheckerFragment : Fragment() {
                 SecurityCheckerViewState.Retry -> {
                     onRetry()
                 }
-                SecurityCheckerViewState.ValidLicense, SecurityCheckerViewState.IgnoreSecurityCheck -> {
+                SecurityCheckerViewState.ValidLicense, SecurityCheckerViewState.IgnoreLicenseCheck -> {
                     onValidLicense()
                 }
             }
