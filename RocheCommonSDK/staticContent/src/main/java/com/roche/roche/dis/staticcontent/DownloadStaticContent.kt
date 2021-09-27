@@ -161,7 +161,7 @@ object DownloadStaticContent {
     }
 
     /**
-     * Retrieve a file URL based on the app version, locale and file key from given manifest
+     * get manifest info based on the app version, locale and file key from given manifest
      *
      * @param context Context
      * @param manifestUrl Url of the manifest file
@@ -169,6 +169,8 @@ object DownloadStaticContent {
      * @param locale Locale
      * @param fileKey file key for which static assets needs to be downloaded (e.g. user_manual)
      * @param allowWifiOnly download asset on WIFI only (Default is false).
+     *
+     * @return returns ManifestInfo object
      */
     @Throws(
         IllegalStateException::class,
