@@ -23,7 +23,7 @@ How to use the DownloadStaticContent
         Log.d("usermanual", "Downloading Progress: $progress")
     }
     ```
-How to retrieve a file URL based on the app version, locale and file key
+How to retrieve manifest info based on the app version, locale and file key
 ----------
     ```
     val fileUrl = DownloadStaticContent.getUrlFromManifest(context, manifestUrl, appVersion, locale, fileKey)
