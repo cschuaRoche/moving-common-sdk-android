@@ -23,7 +23,7 @@ abstract class SecurityCheckerActivity : AppCompatActivity() {
                 SecurityCheckerViewState.Retry -> {
                     onRetry()
                 }
-                SecurityCheckerViewState.ValidLicense, SecurityCheckerViewState.IgnoreSecurityCheck -> {
+                SecurityCheckerViewState.ValidLicense, SecurityCheckerViewState.IgnoreLicenseCheck -> {
                     onValidLicense()
                 }
             }
