@@ -19,7 +19,23 @@
         android:id="@+id/mainFragment"
         android:name="com.roche.roche.dis.ui.MainFragment"
         android:label="fragment_main"
-        tools:layout="@layout/fragment_main" />
+        tools:layout="@layout/fragment_main">
+        <action
+            android:id="@+id/action_to_user_one"
+            app:destination="@+id/userOneFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+
+        <action
+            android:id="@+id/action_to_user_two"
+            app:destination="@+id/userTwoFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+    </fragment>
 
     <fragment
         android:id="@+id/utilsFragment"
@@ -38,12 +54,13 @@
         android:label="fragment_salesforce"
         tools:layout="@layout/fragment_salesforce">
 
-        <action android:id="@+id/action_to_custom_chat_ui"
+        <action
+            android:id="@+id/action_to_custom_chat_ui"
             app:destination="@+id/customChatUIFragment"
             app:enterAnim="@anim/nav_default_enter_anim"
             app:exitAnim="@anim/nav_default_exit_anim"
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-            app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
     </fragment>
 
     <fragment
@@ -51,4 +68,11 @@
         android:name="com.roche.roche.dis.salesforce.ui.CustomChatUIFragment"
         android:label="fragment_custom_chat_ui"
         tools:layout="@layout/custom_chat" />
+
+    <fragment
+        android:id="@+id/userOneFragment"
+        android:name="com.roche.roche.dis.ui.UserOneFragment"
+        android:label="fragment_user_one"
+        tools:layout="@layout/custom_chat" />
+
 </navigation>

@@ -21,7 +21,7 @@ android {
     configProperties.load(new FileInputStream(configPropertiesFile))
 
     defaultConfig {
-        applicationId "com.roche.roche.dis.biometrics"
+        applicationId "com.roche.roche.dis.sampleapp"
         minSdkVersion 24
         targetSdkVersion 30
         versionCode 1
@@ -112,4 +112,8 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
     androidTestImplementation 'com.android.support.test:rules:1.0.2'
     androidTestCompile 'com.android.support.test.espresso:espresso-contrib:2.2.2'
+
+    //Split.io
+    implementation 'io.split.client:android-client:2.7.2'
+    implementation 'com.google.code.gson:gson:2.8.8'
 }
