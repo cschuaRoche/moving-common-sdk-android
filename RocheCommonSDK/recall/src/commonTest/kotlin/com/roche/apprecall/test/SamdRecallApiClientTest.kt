@@ -5,21 +5,15 @@ import com.roche.apprecall.data.RecallApiClient
 import com.roche.apprecall.mockresponses.SamdMockResponse
 import com.roche.apprecall.runBlockingTest
 import com.roche.apprecall.util.ApiMockEngine
-import io.ktor.client.*
-import io.ktor.client.engine.mock.*
-import io.ktor.client.features.*
-import io.ktor.client.features.json.*
-import io.ktor.client.features.json.serializer.*
-import io.ktor.client.features.logging.*
-import io.ktor.client.request.*
-import io.ktor.client.statement.*
-import io.ktor.http.*
-import io.ktor.util.pipeline.*
-import io.ktor.utils.io.*
+import io.ktor.client.engine.mock.MockEngine
+import io.ktor.client.engine.mock.respond
+import io.ktor.http.HttpHeaders
+import io.ktor.http.HttpStatusCode
+import io.ktor.http.headersOf
+import kotlinx.coroutines.delay
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
-import kotlinx.coroutines.delay
 
 
 class SamdRecallApiClientTest {

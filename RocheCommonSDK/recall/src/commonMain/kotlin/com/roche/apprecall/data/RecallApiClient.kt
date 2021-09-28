@@ -14,6 +14,7 @@ import io.ktor.client.features.HttpTimeout
 import io.ktor.client.features.ResponseException
 import io.ktor.client.features.json.JsonFeature
 import io.ktor.client.features.json.serializer.KotlinxSerializer
+import io.ktor.client.features.logging.LogLevel
 import io.ktor.client.features.logging.Logger
 import io.ktor.client.features.logging.Logging
 import io.ktor.client.request.get
@@ -39,7 +40,7 @@ class RecallApiClient(httpClientEngine: HttpClientEngine) {
             connectTimeoutMillis = TIME_OUT
         }
         install(Logging) {
-            level = io.ktor.client.features.logging.LogLevel.ALL
+            level = LogLevel.ALL
             logger = object : Logger {
                 override fun log(message: String) {
                     //Napier.v(tag = "HTTP Client", message = message)
