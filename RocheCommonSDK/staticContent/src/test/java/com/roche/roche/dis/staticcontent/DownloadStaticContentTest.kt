@@ -1,6 +1,7 @@
 package com.roche.roche.dis.staticcontent
 
 import android.app.Application
+import com.roche.roche.dis.staticcontent.entity.ManifestInfo
 import com.roche.roche.dis.utils.NetworkUtils
 import com.roche.roche.dis.utils.UnZipUtils
 import io.mockk.coEvery
@@ -35,7 +36,7 @@ class DownloadStaticContentTest : BaseMockkTest() {
     @Test
     fun `when downloadStaticAssets is successful then returns unzipped file path`() = runBlocking {
         coEvery {
-            DownloadStaticContent.getUrlFromManifest(
+            DownloadStaticContent.getInfoFromManifest(
                 appContext,
                 getManifestUrl(),
                 APP_VERSION,
@@ -43,7 +44,8 @@ class DownloadStaticContentTest : BaseMockkTest() {
                 FILE_KEY,
                 false
             )
-        } returns getZippedFileUrl()
+        } returns getManifestInfo()
+        every { appContext.filesDir.usableSpace } returns ORIGINAL_FILE_SIZE + 1
         coEvery {
             DownloadStaticContent.downloadFromUrl(
                 appContext,
@@ -86,7 +88,7 @@ class DownloadStaticContentTest : BaseMockkTest() {
         )
         Assert.assertEquals(getUnzippedFilePath(), path)
         coVerify(exactly = 1) {
-            DownloadStaticContent.getUrlFromManifest(
+            DownloadStaticContent.getInfoFromManifest(
                 appContext,
                 getManifestUrl(),
                 APP_VERSION,
@@ -132,7 +134,7 @@ class DownloadStaticContentTest : BaseMockkTest() {
     fun `when downloadStaticAssets throws EXCEPTION_INVALID_MANIFEST_FILE_FORMAT exception when file extension is not zip type`() =
         runBlocking {
             coEvery {
-                DownloadStaticContent.getUrlFromManifest(
+                DownloadStaticContent.getInfoFromManifest(
                     appContext,
                     getManifestUrl(),
                     APP_VERSION,
@@ -140,7 +142,7 @@ class DownloadStaticContentTest : BaseMockkTest() {
                     FILE_KEY,
                     false
                 )
-            } returns "ZippedFileUrl.txt"
+            } returns getManifestInfo(zippedFileUrl = "zippedFileUrl.txt")
 
             try {
                 DownloadStaticContent.downloadStaticAssets(
@@ -159,7 +161,7 @@ class DownloadStaticContentTest : BaseMockkTest() {
                 )
             }
             coVerify(exactly = 1) {
-                DownloadStaticContent.getUrlFromManifest(
+                DownloadStaticContent.getInfoFromManifest(
                     appContext,
                     getManifestUrl(),
                     APP_VERSION,
@@ -177,10 +179,119 @@ class DownloadStaticContentTest : BaseMockkTest() {
         }
 
     @Test
+    fun `when downloadStaticAssets throws EXCEPTION_INSUFFICIENT_STORAGE exception when disk space is less than compressed file size`() =
+        runBlocking {
+            coEvery {
+                DownloadStaticContent.getInfoFromManifest(
+                    appContext,
+                    getManifestUrl(),
+                    APP_VERSION,
+                    LOCALE,
+                    FILE_KEY,
+                    false
+                )
+            } returns getManifestInfo()
+            every { appContext.filesDir.usableSpace } returns FILE_SIZE - 1
+
+            try {
+                DownloadStaticContent.downloadStaticAssets(
+                    appContext,
+                    getManifestUrl(),
+                    APP_VERSION,
+                    LOCALE,
+                    FILE_KEY,
+                    ::showProgress
+                )
+                Assert.fail("downloadStaticAssets should throw EXCEPTION_INSUFFICIENT_STORAGE error")
+            } catch (e: IllegalStateException) {
+                Assert.assertEquals(
+                    DownloadStaticContent.EXCEPTION_INSUFFICIENT_STORAGE,
+                    e.message
+                )
+            }
+            coVerify(exactly = 1) {
+                DownloadStaticContent.getInfoFromManifest(
+                    appContext,
+                    getManifestUrl(),
+                    APP_VERSION,
+                    LOCALE,
+                    FILE_KEY,
+                    false
+                )
+            }
+            coVerify(exactly = 0) {
+                DownloadStaticContent.downloadFromUrl(appContext, any(), any(), any(), any())
+            }
+            verify(exactly = 0) {
+                DownloadStaticContent.unzipFile(appContext, any(), any())
+            }
+            verify(exactly = 1) { appContext.filesDir.usableSpace }
+        }
+
+    @Test
+    fun `when downloadStaticAssets throws EXCEPTION_INSUFFICIENT_STORAGE exception when disk space is less than original file size`() =
+        runBlocking {
+            coEvery {
+                DownloadStaticContent.getInfoFromManifest(
+                    appContext,
+                    getManifestUrl(),
+                    APP_VERSION,
+                    LOCALE,
+                    FILE_KEY,
+                    false
+                )
+            } returns getManifestInfo()
+            every { appContext.filesDir.usableSpace } returns ORIGINAL_FILE_SIZE - 1
+            coEvery {
+                DownloadStaticContent.downloadFromUrl(
+                    appContext,
+                    getZippedFileUrl(),
+                    any(),
+                    getSubDir(),
+                    false
+                )
+            } returns getZippedFilePath()
+
+            try {
+                DownloadStaticContent.downloadStaticAssets(
+                    appContext,
+                    getManifestUrl(),
+                    APP_VERSION,
+                    LOCALE,
+                    FILE_KEY,
+                    ::showProgress
+                )
+                Assert.fail("downloadStaticAssets should throw EXCEPTION_INSUFFICIENT_STORAGE error")
+            } catch (e: IllegalStateException) {
+                Assert.assertEquals(
+                    DownloadStaticContent.EXCEPTION_INSUFFICIENT_STORAGE,
+                    e.message
+                )
+            }
+            coVerify(exactly = 1) {
+                DownloadStaticContent.getInfoFromManifest(
+                    appContext,
+                    getManifestUrl(),
+                    APP_VERSION,
+                    LOCALE,
+                    FILE_KEY,
+                    false
+                )
+            }
+            coVerify(exactly = 1) {
+                DownloadStaticContent.downloadFromUrl(appContext, any(), any(), any(), any())
+            }
+            verify(exactly = 0) {
+                DownloadStaticContent.unzipFile(appContext, any(), any())
+            }
+            verify(exactly = 2) { appContext.filesDir.usableSpace }
+        }
+
+    @Test
     fun `when downloadStaticAssets returns existing unzipped file path if EXCEPTION_NOT_MODIFIED received`() =
         runBlocking {
             coEvery {
-                DownloadStaticContent.getUrlFromManifest(
+                DownloadStaticContent.getInfoFromManifest(
                     appContext,
                     getManifestUrl(),
                     APP_VERSION,
@@ -208,7 +319,7 @@ class DownloadStaticContentTest : BaseMockkTest() {
             )
             Assert.assertEquals(getUnzippedFilePath(), path)
             coVerify(exactly = 1) {
-                DownloadStaticContent.getUrlFromManifest(
+                DownloadStaticContent.getInfoFromManifest(
                     appContext,
                     getManifestUrl(),
                     APP_VERSION,
@@ -266,14 +377,14 @@ class DownloadStaticContentTest : BaseMockkTest() {
             )
         } returns Unit
 
-        val zippedUrl = DownloadStaticContent.getUrlFromManifest(
+        val manifestInfo = DownloadStaticContent.getInfoFromManifest(
             appContext,
             getManifestUrl(),
             APP_VERSION,
             LOCALE,
             FILE_KEY
         )
-        Assert.assertEquals(getZippedFileUrl(), zippedUrl)
+        Assert.assertEquals(getZippedFileUrl(), manifestInfo.path)
     }
 
     @Test
@@ -300,7 +411,7 @@ class DownloadStaticContentTest : BaseMockkTest() {
             every { httpURLConnection.responseCode } returns HttpURLConnection.HTTP_NOT_MODIFIED
 
             try {
-                DownloadStaticContent.getUrlFromManifest(
+                DownloadStaticContent.getInfoFromManifest(
                     appContext,
                     getManifestUrl(),
                     APP_VERSION,
@@ -340,7 +451,7 @@ class DownloadStaticContentTest : BaseMockkTest() {
             every { DownloadStaticContent.readStream(any()) } returns getManifestContent()
 
             try {
-                DownloadStaticContent.getUrlFromManifest(
+                DownloadStaticContent.getInfoFromManifest(
                     appContext,
                     getManifestUrl(),
                     incorrectAppVersion,
@@ -392,7 +503,7 @@ class DownloadStaticContentTest : BaseMockkTest() {
             every { DownloadStaticContent.readStream(any()) } returns getManifestContent()
 
             try {
-                DownloadStaticContent.getUrlFromManifest(
+                DownloadStaticContent.getInfoFromManifest(
                     appContext,
                     getManifestUrl(),
                     APP_VERSION,
@@ -444,7 +555,7 @@ class DownloadStaticContentTest : BaseMockkTest() {
             every { DownloadStaticContent.readStream(any()) } returns getManifestContent()
 
             try {
-                DownloadStaticContent.getUrlFromManifest(
+                DownloadStaticContent.getInfoFromManifest(
                     appContext,
                     getManifestUrl(),
                     APP_VERSION,
@@ -474,7 +585,7 @@ class DownloadStaticContentTest : BaseMockkTest() {
         runBlocking {
             every { NetworkUtils.hasInternetConnection(appContext) } returns false
             try {
-                DownloadStaticContent.getUrlFromManifest(
+                DownloadStaticContent.getInfoFromManifest(
                     appContext,
                     getManifestUrl(),
                     APP_VERSION,
@@ -497,7 +608,7 @@ class DownloadStaticContentTest : BaseMockkTest() {
         runBlocking {
             every { NetworkUtils.isWifiConnected(appContext) } returns false
             try {
-                DownloadStaticContent.getUrlFromManifest(
+                DownloadStaticContent.getInfoFromManifest(
                     appContext,
                     getManifestUrl(),
                     APP_VERSION,
@@ -667,6 +778,9 @@ class DownloadStaticContentTest : BaseMockkTest() {
 
     private fun getManifestUrl() = "https://domain-name/docs/manifest.json"
     private fun getZippedFileUrl() = "https://domain-name/docs/zipped-file.zip"
+    private fun getManifestInfo(zippedFileUrl: String = getZippedFileUrl()) =
+        ManifestInfo(zippedFileUrl, FILE_SIZE, ORIGINAL_FILE_SIZE)
+
     private fun getZippedFilePath() = CONTEXT_FILES_DIR + File.separator + "zipped-file.zip"
     private fun getUnzippedFilePath() = CONTEXT_FILES_DIR
     private fun getETag() = "ETAG"
@@ -676,8 +790,8 @@ class DownloadStaticContentTest : BaseMockkTest() {
             "      \"en_US\":{\n" +
             "         \"user-manuals\":{\n" +
             "            \"path\":\"${getZippedFileUrl()}\",\n" +
-            "            \"fileSize\":123456,\n" +
-            "            \"uncompressedSize\":1233113312\n" +
+            "            \"fileSize\":$FILE_SIZE,\n" +
+            "            \"originalSize\":$ORIGINAL_FILE_SIZE\n" +
             "         }\n" +
             "      }\n" +
             "   }\n" +
@@ -698,5 +812,7 @@ class DownloadStaticContentTest : BaseMockkTest() {
         private const val FILE_KEY = "user-manuals"
         private const val HEADER_KEY_ETAG = "ETag"
         private const val CONTEXT_FILES_DIR = "data/com.test/files"
+        private const val FILE_SIZE = 100L
+        private const val ORIGINAL_FILE_SIZE = 500L
     }
 }
