@@ -56,7 +56,7 @@ class SecurityCheckerViewModel @Inject constructor(app: Application) : AndroidVi
         } else {
             // for Debug, QA, Support env, we ignore the security check
             updateState {
-                SecurityCheckerViewState.IgnoreSecurityCheck
+                SecurityCheckerViewState.IgnoreLicenseCheck
             }
         }
     }
@@ -186,5 +186,5 @@ sealed class SecurityCheckerViewState {
     object InvalidLicense : SecurityCheckerViewState()
     object DeviceIsRooted : SecurityCheckerViewState()
     object Retry : SecurityCheckerViewState()
-    object IgnoreSecurityCheck : SecurityCheckerViewState()
+    object IgnoreLicenseCheck : SecurityCheckerViewState()
 }
