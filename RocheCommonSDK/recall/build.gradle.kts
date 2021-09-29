@@ -47,6 +47,9 @@ kotlin {
             dependencies {
                 implementation(kotlin("test-common"))
                 implementation(kotlin("test-annotations-common"))
+                implementation( "io.ktor:ktor-client-mock:$ktor_version")
+                implementation("io.mockk:mockk-common:1.9.3.kotlin12")
+                implementation("io.mockk:mockk:1.9.3.kotlin12")
             }
         }
         val androidMain by getting {
@@ -58,11 +61,13 @@ kotlin {
             dependencies {
                 implementation(kotlin("test-junit"))
                 implementation("junit:junit:4.13.2")
+                implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.5.2")
             }
         }
         val iosMain by getting {
             dependencies {
                 implementation("io.ktor:ktor-client-ios:$ktor_version")
+                implementation( "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2-native-mt")
             }
         }
         val iosTest by getting
