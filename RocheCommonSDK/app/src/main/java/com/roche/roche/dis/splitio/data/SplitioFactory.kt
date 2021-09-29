@@ -7,9 +7,9 @@ import io.split.android.client.SplitFactoryBuilder
 import io.split.android.client.api.Key
 import java.security.AccessControlContext
 
-object SplitioFactory {
+object SplitIoFactory {
 
-    fun getSplitClient(context: Context,userKey: String) : SplitClient{
+    fun getSplitClient(context: Context, userKey: String): SplitClient {
         // val apikey = "a8kp11v5ek4sggmu6g4bldv9r7tcotvjvr66" // Prod-Default Client
         val apikey = "lustbo1tjk27dlml1483ndq2irfph36j5blj" // Staging-Default
         // Build SDK configuration by default
@@ -21,7 +21,7 @@ object SplitioFactory {
         // Create factory
         val splitFactory = SplitFactoryBuilder.build(
             apikey, k, config,
-            context?.applicationContext
+            context.applicationContext
         )
         // Get Split Client instance
         return splitFactory.client()
