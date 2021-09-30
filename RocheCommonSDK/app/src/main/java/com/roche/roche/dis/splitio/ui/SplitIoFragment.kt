@@ -70,11 +70,11 @@ class SplitIoFragment : Fragment() {
         val treatment = splitViewModel.getVersionTreatment()
         when {
             treatment.equals("Green_button") -> {
-                // insert on code here
+                // insert Green_button code here
                 binding.btnA.isEnabled = true
             }
             treatment.equals("Red_button") -> {
-                // insert off code here
+                // insert Red_button code here
                 binding.btnB.isEnabled = true
             }
             else -> {
@@ -104,11 +104,11 @@ class SplitIoFragment : Fragment() {
         val treatment = splitViewModel.getStudyTreatment()
         when {
             treatment.equals("Alpha_Study") -> {
-                // insert US_users code here
+                // insert Alpha_Study code here
                 binding.btnD.isEnabled = false
             }
             treatment.equals("Beta_Study") -> {
-                // insert CA_users code here
+                // insert Beta_Study code here
                 binding.btnD.isEnabled = true
             }
             else -> {
@@ -121,11 +121,11 @@ class SplitIoFragment : Fragment() {
         val treatment = splitViewModel.getRolloutTreatment()
         when {
             treatment.equals("on") -> {
-                // insert US_users code here
+                // insert code for ON here
                 binding.btnE.isEnabled = true
             }
             treatment.equals("off") -> {
-                // insert CA_users code here
+                // insert code for OFF here
                 binding.btnE.isEnabled = false
             }
             else -> {
