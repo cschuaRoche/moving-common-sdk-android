@@ -30,7 +30,7 @@
             app:actionLayout="@layout/action_view_arrow" />
 
         <item
-            android:id="@+id/userOneFragment"
+            android:id="@+id/splitIoFragment"
             android:title="@string/split_io_user"
             app:actionLayout="@layout/action_view_arrow" />
 

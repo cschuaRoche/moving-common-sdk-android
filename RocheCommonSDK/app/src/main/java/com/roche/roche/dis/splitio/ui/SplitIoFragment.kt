@@ -1,9 +1,8 @@
-package com.roche.roche.dis.ui
+package com.roche.roche.dis.splitio.ui
 
 import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,14 +10,13 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.roche.roche.dis.R
-import com.roche.roche.dis.databinding.FragmentUserBinding
-import com.roche.roche.dis.splitio.data.User
+import com.roche.roche.dis.databinding.FragmentSplitIoBinding
 import com.roche.roche.dis.splitio.vm.SplitViewModel
 
 
-class UserOneFragment : Fragment() {
+class SplitIoFragment : Fragment() {
 
-    private lateinit var binding: FragmentUserBinding
+    private lateinit var binding: FragmentSplitIoBinding
 
     private val splitViewModel: SplitViewModel by activityViewModels()
 
@@ -27,7 +25,7 @@ class UserOneFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         // Inflate the layout for this fragment
-        binding = FragmentUserBinding.inflate(inflater, container, false)
+        binding = FragmentSplitIoBinding.inflate(inflater, container, false)
 
         binding.btnA.setOnClickListener {
             Toast.makeText(context, "Enabled Button A..", Toast.LENGTH_LONG).show()

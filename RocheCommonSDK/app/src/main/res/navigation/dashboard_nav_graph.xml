@@ -70,9 +70,9 @@
         tools:layout="@layout/custom_chat" />
 
     <fragment
-        android:id="@+id/userOneFragment"
-        android:name="com.roche.roche.dis.ui.UserOneFragment"
-        android:label="fragment_user_one"
-        tools:layout="@layout/custom_chat" />
+        android:id="@+id/splitIoFragment"
+        android:name="com.roche.roche.dis.splitio.ui.SplitIoFragment"
+        android:label="fragment_split_io"
+        tools:layout="@layout/fragment_split_io" />
 
 </navigation>
