@@ -1,6 +1,6 @@
-Biometric
+Biometrics Library
 ========
-A library used for Authentication
+A library that contains a wrapper to the [Android Biometric API](https://developer.android.com/training/sign-in/biometric-auth)
 
 How To Use
 ----------
@@ -28,10 +28,10 @@ How To Use
         ```
         implementation "RocheCommonComponent:biometrics:1.1"
         ```
-    - Add following properties in gradle.properties(Project Proerties) file
+    - Add the following properties in gradle.properties file
         ```
-        artifactory.user=**********
-        artifactory.password=**********
+        artifactory.user=********** // replace with your JFrog's user name
+        artifactory.password=********** // replace with your JFrog's password
         ```
 2. Example code
     - Implement Biometric callback
