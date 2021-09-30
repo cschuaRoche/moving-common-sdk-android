@@ -1,7 +1,7 @@
 <resources>
     <string name="test_app_package_name">com.roche.roche.dis.biometrics</string>
     <string name="test_app_activity_name">com.roche.roche.dis.MainActivity</string>
-    <string name="text_app_name">RocheCommonSampleApp</string>
+    <string name="text_app_name">Common Sample App</string>
     <string name="text_biometric_confirm_title">Do you want to allow RocheCommonSampleApp to use biometrics?</string>
     <string name="text_biometric_enable_desc">In order to be able to use Biometrics login, you have to enable that from device Settings.</string>
     <string name="text_toggle_biometrics">Toggle Biometrics</string>

@@ -27,7 +27,7 @@ class MenuUtilitesScreenTest : BaseTest() {
         HomeScreenPage.verifyAndClickUtilitiesMenu()
         MenuUtilitesScreenPage.verifyUtitliesScreenPage()
         MenuUtilitesScreenPage.clickOnCheckDeviceRootedButton()
-        MenuUtilitesScreenPage.clickOnGetUserManualButton()
+       // MenuUtilitesScreenPage.clickOnGetUserManualButton()
         MenuUtilitesScreenPage.clickOnUnZIPButton()
         MenuUtilitesScreenPage.verifyDeviceRootedStatus(AppUtils.string(R.string.text_device_rooted))
         MenuUtilitesScreenPage.verifyUnZipStatus(AppUtils.string(R.string.text_unzip_status_path))
