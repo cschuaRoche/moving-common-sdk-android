@@ -112,4 +112,8 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
     androidTestImplementation 'com.android.support.test:rules:1.0.2'
     androidTestCompile 'com.android.support.test.espresso:espresso-contrib:2.2.2'
+
+    //Split.io
+    implementation "io.split.client:android-client:${versions.split_version}"
+    implementation "com.google.code.gson:gson:${versions.gson_version}"
 }
