@@ -62,6 +62,8 @@ class SplitViewModel(application: Application) : AndroidViewModel(application) {
         return treatments
     }
 
+    fun getAllConfiguration() = users[selectedUser.position]
+
     fun getVersionTreatment(): String? =
         client.getTreatment(
             SPLIT_SSG_APP_VERSION,

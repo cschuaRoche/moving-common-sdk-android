@@ -59,4 +59,7 @@
     <string name="button_d">Button D</string>
     <string name="button_e">Button E</string>
     <string name="button_f">Button F</string>
+    <string name="user_configuration">User Configuration</string>
+    <string name="disabled">Disabled</string>
+    <string name="enabled">Enabled</string>
 </resources>
