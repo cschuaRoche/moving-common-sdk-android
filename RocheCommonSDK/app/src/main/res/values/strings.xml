@@ -49,8 +49,8 @@
     -->
     <string name="split_io_user">Split.io</string>
     <string name="split_io_version">Version: %s</string>
-    <string name="split_io_country">Country: %s</string>
-    <string name="split_io_study">Study: %s</string>
+    <string name="split_io_country">Country: US</string>
+    <string name="split_io_study">Study: Beta</string>
     <string name="split_io_percentage_based_rollout">% based rollout</string>
     <string name="split_io_ab_testing">A/B Testing</string>
     <string name="button_a">Button A</string>

@@ -48,8 +48,8 @@ class SplitIoFragment : Fragment() {
         // Set the values
         binding.tvVersion1.text = getString(R.string.split_io_version, "1.0.0")
         binding.tvVersion2.text = getString(R.string.split_io_version, "1.1.0")
-        binding.tvStudy.text = getString(R.string.split_io_study, currentUser.study)
-        binding.tvCountry.text = getString(R.string.split_io_country, currentUser.country)
+        binding.tvStudy.text = getString(R.string.split_io_study)
+        binding.tvCountry.text = getString(R.string.split_io_country)
 
         observeSplitData()
         return binding.root
@@ -150,7 +150,7 @@ class SplitIoFragment : Fragment() {
         val config = splitViewModel.getStyleTreatment()
         binding.btnF.isEnabled = true
         binding.btnF.text = config.text
-        val color=Color.parseColor(config.color)
+        val color = Color.parseColor(config.color)
         binding.btnF.backgroundTintList = ColorStateList.valueOf(color)
         binding.btnF.setTextColor(Color.parseColor(config.textcolor))
     }
