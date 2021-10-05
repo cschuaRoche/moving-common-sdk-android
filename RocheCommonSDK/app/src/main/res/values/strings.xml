@@ -62,4 +62,5 @@
     <string name="user_configuration">User Configuration</string>
     <string name="disabled">Disabled</string>
     <string name="enabled">Enabled</string>
+    <string name="user">USER</string>
 </resources>

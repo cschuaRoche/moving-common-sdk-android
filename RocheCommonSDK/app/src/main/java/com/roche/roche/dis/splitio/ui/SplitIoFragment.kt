@@ -29,6 +29,8 @@ class SplitIoFragment : Fragment() {
         // Inflate the layout for this fragment
         binding = FragmentSplitIoBinding.inflate(inflater, container, false)
 
+        binding.isDataAvailable = false
+
         binding.btnA.setOnClickListener {
             Toast.makeText(context, "Enabled Button A..", Toast.LENGTH_LONG).show()
         }
@@ -57,8 +59,10 @@ class SplitIoFragment : Fragment() {
     }
 
     private fun observeSplitData() {
+
         splitViewModel.initClient().observe(viewLifecycleOwner, {
             if (it) {
+                binding.isDataAvailable = true
                 setVersionTreatment()
                 setCountryTreatment()
                 setStudyTreatment()
