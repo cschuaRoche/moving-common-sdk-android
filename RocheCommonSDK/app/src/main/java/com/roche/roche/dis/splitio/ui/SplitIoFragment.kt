@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -87,6 +88,7 @@ class SplitIoFragment : Fragment() {
             }
             else -> {
                 // insert control code here
+                unsupportedTreatment(SplitViewModel.SPLIT_SSG_APP_VERSION)
             }
         }
     }
@@ -105,6 +107,7 @@ class SplitIoFragment : Fragment() {
             }
             else -> {
                 // insert control code here
+                unsupportedTreatment(SplitViewModel.SPLIT_SSG_PROTOTYPE_COUNTRY)
             }
         }
     }
@@ -123,6 +126,7 @@ class SplitIoFragment : Fragment() {
             }
             else -> {
                 // insert control code here
+                unsupportedTreatment(SplitViewModel.SPLIT_SSG_PROTOTYPE_STUDY)
             }
         }
     }
@@ -141,6 +145,7 @@ class SplitIoFragment : Fragment() {
             }
             else -> {
                 // insert control code here
+                unsupportedTreatment(SplitViewModel.SPLIT_SSG_LIMIT_ROLLOUT)
             }
         }
     }
@@ -158,6 +163,10 @@ class SplitIoFragment : Fragment() {
     override fun onDestroy() {
         super.onDestroy()
         splitViewModel.destroy()
+    }
+
+    private fun unsupportedTreatment(treatment: String) {
+        Log.d("SplitIO", "setTreatment: treatment $treatment is not supported.")
     }
 
 }
