@@ -1,9 +1,8 @@
 Pod::Spec.new do |spec|
     spec.name                     = 'AppRecall'
     spec.version                  = '1.0'
-    spec.homepage                 = 'git@bitbucket.org:rochedis/common-sdk-android.git'
-    spec.source                   = { :git => "git@bitbucket.org:rochedis/common-sdk-android/RocheCommonSDK/recall.git", :branch => "feature/ios_distribution_pod",
-                                     :tag => "#{spec.version}" }
+    spec.homepage                 = 'Link to the Shared Module homepage'
+    spec.source                   = { :git => "Not Published", :tag => "Cocoapods/#{spec.name}/#{spec.version}" }
     spec.authors                  = ''
     spec.license                  = ''
     spec.summary                  = 'Some description for the Shared Module'
