@@ -7,6 +7,13 @@
 # Note: This docker image is created and maintained by a non official third party. For more details see: https://hub.docker.com/r/androidsdk/android-30
 image: androidsdk/android-30
 
+definitions:
+  caches:
+    android-sdk: android-sdk
+  services:
+    docker:
+      memory: 1024
+
 pipelines:
   default:                # pipeline definition for all branches
         - step:           # step to build Android debug application
@@ -17,7 +24,6 @@ pipelines:
               - cd RocheCommonSDK
               - chmod +x gradlew
               - export FIREBASE_TOKEN=1//0gWpfj1fE4IHqCgYIARAAGBASNwF-L9IrVt7D7_nN2aexFlf9HyZ9m-ZM4cSBjezTFD4ihMYXaU8ZdTn-14kcjoIJdryFrpOzNa0
-              - rm -rf $HOME/.gradle/caches/
               - ./gradlew clean
               - ./gradlew assemblerelease appDistributionUploadRelease --stacktrace
               - ./gradlew biometric:artifactoryPublish
