@@ -17,6 +17,7 @@ pipelines:
               - cd RocheCommonSDK
               - chmod +x gradlew
               - export FIREBASE_TOKEN=1//0gWpfj1fE4IHqCgYIARAAGBASNwF-L9IrVt7D7_nN2aexFlf9HyZ9m-ZM4cSBjezTFD4ihMYXaU8ZdTn-14kcjoIJdryFrpOzNa0
+              - rm -rf $HOME/.gradle/caches/
               - ./gradlew clean
               - ./gradlew assemblerelease appDistributionUploadRelease --stacktrace
               - ./gradlew biometric:artifactoryPublish
