@@ -28,5 +28,11 @@
             android:id="@+id/salesforceFragment"
             android:title="@string/salesforce"
             app:actionLayout="@layout/action_view_arrow" />
+
+        <item
+            android:id="@+id/splitIoFragment"
+            android:title="@string/split_io_user"
+            app:actionLayout="@layout/action_view_arrow" />
+
     </group>
 </menu>
