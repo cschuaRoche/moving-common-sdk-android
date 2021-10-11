@@ -73,4 +73,5 @@
     <string name="do_not_show_again">Do not show again</string>
     <string name="app_or_samd_id">App or SAMD ID</string>
     <string name="app_or_samd_version">App or SAMD Version</string>
+    <string name="country_optional">Country (Optional)</string>
 </resources>

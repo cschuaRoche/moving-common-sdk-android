@@ -69,7 +69,7 @@
             android:id="@+id/et_country"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:hint="@string/country"
+            android:hint="@string/country_optional"
             android:inputType="text"
             android:lines="1"
             android:maxLines="1"
