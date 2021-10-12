@@ -75,4 +75,10 @@
         android:label="fragment_split_io"
         tools:layout="@layout/fragment_split_io" />
 
+    <fragment
+        android:id="@+id/systemMessagesFragment"
+        android:name="com.roche.roche.dis.systemmessages.ui.SystemMessagesFragment"
+        android:label="fragment_system_messages"
+        tools:layout="@layout/fragment_system_messages" />
+
 </navigation>

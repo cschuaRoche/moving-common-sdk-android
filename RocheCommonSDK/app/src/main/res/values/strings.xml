@@ -63,4 +63,15 @@
     <string name="disabled">Disabled</string>
     <string name="enabled">Enabled</string>
     <string name="user">USER</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="system_messages">System Messages</string>
+    <string name="type">Comma Separated Message Types</string>
+    <string name="request_system_messages">Request system messages</string>
+    <string name="clear_cache">Clear Cache</string>
+    <string name="ok">Okay</string>
+    <string name="do_not_show_again">Do not show again</string>
+    <string name="app_or_samd_id">App or SAMD ID</string>
+    <string name="app_or_samd_version">App or SAMD Version</string>
+    <string name="country_optional">Country (Optional)</string>
 </resources>
