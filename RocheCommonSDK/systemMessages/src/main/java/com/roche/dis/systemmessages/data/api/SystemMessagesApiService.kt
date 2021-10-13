@@ -24,7 +24,7 @@ interface SystemMessagesApiService {
 
     companion object {
         private const val TIMEOUT = 15L
-        internal const val SYSTEM_MESSAGES_END_POINT = "/systemMessages"
+        internal const val SYSTEM_MESSAGES_END_POINT = "/notifications/systemMessages"
 
         var retrofitService: SystemMessagesApiService? = null
 
