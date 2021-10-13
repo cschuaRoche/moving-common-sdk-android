@@ -5,6 +5,12 @@ plugins {
     kotlin("plugin.serialization") version "1.4.10"
     kotlin("native.cocoapods")
     id("com.android.library")
+
+    jacoco
+}
+
+jacoco {
+    toolVersion = "0.8.7"
 }
 
 version = "1.0"
@@ -80,5 +86,27 @@ android {
     defaultConfig {
         minSdkVersion(21)
         targetSdkVersion(31)
+    }
+}
+
+val jacocoTestReport by tasks.creating(JacocoReport::class.java) {
+    val coverageSourceDirs = arrayOf(
+        "src/commonMain",
+        "src/jvmMain"
+    )
+
+    val classFiles = File("${buildDir}/tmp/kotlin-classes/debug/")
+        .walkBottomUp()
+        .toSet()
+
+    classDirectories.setFrom(classFiles)
+    sourceDirectories.setFrom(files(coverageSourceDirs))
+
+    executionData
+        .setFrom(files("${buildDir}/jacoco/testDebugUnitTest.exec"))
+
+    reports {
+        xml.isEnabled = true
+        html.isEnabled = true
     }
 }
