@@ -6,6 +6,15 @@ import retrofit2.HttpException
 
 object SystemMessages {
 
+    /**
+     * Get system messages based on message type, appOrSamdId, appOrSamdVersion and country
+     *
+     * @param baseUrl base url for getting the system messages
+     * @param messageTypeList list of message types
+     * @param appOrSamdId application or samd id
+     * @param appOrSamdVersion application or samd version
+     * @param country country (optional)
+     */
     @Throws(SystemMessagesException::class)
     suspend fun getSystemMessages(
         baseUrl: String,

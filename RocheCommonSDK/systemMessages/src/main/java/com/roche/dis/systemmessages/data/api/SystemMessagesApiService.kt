@@ -10,7 +10,7 @@ import retrofit2.http.Query
 import retrofit2.http.Url
 import java.util.concurrent.TimeUnit
 
-interface SystemMessagesApiService {
+internal interface SystemMessagesApiService {
     @GET
     suspend fun getSystemMessages(
         @Url url: String,
