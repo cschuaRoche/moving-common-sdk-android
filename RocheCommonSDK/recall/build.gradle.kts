@@ -90,18 +90,23 @@ android {
 }
 
 val jacocoTestReport by tasks.creating(JacocoReport::class.java) {
+    val excludes = ArrayList<String>()
+    File("${project.rootDir}/scripts/file_exclusion.txt").forEachLine { line ->
+        if (!line.contains("//")) {
+            excludes.add(line)
+        }
+    }
+
+    val classFiles = fileTree(baseDir = "${buildDir}/tmp/kotlin-classes/debug/")
+    classFiles.setExcludes(excludes)
+    classDirectories.setFrom(classFiles)
+
     val coverageSourceDirs = arrayOf(
         "src/commonMain",
         "src/jvmMain"
     )
 
-    val classFiles = File("${buildDir}/tmp/kotlin-classes/debug/")
-        .walkBottomUp()
-        .toSet()
-
-    classDirectories.setFrom(classFiles)
     sourceDirectories.setFrom(files(coverageSourceDirs))
-
     executionData
         .setFrom(files("${buildDir}/jacoco/testDebugUnitTest.exec"))
 
