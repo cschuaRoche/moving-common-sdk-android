@@ -43,7 +43,7 @@ object SystemMessages {
         }
     }
 
-    private fun getDevice() = android.os.Build.MODEL.lowercase()
+    private fun getDevice() = android.os.Build.MODEL
     private fun getOS() = "android"
     private fun getOsVersion() = android.os.Build.VERSION.SDK_INT.toString()
 }
