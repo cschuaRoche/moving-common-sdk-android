@@ -47,7 +47,7 @@ class SystemMessagesFragment : Fragment() {
     }
 
     private fun showSystemMessageDialog(title: String, message: String) {
-        val dialog = AlertDialog.Builder(requireContext())
+        val dialog = AlertDialog.Builder(requireContext(), R.style.AlertDialogTheme)
             .setTitle(title)
             .setMessage(message)
             .setCancelable(false)

@@ -22,4 +22,9 @@
         <item name="android:textColor">@color/white_high_emphasis_2</item>
         <item name="android:layout_gravity">center</item>
     </style>
+
+    <style name="AlertDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="colorAccent">@color/colorPrimary</item>
+    </style>
+
 </resources>
