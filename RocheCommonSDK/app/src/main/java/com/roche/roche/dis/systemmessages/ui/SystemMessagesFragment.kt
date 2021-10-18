@@ -10,7 +10,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.roche.dis.systemmessages.SystemMessages
-import com.roche.dis.systemmessages.SystemMessagesException
+import com.roche.dis.systemmessages.data.api.RetrofitApiService
+import com.roche.dis.systemmessages.data.model.SystemMessage
 import com.roche.roche.dis.R
 import com.roche.roche.dis.databinding.BottomSheetSystemMessageBinding
 import com.roche.roche.dis.databinding.FragmentSystemMessagesBinding
@@ -38,14 +39,7 @@ class SystemMessagesFragment : Fragment() {
                 txtError.isVisible = false
                 lifecycleScope.launch {
                     try {
-                        val systemMessages = SystemMessages.getSystemMessages(
-                            baseUrl = etUrl.text.toString(),
-                            messageTypeList = getMessageTypes(),
-                            appOrSamdId = etAppSamdId.text.toString(),
-                            appOrSamdVersion = etAppSamdVersion.text.toString(),
-                            country = etCountry.text.toString()
-                                .takeIf { etCountry.text.isNullOrEmpty().not() }
-                        )
+                        val systemMessages = getSystemMsgsFromInput()
                         if (systemMessages.isNotEmpty()) {
                             systemMessages.forEach {
                                 showSystemMessageDialog(it.type, it.defaultMessage)
@@ -54,7 +48,7 @@ class SystemMessagesFragment : Fragment() {
                             txtError.text = getString(R.string.system_messages_not_available)
                             txtError.isVisible = true
                         }
-                    } catch (e: SystemMessagesException) {
+                    } catch (e: RetrofitApiService.ApiException) {
                         txtError.text = getString(R.string.error, "${e.statusCode} - ${e.message}")
                         txtError.isVisible = true
                     } catch (e1: Exception) {
@@ -64,6 +58,18 @@ class SystemMessagesFragment : Fragment() {
                     progressBar.progressBarHolder.isVisible = false
                 }
             }
+        }
+    }
+
+    private suspend fun getSystemMsgsFromInput(): List<SystemMessage> {
+        with(binding) {
+            return SystemMessages.getSystemMessages(
+                baseUrl = etUrl.text.toString(),
+                messageTypeList = getMessageTypes(),
+                appOrSamdId = etAppSamdId.text.toString(),
+                appOrSamdVersion = etAppSamdVersion.text.toString(),
+                country = etCountry.text.toString().takeIf { etCountry.text.isNullOrEmpty().not() }
+            )
         }
     }
 

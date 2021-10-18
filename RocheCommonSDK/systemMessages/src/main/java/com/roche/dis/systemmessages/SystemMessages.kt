@@ -1,5 +1,6 @@
 package com.roche.dis.systemmessages
 
+import com.roche.dis.systemmessages.data.api.RetrofitApiService
 import com.roche.dis.systemmessages.data.api.SystemMessagesApiService
 import com.roche.dis.systemmessages.data.model.SystemMessage
 import retrofit2.HttpException
@@ -15,7 +16,7 @@ object SystemMessages {
      * @param appOrSamdVersion application or samd version
      * @param country country (optional)
      */
-    @Throws(SystemMessagesException::class)
+    @Throws(RetrofitApiService.ApiException::class)
     suspend fun getSystemMessages(
         baseUrl: String,
         messageTypeList: List<String>,
@@ -37,7 +38,7 @@ object SystemMessages {
             return response.systemMessagesList.filter { it.type in messageTypeList }
         } catch (e: Exception) {
             if (e is HttpException) {
-                throw SystemMessagesException(e.code(), e)
+                throw RetrofitApiService.ApiException(e.code())
             }
             throw e
         }

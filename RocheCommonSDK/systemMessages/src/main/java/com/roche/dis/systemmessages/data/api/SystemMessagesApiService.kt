@@ -24,28 +24,14 @@ internal interface SystemMessagesApiService {
 
     companion object {
         private const val TIMEOUT = 15L
+        private const val BASE_URL = "https://defaultBaseUrl"
         internal const val SYSTEM_MESSAGES_END_POINT = "/notifications/systemMessages"
 
         var retrofitService: SystemMessagesApiService? = null
 
         fun getInstance(): SystemMessagesApiService {
             if (retrofitService == null) {
-                val httpLoggingInterceptor = HttpLoggingInterceptor()
-                httpLoggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
-
-                val okHttpClient = OkHttpClient.Builder().apply {
-                    connectTimeout(TIMEOUT, TimeUnit.SECONDS)
-                    readTimeout(TIMEOUT, TimeUnit.SECONDS)
-                    writeTimeout(TIMEOUT, TimeUnit.SECONDS)
-                    addInterceptor(httpLoggingInterceptor)
-                }.build()
-
-                val retrofit = Retrofit.Builder().apply {
-                    baseUrl("https://defaultBaseUrl")
-                    client(okHttpClient)
-                    addConverterFactory(GsonConverterFactory.create())
-                }.build()
-
+                val retrofit = RetrofitApiService.getRetrofit(BASE_URL, TIMEOUT)
                 retrofitService = retrofit.create(SystemMessagesApiService::class.java)
             }
             return retrofitService!!
