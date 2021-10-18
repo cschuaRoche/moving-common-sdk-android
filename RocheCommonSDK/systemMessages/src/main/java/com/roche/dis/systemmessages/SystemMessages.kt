@@ -1,8 +1,10 @@
 package com.roche.dis.systemmessages
 
+import androidx.annotation.VisibleForTesting
 import com.roche.dis.systemmessages.data.api.RetrofitApiService
 import com.roche.dis.systemmessages.data.api.SystemMessagesApiService
 import com.roche.dis.systemmessages.data.model.SystemMessage
+import com.roche.dis.systemmessages.data.model.SystemMessagesResponse
 import retrofit2.HttpException
 
 object SystemMessages {
@@ -26,15 +28,7 @@ object SystemMessages {
     ): List<SystemMessage> {
         try {
             val url = baseUrl + SystemMessagesApiService.SYSTEM_MESSAGES_END_POINT
-            val response = SystemMessagesApiService.getInstance().getSystemMessages(
-                url = url,
-                device = getDevice(),
-                os = getOS(),
-                osVersion = getOsVersion(),
-                appOrSamdId = appOrSamdId,
-                appOrSamdVersion = appOrSamdVersion,
-                country = country
-            )
+            val response = fetchSystemMessages(url, appOrSamdId, appOrSamdVersion, country)
             return response.systemMessagesList.filter { it.type in messageTypeList }
         } catch (e: Exception) {
             if (e is HttpException) {
@@ -42,6 +36,24 @@ object SystemMessages {
             }
             throw e
         }
+    }
+
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    internal suspend fun fetchSystemMessages(
+        url: String,
+        appOrSamdId: String,
+        appOrSamdVersion: String,
+        country: String?
+    ): SystemMessagesResponse {
+        return SystemMessagesApiService.getInstance().getSystemMessages(
+            url = url,
+            device = getDevice(),
+            os = getOS(),
+            osVersion = getOsVersion(),
+            appOrSamdId = appOrSamdId,
+            appOrSamdVersion = appOrSamdVersion,
+            country = country
+        )
     }
 
     private fun getDevice() = android.os.Build.MODEL
