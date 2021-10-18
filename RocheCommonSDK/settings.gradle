@@ -8,3 +8,4 @@ rootProject.name = "RocheCommonSampleApp"
 include ':utils'
 include ':staticContent'
 include ':recall'
+include ':systemMessages'
