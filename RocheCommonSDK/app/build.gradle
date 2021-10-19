@@ -21,7 +21,7 @@ android {
     configProperties.load(new FileInputStream(configPropertiesFile))
 
     defaultConfig {
-        applicationId "com.roche.roche.dis.biometrics"
+        applicationId "com.roche.ssg.sample"
         minSdkVersion 24
         targetSdkVersion 30
         versionCode 1
