@@ -89,6 +89,7 @@ dependencies {
     // firebase
     implementation platform("com.google.firebase:firebase-bom:$versions.firebase")
     implementation 'com.google.firebase:firebase-analytics-ktx'
+    implementation 'com.google.firebase:firebase-messaging'
 
     // salesforce
     implementation 'com.salesforce.service:chat-core:4.2.0'
