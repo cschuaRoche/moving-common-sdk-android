@@ -49,8 +49,8 @@
     -->
     <string name="split_io_user">Split.io</string>
     <string name="split_io_version">Version: %s</string>
-    <string name="split_io_country">Country: %s</string>
-    <string name="split_io_study">Study: %s</string>
+    <string name="split_io_country">Country: US</string>
+    <string name="split_io_study">Study: Beta</string>
     <string name="split_io_percentage_based_rollout">% based rollout</string>
     <string name="split_io_ab_testing">A/B Testing</string>
     <string name="button_a">Button A</string>
@@ -59,4 +59,19 @@
     <string name="button_d">Button D</string>
     <string name="button_e">Button E</string>
     <string name="button_f">Button F</string>
+    <string name="user_configuration">User Configuration</string>
+    <string name="disabled">Disabled</string>
+    <string name="enabled">Enabled</string>
+    <string name="user">USER</string>
+
+    <string name="system_messages">System Messages</string>
+    <string name="type">Comma separated valid message types</string>
+    <string name="request_system_messages">Request system messages</string>
+    <string name="clear_cache">Clear Cache</string>
+    <string name="ok">Okay</string>
+    <string name="do_not_show_again">Do not show again</string>
+    <string name="app_or_samd_id">App or SaMD ID</string>
+    <string name="app_or_samd_version">App or SaMD Version</string>
+    <string name="country_optional">Country (Optional)</string>
+    <string name="system_messages_not_available">System messages are not available</string>
 </resources>

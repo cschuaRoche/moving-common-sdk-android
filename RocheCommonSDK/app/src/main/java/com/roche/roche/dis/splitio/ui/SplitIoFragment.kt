@@ -1,8 +1,10 @@
 package com.roche.roche.dis.splitio.ui
 
 import android.annotation.SuppressLint
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -27,6 +29,8 @@ class SplitIoFragment : Fragment() {
         // Inflate the layout for this fragment
         binding = FragmentSplitIoBinding.inflate(inflater, container, false)
 
+        binding.isDataAvailable = false
+
         binding.btnA.setOnClickListener {
             Toast.makeText(context, "Enabled Button A..", Toast.LENGTH_LONG).show()
         }
@@ -47,23 +51,30 @@ class SplitIoFragment : Fragment() {
         // Set the values
         binding.tvVersion1.text = getString(R.string.split_io_version, "1.0.0")
         binding.tvVersion2.text = getString(R.string.split_io_version, "1.1.0")
-        binding.tvStudy.text = getString(R.string.split_io_study, currentUser.study)
-        binding.tvCountry.text = getString(R.string.split_io_country, currentUser.country)
+        binding.tvStudy.text = getString(R.string.split_io_study)
+        binding.tvCountry.text = getString(R.string.split_io_country)
 
         observeSplitData()
         return binding.root
     }
 
     private fun observeSplitData() {
+
         splitViewModel.initClient().observe(viewLifecycleOwner, {
             if (it) {
+                binding.isDataAvailable = true
                 setVersionTreatment()
                 setCountryTreatment()
                 setStudyTreatment()
                 setRolloutTreatment()
                 setStyleTreatment()
+                setConfiguration()
             }
         })
+    }
+
+    private fun setConfiguration() {
+        binding.userConfiguration.text = splitViewModel.getAllConfiguration().toString()
     }
 
     private fun setVersionTreatment() {
@@ -72,13 +83,16 @@ class SplitIoFragment : Fragment() {
             treatment.equals("Green_button") -> {
                 // insert Green_button code here
                 binding.btnA.isEnabled = true
+                binding.btnA.text = getString(R.string.enabled)
             }
             treatment.equals("Red_button") -> {
                 // insert Red_button code here
                 binding.btnB.isEnabled = true
+                binding.btnB.text = getString(R.string.enabled)
             }
             else -> {
                 // insert control code here
+                unsupportedTreatment(SplitViewModel.SPLIT_SSG_APP_VERSION)
             }
         }
     }
@@ -89,6 +103,7 @@ class SplitIoFragment : Fragment() {
             treatment.equals("US_users") -> {
                 // insert US_users code here
                 binding.btnC.isEnabled = true
+                binding.btnC.text = getString(R.string.enabled)
             }
             treatment.equals("CA_users") -> {
                 // insert CA_users code here
@@ -96,6 +111,7 @@ class SplitIoFragment : Fragment() {
             }
             else -> {
                 // insert control code here
+                unsupportedTreatment(SplitViewModel.SPLIT_SSG_PROTOTYPE_COUNTRY)
             }
         }
     }
@@ -110,9 +126,11 @@ class SplitIoFragment : Fragment() {
             treatment.equals("Beta_Study") -> {
                 // insert Beta_Study code here
                 binding.btnD.isEnabled = true
+                binding.btnD.text = getString(R.string.enabled)
             }
             else -> {
                 // insert control code here
+                unsupportedTreatment(SplitViewModel.SPLIT_SSG_PROTOTYPE_STUDY)
             }
         }
     }
@@ -123,6 +141,7 @@ class SplitIoFragment : Fragment() {
             treatment.equals("on") -> {
                 // insert code for ON here
                 binding.btnE.isEnabled = true
+                binding.btnE.text = getString(R.string.enabled)
             }
             treatment.equals("off") -> {
                 // insert code for OFF here
@@ -130,6 +149,7 @@ class SplitIoFragment : Fragment() {
             }
             else -> {
                 // insert control code here
+                unsupportedTreatment(SplitViewModel.SPLIT_SSG_LIMIT_ROLLOUT)
             }
         }
     }
@@ -139,13 +159,18 @@ class SplitIoFragment : Fragment() {
         val config = splitViewModel.getStyleTreatment()
         binding.btnF.isEnabled = true
         binding.btnF.text = config.text
-        binding.btnF.setBackgroundColor(Color.parseColor(config.color))
+        val color = Color.parseColor(config.color)
+        binding.btnF.backgroundTintList = ColorStateList.valueOf(color)
         binding.btnF.setTextColor(Color.parseColor(config.textcolor))
     }
 
     override fun onDestroy() {
         super.onDestroy()
         splitViewModel.destroy()
+    }
+
+    private fun unsupportedTreatment(treatment: String) {
+        Log.d("SplitIO", "setTreatment: treatment $treatment is not supported.")
     }
 
 }
