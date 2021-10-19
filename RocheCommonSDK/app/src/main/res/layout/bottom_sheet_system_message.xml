@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="25dp">
@@ -32,11 +33,13 @@
             android:layout_height="wrap_content"
             android:clickable="true"
             android:focusable="true"
+            android:gravity="center"
+            android:minHeight="48dp"
             android:paddingStart="20dp"
             android:paddingEnd="20dp"
             android:text="@string/ok"
             android:textAllCaps="true"
-            android:textColor="@color/colorAccent"
+            android:textColor="@color/colorPrimary"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/txt_message" />
 
@@ -46,11 +49,13 @@
             android:layout_height="wrap_content"
             android:clickable="true"
             android:focusable="true"
+            android:gravity="center"
+            android:minHeight="48dp"
             android:paddingStart="20dp"
             android:paddingEnd="20dp"
             android:text="@string/do_not_show_again"
             android:textAllCaps="true"
-            android:textColor="@color/colorAccent"
+            android:textColor="@color/colorPrimary"
             app:layout_constraintEnd_toStartOf="@id/txt_okay"
             app:layout_constraintTop_toTopOf="@id/txt_okay" />
 
