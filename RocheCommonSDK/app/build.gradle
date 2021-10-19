@@ -6,6 +6,7 @@ plugins {
 
 apply plugin: "androidx.navigation.safeargs.kotlin"
 apply plugin: 'com.google.firebase.appdistribution'
+apply plugin: 'com.google.gms.google-services'
 
 android {
     compileSdkVersion 30
@@ -84,6 +85,10 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'com.google.android.material:material:1.2.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+
+    // firebase
+    implementation platform("com.google.firebase:firebase-bom:$versions.firebase")
+    implementation 'com.google.firebase:firebase-analytics-ktx'
 
     // salesforce
     implementation 'com.salesforce.service:chat-core:4.2.0'
