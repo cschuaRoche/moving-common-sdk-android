@@ -1,4 +1,4 @@
-package com.roche.apprecall
+package com.roche.apprecall.model
 
 data class SamdResponse(
     val samdId: String,
