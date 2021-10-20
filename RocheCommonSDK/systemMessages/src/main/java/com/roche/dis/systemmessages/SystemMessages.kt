@@ -1,5 +1,6 @@
 package com.roche.dis.systemmessages
 
+import android.content.Context
 import androidx.annotation.VisibleForTesting
 import com.roche.dis.systemmessages.data.api.RetrofitApiService
 import com.roche.dis.systemmessages.data.api.SystemMessagesApiService
@@ -20,6 +21,7 @@ object SystemMessages {
      */
     @Throws(RetrofitApiService.ApiException::class)
     suspend fun getSystemMessages(
+        context: Context,
         baseUrl: String,
         messageTypeList: List<String>,
         appOrSamdId: String,
@@ -29,12 +31,27 @@ object SystemMessages {
         try {
             val url = baseUrl + SystemMessagesApiService.SYSTEM_MESSAGES_END_POINT
             val response = fetchSystemMessages(url, appOrSamdId, appOrSamdVersion, country)
-            return response.systemMessagesList.filter { it.type in messageTypeList }
+            val dismissedMessages = SystemMessagesSharedPref.getDismissedMessages(context)
+            return response.systemMessagesList.filter { (it.type in messageTypeList) && (it.resourceId !in dismissedMessages) }
         } catch (e: Exception) {
             if (e is HttpException) {
                 throw RetrofitApiService.ApiException(e.code())
             }
             throw e
+        }
+    }
+
+    /**
+     * Caches resource id of the dismissed system message in shared pref
+     *
+     * @param context application context
+     * @param resourceId resource id of the system message
+     */
+    fun dismissMessage(context: Context, resourceId: String) {
+        val dismissedMessages = SystemMessagesSharedPref.getDismissedMessages(context)
+        if (dismissedMessages.contains(resourceId).not()) {
+            dismissedMessages.add(resourceId)
+            SystemMessagesSharedPref.setDismissedMessages(context, dismissedMessages)
         }
     }
 
