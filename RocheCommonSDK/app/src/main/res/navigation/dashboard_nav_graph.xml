@@ -81,4 +81,10 @@
         android:label="fragment_system_messages"
         tools:layout="@layout/fragment_system_messages" />
 
+    <fragment
+        android:id="@+id/PushNotificationFragment"
+        android:name="com.roche.roche.dis.push.ui.RegisterPushFragment"
+        android:label="fragment_system_messages"
+        tools:layout="@layout/fragment_push_register" />
+
 </navigation>

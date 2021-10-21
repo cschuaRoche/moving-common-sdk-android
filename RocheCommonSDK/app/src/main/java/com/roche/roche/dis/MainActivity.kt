@@ -8,12 +8,8 @@ import androidx.appcompat.widget.Toolbar
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupActionBarWithNavController
+import androidx.navigation.ui.*
 import com.roche.roche.dis.databinding.ActivityMainBinding
-import androidx.navigation.ui.setupWithNavController
-import androidx.navigation.ui.onNavDestinationSelected
-import androidx.navigation.ui.navigateUp
 
 class MainActivity : AppCompatActivity() {
 

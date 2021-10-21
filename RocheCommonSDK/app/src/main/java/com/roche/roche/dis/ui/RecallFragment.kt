@@ -1,12 +1,12 @@
 package com.roche.roche.dis.ui
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.roche.apprecall.data.RecallApiClient
+import androidx.fragment.app.Fragment
 import com.roche.apprecall.RecallException
+import com.roche.apprecall.data.RecallApiClient
 import com.roche.roche.dis.databinding.FragmentRecallBinding
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch

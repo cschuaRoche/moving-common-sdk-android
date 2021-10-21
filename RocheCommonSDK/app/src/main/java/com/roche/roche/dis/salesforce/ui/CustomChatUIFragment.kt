@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.roche.roche.dis.databinding.CustomChatBinding
 import com.roche.roche.dis.salesforce.viewmodel.CustomChatUIViewModel
-import com.roche.roche.dis.salesforce.viewmodel.SalesforceChatViewModel
 
 class CustomChatUIFragment : Fragment() {
 

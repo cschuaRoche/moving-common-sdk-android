@@ -1,11 +1,7 @@
 package com.roche.roche.dis.salesforce
 
 import android.util.Log
-import com.salesforce.android.chat.core.model.AgentInformation
-import com.salesforce.android.chat.core.model.ChatFooterMenu
-import com.salesforce.android.chat.core.model.ChatMessage
-import com.salesforce.android.chat.core.model.ChatWindowButtonMenu
-import com.salesforce.android.chat.core.model.ChatWindowMenu
+import com.salesforce.android.chat.core.model.*
 import com.salesforce.android.chat.ui.ChatEventListener
 
 class ChatEventImpl : ChatEventListener {

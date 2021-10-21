@@ -2,6 +2,7 @@ plugins {
     id 'com.android.application'
     id 'kotlin-android'
     id 'kotlin-kapt'
+    id 'kotlin-parcelize'
 }
 
 apply plugin: "androidx.navigation.safeargs.kotlin"
@@ -113,7 +114,15 @@ dependencies {
     androidTestImplementation 'com.android.support.test:rules:1.0.2'
     androidTestCompile 'com.android.support.test.espresso:espresso-contrib:2.2.2'
 
+    //AWSMobileClient
+    implementation "com.amazonaws:aws-android-sdk-mobile-client:${versions.aws}"
+    implementation "com.amazonaws:aws-android-sdk-auth-userpools:${versions.aws}"
+    implementation "com.amazonaws:aws-android-sdk-cognitoauth:${versions.aws}"
+
     //Split.io
     implementation "io.split.client:android-client:${versions.split_version}"
     implementation "com.google.code.gson:gson:${versions.gson_version}"
+
+    implementation 'com.google.guava:guava:27.0.1-android'
+
 }

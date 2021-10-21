@@ -5,7 +5,6 @@ import io.split.android.client.SplitClient
 import io.split.android.client.SplitClientConfig
 import io.split.android.client.SplitFactoryBuilder
 import io.split.android.client.api.Key
-import java.security.AccessControlContext
 
 object SplitIoFactory {
 

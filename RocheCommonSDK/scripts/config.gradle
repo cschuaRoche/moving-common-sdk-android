@@ -7,6 +7,7 @@ versions.nav_version = "2.3.3"
 versions.activity_version = "1.2.3"
 versions.split_version = "2.7.2"
 versions.gson_version = "2.8.8"
+versions.aws = "2.19.0"
 ext.versions = versions
 
 def static addBuildScriptRepos(RepositoryHandler handler) {

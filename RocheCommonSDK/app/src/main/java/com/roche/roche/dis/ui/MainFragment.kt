@@ -1,11 +1,11 @@
 package com.roche.roche.dis.ui
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.roche.roche.dis.R
 import com.roche.roche.dis.databinding.FragmentMainBinding

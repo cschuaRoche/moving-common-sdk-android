@@ -2,7 +2,8 @@ plugins {
     id 'com.android.library'
     id 'kotlin-android'
 }
-
+apply plugin: 'com.jfrog.artifactory'
+apply plugin: 'maven-publish'
 android {
     compileSdkVersion 30
     buildToolsVersion "30.0.3"
@@ -11,7 +12,7 @@ android {
         minSdkVersion 24
         targetSdkVersion 30
         versionCode 1
-        versionName "1.0"
+        versionName "1.0.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
@@ -32,6 +33,33 @@ android {
     }
 }
 
+publishing {
+    publications {
+        aar(MavenPublication) {
+            groupId 'RocheCommonComponent' //put here your groupId
+            artifactId project.getName() //put here your artifactId
+            version android.defaultConfig.versionName //put here your library version
+
+            // Tell maven to prepare the generated "*.aar" file for publishing
+            artifact("$buildDir/outputs/aar/${project.getName()}-release.aar")
+        }
+    }
+}
+
+artifactory {
+    contextUrl = 'https://dhs.jfrog.io/dhs/'
+    publish {
+        repository {
+            repoKey = getProperty('artifactory.repokey')
+            username = getProperty('artifactory.user')
+            password = getProperty('artifactory.password')
+        }
+        defaults {
+            // Tell the Artifactory Plugin which artifacts should be published to Artifactory.
+            publications('aar')
+        }
+    }
+}
 dependencies {
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib:${versions.kotlin_version}"
