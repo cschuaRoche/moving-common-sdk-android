@@ -42,7 +42,7 @@ class SystemMessagesFragment : Fragment() {
                         val systemMessages = getSystemMsgsFromInput()
                         if (systemMessages.isNotEmpty()) {
                             systemMessages.forEach {
-                                showSystemMessageDialog(it.type, it.defaultMessage)
+                                showSystemMessageDialog(it.type, it.defaultMessage, it.resourceId)
                             }
                         } else {
                             txtError.text = getString(R.string.system_messages_not_available)
@@ -64,6 +64,7 @@ class SystemMessagesFragment : Fragment() {
     private suspend fun getSystemMsgsFromInput(): List<SystemMessage> {
         with(binding) {
             return SystemMessages.getSystemMessages(
+                context = requireContext(),
                 baseUrl = etUrl.text.toString(),
                 messageTypeList = getMessageTypes(),
                 appOrSamdId = etAppSamdId.text.toString(),
@@ -86,20 +87,20 @@ class SystemMessagesFragment : Fragment() {
         }
     }
 
-    private fun showSystemMessageDialog(title: String, message: String) {
+    private fun showSystemMessageDialog(title: String, message: String, resourceId: String) {
         val dialog = AlertDialog.Builder(requireContext(), R.style.AlertDialogTheme)
             .setTitle(title)
             .setMessage(message)
             .setCancelable(false)
             .setPositiveButton(getString(R.string.ok)) { dialog, which ->
-                // TODO: Handle Okay click here
+                // do nothing
             }.setNegativeButton(getString(R.string.do_not_show_again)) { dialog, which ->
-                // TODO: Handle do not show again click here
+                handleDismissSystemMessage(resourceId)
             }.create()
         dialog.show()
     }
 
-    private fun showSystemMessageBottomDialog(title: String, message: String) {
+    private fun showSystemMessageBottomDialog(title: String, message: String, resourceId: String) {
         val layout = BottomSheetSystemMessageBinding.inflate(layoutInflater)
 
         val dialog = BottomSheetDialog(requireContext())
@@ -109,11 +110,15 @@ class SystemMessagesFragment : Fragment() {
         layout.txtTitle.text = title
         layout.txtMessage.text = message
         layout.txtOkay.setOnClickListener {
-            // TODO: Handle Okay click here
+            // do nothing
         }
         layout.txtDoNotShow.setOnClickListener {
-            // TODO: Handle do not show again click here
+            handleDismissSystemMessage(resourceId)
         }
         dialog.show()
+    }
+
+    private fun handleDismissSystemMessage(resourceId: String) {
+        SystemMessages.dismissMessage(requireContext(), resourceId)
     }
 }
