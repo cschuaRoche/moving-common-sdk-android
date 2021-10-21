@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "46579760946",
+    "project_id": "ssg-sample-app",
+    "storage_bucket": "ssg-sample-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:46579760946:android:0e518228f2b50f4b53212b",
+        "android_client_info": {
+          "package_name": "com.roche.ssg.sample"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "46579760946-v0a6j4nv62ockri3tgso146jrttk5c8j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD2vH3ghPVFmZcT0-PGTwSKP4eEtAWKqHA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "46579760946-v0a6j4nv62ockri3tgso146jrttk5c8j.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

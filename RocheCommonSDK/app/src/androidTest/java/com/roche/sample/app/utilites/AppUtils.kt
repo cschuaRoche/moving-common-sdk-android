@@ -8,7 +8,7 @@ import androidx.annotation.IdRes
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.*
-import com.roche.roche.dis.R
+import com.roche.ssg.sample.R
 
 
 object AppUtils {
