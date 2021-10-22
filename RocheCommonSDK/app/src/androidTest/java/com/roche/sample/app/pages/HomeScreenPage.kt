@@ -1,16 +1,12 @@
 package com.roche.sample.app.pages
 
 import androidx.test.espresso.Espresso.*
-import androidx.test.espresso.action.ViewActions.click
-import androidx.test.espresso.contrib.NavigationViewActions
 import androidx.test.espresso.matcher.ViewMatchers.*
-import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
-import com.roche.roche.dis.R
+import com.roche.ssg.sample.R
 import com.roche.sample.app.utilites.AppUtils
 import com.roche.sample.app.utilites.BaseTest
 import com.roche.sample.app.utilites.performClick
 import org.hamcrest.CoreMatchers.allOf
-import org.hamcrest.CoreMatchers.anyOf
 
 
 object HomeScreenPage : BaseTest() {

@@ -1,7 +1,7 @@
 package com.roche.sample.app.pages
 
 import androidx.test.espresso.matcher.ViewMatchers
-import com.roche.roche.dis.R
+import com.roche.ssg.sample.R
 import com.roche.sample.app.utilites.AppUtils
 import com.roche.sample.app.utilites.BaseTest
 

@@ -2,8 +2,7 @@ package com.roche.sample.app.test
 
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.roche.roche.dis.MainActivity
-import com.roche.roche.dis.R
+import com.roche.ssg.sample.MainActivity
 import com.roche.sample.app.pages.BiometricScreenPage
 import com.roche.sample.app.pages.HomeScreenPage
 import com.roche.sample.app.utilites.AppUtils

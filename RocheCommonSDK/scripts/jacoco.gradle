@@ -1,0 +1,69 @@
+apply plugin: 'jacoco'
+
+jacoco {
+    toolVersion = "0.8.7"
+}
+
+project.afterEvaluate {
+    if (it.name.contains("lvl_library") || it.name.contains("play-licensing")) {
+        // skip license library
+        return
+    }
+
+    // Grab all build types
+    def buildTypes = android.buildTypes.collect { type -> type.name }
+    def productFlavors = android.productFlavors.collect { flavor -> flavor.name }
+
+    // When no product flavors defined, use empty
+    if (!productFlavors) productFlavors.add('')
+
+    println("buildTypes " + buildTypes)
+    productFlavors.each { productFlavorName ->
+        buildTypes.each { buildTypeName ->
+            def sourceName, sourcePath
+            if (!productFlavorName) {
+                sourceName = sourcePath = "${buildTypeName}"
+            } else {
+                sourceName = "${productFlavorName}${buildTypeName.capitalize()}"
+                sourcePath = "${productFlavorName}/${buildTypeName}"
+            }
+            def testTaskName = "test${sourceName.capitalize()}UnitTest"
+
+            // Create coverage task of form 'testFlavorTypeCoverage' depending on 'testFlavorTypeUnitTest'
+            task "${testTaskName}Coverage"(type: JacocoReport, dependsOn: "$testTaskName") {
+                group = "Reporting"
+                description = "Generate Jacoco coverage reports on the ${sourceName.capitalize()} build."
+
+                def excludes = []
+                new File("${project.rootDir}/scripts/file_exclusion.txt").eachLine { line ->
+                    if (!line.contains("//")) {
+                        excludes << line
+                    }
+                }
+
+                getClassDirectories().setFrom(fileTree(
+                        dir: "${project.buildDir}/intermediates/classes/${sourcePath}",
+                        excludes: excludes
+                ) + fileTree(
+                        dir: "${project.buildDir}/tmp/kotlin-classes/${sourceName}",
+                        excludes: excludes
+                ))
+
+
+                def coverageSourceDirs = [
+                        "src/main/java",
+                        "src/$buildTypeName/java"
+                ]
+
+                getAdditionalSourceDirs().setFrom(files(coverageSourceDirs))
+                getSourceDirectories().setFrom(files(coverageSourceDirs))
+                getExecutionData().setFrom(files("${project.buildDir}/jacoco/${testTaskName}.exec"))
+
+                reports {
+                    xml.required = true
+                    html.required = true
+                }
+            }
+        }
+    }
+}
