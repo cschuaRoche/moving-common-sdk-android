@@ -1,6 +1,6 @@
 package com.roche.apprecall.util
 
-import com.roche.apprecall.data.RecallApiClient
+import com.roche.apprecall.api.RecallApiClient
 import com.roche.apprecall.mockresponses.AppRecallResponse
 import com.roche.apprecall.mockresponses.SamdMockResponse
 import io.ktor.client.HttpClient
