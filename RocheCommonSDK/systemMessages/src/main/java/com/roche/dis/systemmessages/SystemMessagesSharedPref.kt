@@ -4,8 +4,8 @@ import android.content.Context
 import androidx.annotation.VisibleForTesting
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.roche.roche.dis.utils.PreferenceUtil
-import com.roche.roche.dis.utils.set
+import com.roche.ssg.sample.utils.PreferenceUtil
+import com.roche.ssg.sample.utils.set
 
 internal object SystemMessagesSharedPref {
     @VisibleForTesting
