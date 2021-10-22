@@ -1,8 +1,8 @@
-package com.roche.apprecall.data
+package com.roche.apprecall.api
 
-import com.roche.apprecall.AppRecallResponse
+import com.roche.apprecall.model.AppRecallResponse
 import com.roche.apprecall.RecallException
-import com.roche.apprecall.SamdResponse
+import com.roche.apprecall.model.SamdResponse
 import com.roche.apprecall.getDevice
 import com.roche.apprecall.getOS
 import com.roche.apprecall.getOSVersion

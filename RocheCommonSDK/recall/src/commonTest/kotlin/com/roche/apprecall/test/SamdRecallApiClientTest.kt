@@ -1,7 +1,7 @@
 package com.roche.apprecall.test
 
 import com.roche.apprecall.RecallException
-import com.roche.apprecall.data.RecallApiClient
+import com.roche.apprecall.api.RecallApiClient
 import com.roche.apprecall.mockresponses.SamdMockResponse
 import com.roche.apprecall.runBlockingTest
 import com.roche.apprecall.util.ApiMockEngine
