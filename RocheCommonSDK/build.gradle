@@ -9,19 +9,22 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath "org.jfrog.buildinfo:build-info-extractor-gradle:latest.release"
+        classpath "org.jfrog.buildinfo:build-info-extractor-gradle:4.21.0"
         classpath 'com.android.tools.build:gradle:4.2.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$versions.kotlin_version"
         classpath "org.jetbrains.dokka:dokka-gradle-plugin:$versions.dokka_version"
         classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$versions.nav_version"
         classpath 'com.google.firebase:firebase-appdistribution-gradle:2.1.3'
         classpath "com.google.gms:google-services:$versions.gms"
+        classpath "org.jacoco:org.jacoco.core:$versions.jacoco"
+
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
 }
 
 allprojects {
+    apply plugin: 'jacoco'
     repositories {
         google()
         jcenter()
@@ -33,6 +36,11 @@ allprojects {
             url 'http://tokbox.bintray.com/maven/'
         }
     }
+}
+
+subprojects {
+    //jacoco setup
+    apply from: "$project.rootDir/scripts/jacoco.gradle"
 }
 
 task clean(type: Delete) {

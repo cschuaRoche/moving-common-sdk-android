@@ -5,6 +5,12 @@ plugins {
     kotlin("plugin.serialization") version "1.4.10"
     kotlin("native.cocoapods")
     id("com.android.library")
+
+    jacoco
+}
+
+jacoco {
+    toolVersion = "0.8.7"
 }
 
 version = "1.0"
@@ -80,5 +86,32 @@ android {
     defaultConfig {
         minSdkVersion(21)
         targetSdkVersion(31)
+    }
+}
+
+val jacocoTestReport by tasks.creating(JacocoReport::class.java) {
+    val excludes = ArrayList<String>()
+    File("${project.rootDir}/scripts/file_exclusion.txt").forEachLine { line ->
+        if (!line.contains("//")) {
+            excludes.add(line)
+        }
+    }
+
+    val classFiles = fileTree(baseDir = "${buildDir}/tmp/kotlin-classes/debug/")
+    classFiles.setExcludes(excludes)
+    classDirectories.setFrom(classFiles)
+
+    val coverageSourceDirs = arrayOf(
+        "src/commonMain",
+        "src/jvmMain"
+    )
+
+    sourceDirectories.setFrom(files(coverageSourceDirs))
+    executionData
+        .setFrom(files("${buildDir}/jacoco/testDebugUnitTest.exec"))
+
+    reports {
+        xml.isEnabled = true
+        html.isEnabled = true
     }
 }
