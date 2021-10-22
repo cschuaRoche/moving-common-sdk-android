@@ -1,4 +1,4 @@
-package com.roche.roche.dis.auth
+package com.roche.ssg.sample.auth
 
 import android.content.Context
 import android.util.Log
@@ -14,16 +14,21 @@ import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.GenericHa
 import com.amazonaws.services.cognitoidentityprovider.model.CodeMismatchException
 import com.amazonaws.services.cognitoidentityprovider.model.NotAuthorizedException
 import com.amazonaws.services.cognitoidentityprovider.model.UserNotConfirmedException
-import com.roche.roche.dis.auth.AuthenticationMessages.ACTION_CODE_MISMATCH
-import com.roche.roche.dis.auth.AuthenticationMessages.ACTION_NEW_PASSWORD_REQUIRED
-import com.roche.roche.dis.auth.AuthenticationMessages.INIT_FAILED
-import com.roche.roche.dis.auth.AuthenticationMessages.INIT_SUCCESSFUL
-import com.roche.roche.dis.auth.AuthenticationMessages.LOGIN_FAILED
-import com.roche.roche.dis.auth.AuthenticationMessages.LOGOUT_SUCCESSFUL
-import com.roche.roche.dis.auth.AuthenticationMessages.NOT_AUTHORIZED
-import com.roche.roche.dis.auth.AuthenticationMessages.REGISTER_SUCCESSFUL
-import com.roche.roche.dis.auth.AuthenticationMessages.USER_NOT_CONFIRMED
-import com.roche.roche.dis.auth.model.*
+import com.roche.ssg.sample.auth.AuthenticationMessages.ACTION_CODE_MISMATCH
+import com.roche.ssg.sample.auth.AuthenticationMessages.ACTION_NEW_PASSWORD_REQUIRED
+import com.roche.ssg.sample.auth.AuthenticationMessages.INIT_FAILED
+import com.roche.ssg.sample.auth.AuthenticationMessages.INIT_SUCCESSFUL
+import com.roche.ssg.sample.auth.AuthenticationMessages.LOGIN_FAILED
+import com.roche.ssg.sample.auth.AuthenticationMessages.LOGOUT_SUCCESSFUL
+import com.roche.ssg.sample.auth.AuthenticationMessages.NOT_AUTHORIZED
+import com.roche.ssg.sample.auth.AuthenticationMessages.REGISTER_SUCCESSFUL
+import com.roche.ssg.sample.auth.AuthenticationMessages.USER_NOT_CONFIRMED
+import com.roche.ssg.sample.auth.model.AuthenticatedUserState
+import com.roche.ssg.sample.auth.model.AuthenticationToken
+import com.roche.ssg.sample.auth.model.CognitoResponse
+import com.roche.ssg.sample.auth.model.Result
+import com.roche.ssg.sample.auth.model.Failure
+import com.roche.ssg.sample.auth.model.Success
 import io.split.android.client.service.executor.SplitTaskExecutionInfo.UNEXPECTED_ERROR
 import org.json.JSONObject
 import java.net.HttpURLConnection

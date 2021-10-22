@@ -1,4 +1,4 @@
-package com.roche.roche.dis.push.ui
+package com.roche.ssg.sample.push.ui
 
 import android.os.Bundle
 import android.util.Log
@@ -9,11 +9,11 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.amazonaws.util.ClassLoaderHelper.getResourceAsStream
 import com.google.gson.Gson
-import com.roche.roche.dis.auth.AWSConfigDTO
-import com.roche.roche.dis.auth.SessionManager
-import com.roche.roche.dis.auth.model.Failure
-import com.roche.roche.dis.auth.model.Success
-import com.roche.roche.dis.databinding.FragmentPushRegisterBinding
+import com.roche.ssg.sample.auth.SessionManager
+import com.roche.ssg.sample.auth.model.AWSConfigDTO
+import com.roche.ssg.sample.auth.model.Failure
+import com.roche.ssg.sample.auth.model.Success
+import com.roche.ssg.sample.databinding.FragmentPushRegisterBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch

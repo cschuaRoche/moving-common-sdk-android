@@ -1,4 +1,4 @@
-package com.roche.roche.dis.auth
+package com.roche.ssg.sample.auth.model
 
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName

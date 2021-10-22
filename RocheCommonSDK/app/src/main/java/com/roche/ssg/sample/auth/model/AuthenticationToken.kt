@@ -1,6 +1,6 @@
-package com.roche.roche.dis.auth.model
+package com.roche.ssg.sample.auth.model
 
-import java.util.*
+import java.util.Date
 
 
 data class AuthenticationToken(val tokenString: String, val expirationDate: Date) : Any()

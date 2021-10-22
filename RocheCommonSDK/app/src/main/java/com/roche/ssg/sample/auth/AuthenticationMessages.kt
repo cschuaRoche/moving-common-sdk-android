@@ -1,4 +1,4 @@
-package com.roche.roche.dis.auth
+package com.roche.ssg.sample.auth
 object AuthenticationMessages {
     //ERRORS
     const val LOGIN_FAILED = "Login failed."

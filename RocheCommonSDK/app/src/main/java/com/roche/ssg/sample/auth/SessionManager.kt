@@ -1,9 +1,17 @@
-package com.roche.roche.dis.auth
+package com.roche.ssg.sample.auth
 
 import android.content.Context
 import android.util.Log
-import com.roche.roche.dis.auth.model.*
-import kotlinx.coroutines.*
+import com.roche.ssg.sample.auth.model.AuthenticationToken
+import com.roche.ssg.sample.auth.model.CognitoResponse
+import com.roche.ssg.sample.auth.model.Failure
+import com.roche.ssg.sample.auth.model.Result
+import com.roche.ssg.sample.auth.model.Success
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import org.json.JSONObject
 import java.util.concurrent.atomic.AtomicBoolean
 

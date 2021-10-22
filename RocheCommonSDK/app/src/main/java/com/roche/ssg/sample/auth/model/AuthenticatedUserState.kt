@@ -1,4 +1,4 @@
-package com.roche.roche.dis.auth.model
+package com.roche.ssg.sample.auth.model
 
 data class AuthenticatedUserState(
     val authenticationToken: AuthenticationToken?,

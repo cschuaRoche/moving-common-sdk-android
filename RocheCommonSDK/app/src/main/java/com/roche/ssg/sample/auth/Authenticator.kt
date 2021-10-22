@@ -1,11 +1,11 @@
-package com.roche.roche.dis.auth
+package com.roche.ssg.sample.auth
 
 import android.content.Context
 import com.amazonaws.mobile.client.UserState
-import com.roche.roche.dis.auth.model.AuthenticatedUserState
-import com.roche.roche.dis.auth.model.AuthenticationToken
-import com.roche.roche.dis.auth.model.CognitoResponse
-import com.roche.roche.dis.auth.model.Result
+import com.roche.ssg.sample.auth.model.AuthenticatedUserState
+import com.roche.ssg.sample.auth.model.AuthenticationToken
+import com.roche.ssg.sample.auth.model.CognitoResponse
+import com.roche.ssg.sample.auth.model.Result
 import org.json.JSONObject
 
 interface Authenticator {
