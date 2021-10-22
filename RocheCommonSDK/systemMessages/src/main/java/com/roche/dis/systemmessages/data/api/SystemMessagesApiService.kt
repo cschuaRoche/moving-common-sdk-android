@@ -25,7 +25,7 @@ internal interface SystemMessagesApiService {
     companion object {
         private const val TIMEOUT = 15L
         private const val BASE_URL = "https://defaultBaseUrl"
-        internal const val SYSTEM_MESSAGES_END_POINT = "/notifications/systemMessages"
+        internal const val SYSTEM_MESSAGES_END_POINT = "/notifications/system-messages"
 
         var retrofitService: SystemMessagesApiService? = null
 
