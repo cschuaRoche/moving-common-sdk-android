@@ -1,5 +1,6 @@
 package com.roche.dis.systemmessages
 
+import android.app.Application
 import com.roche.dis.systemmessages.data.api.RetrofitApiService
 import com.roche.dis.systemmessages.data.api.SystemMessagesApiService
 import com.roche.dis.systemmessages.data.model.Meta
@@ -7,7 +8,10 @@ import com.roche.dis.systemmessages.data.model.SystemMessage
 import com.roche.dis.systemmessages.data.model.SystemMessagesResponse
 import io.mockk.coEvery
 import io.mockk.coVerify
+import io.mockk.every
+import io.mockk.impl.annotations.MockK
 import io.mockk.mockkObject
+import io.mockk.verify
 import kotlinx.coroutines.runBlocking
 import okhttp3.MediaType
 import okhttp3.ResponseBody
@@ -18,11 +22,14 @@ import retrofit2.HttpException
 import retrofit2.Response
 
 class SystemMessagesTest : BaseMockkTest() {
+    @MockK(relaxed = true)
+    private lateinit var appContext: Application
 
     @Before
     override fun setup() {
         super.setup()
         mockkObject(SystemMessages)
+        mockkObject(SystemMessagesSharedPref)
     }
 
     @Test
@@ -36,8 +43,10 @@ class SystemMessagesTest : BaseMockkTest() {
                     null
                 )
             } returns getSystemMessageResponse()
+            every { SystemMessagesSharedPref.getDismissedMessages(appContext) } returns hashSetOf()
 
             val messages = SystemMessages.getSystemMessages(
+                appContext,
                 BASE_URL,
                 mutableListOf(MESSAGE_TYPE_QUALITY, MESSAGE_TYPE_ALERT),
                 APP_SAMD_ID,
@@ -51,6 +60,7 @@ class SystemMessagesTest : BaseMockkTest() {
                     null
                 )
             }
+            verify(exactly = 1) { SystemMessagesSharedPref.getDismissedMessages(appContext) }
             Assert.assertEquals(2, messages.size)
             Assert.assertEquals(getQualitySystemMessage(), messages[0])
             Assert.assertEquals(getAlertSystemMessage(), messages[1])
@@ -67,8 +77,10 @@ class SystemMessagesTest : BaseMockkTest() {
                     null
                 )
             } returns getSystemMessageResponse()
+            every { SystemMessagesSharedPref.getDismissedMessages(appContext) } returns hashSetOf()
 
             val messages = SystemMessages.getSystemMessages(
+                appContext,
                 BASE_URL,
                 mutableListOf(MESSAGE_TYPE_ALERT),
                 APP_SAMD_ID,
@@ -82,6 +94,7 @@ class SystemMessagesTest : BaseMockkTest() {
                     null
                 )
             }
+            verify(exactly = 1) { SystemMessagesSharedPref.getDismissedMessages(appContext) }
             Assert.assertEquals(1, messages.size)
             Assert.assertEquals(getAlertSystemMessage(), messages[0])
         }
@@ -104,6 +117,7 @@ class SystemMessagesTest : BaseMockkTest() {
 
             try {
                 SystemMessages.getSystemMessages(
+                    appContext,
                     BASE_URL,
                     mutableListOf(MESSAGE_TYPE_ALERT),
                     APP_SAMD_ID,
@@ -113,6 +127,7 @@ class SystemMessagesTest : BaseMockkTest() {
             } catch (e: RetrofitApiService.ApiException) {
                 Assert.assertEquals(RetrofitApiService.APIResponseCode.NOT_FOUND, e.statusCode)
             }
+            verify(exactly = 0) { SystemMessagesSharedPref.getDismissedMessages(appContext) }
         }
 
     private fun getSystemMessageResponse() = SystemMessagesResponse(
