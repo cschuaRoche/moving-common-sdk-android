@@ -34,12 +34,12 @@ project.afterEvaluate {
                 group = "Reporting"
                 description = "Generate Jacoco coverage reports on the ${sourceName.capitalize()} build."
 
-            def excludes = []
-            new File( 'scripts/file_exclusion.txt' ).eachLine { line ->
-                if (!line.contains("//")) {
-                    excludes << line
+                def excludes = []
+                new File("${project.rootDir}/scripts/file_exclusion.txt").eachLine { line ->
+                    if (!line.contains("//")) {
+                        excludes << line
+                    }
                 }
-            }
 
                 getClassDirectories().setFrom(fileTree(
                         dir: "${project.buildDir}/intermediates/classes/${sourcePath}",
