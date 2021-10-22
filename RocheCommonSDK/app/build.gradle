@@ -129,6 +129,6 @@ dependencies {
     implementation "io.split.client:android-client:${versions.split_version}"
     implementation "com.google.code.gson:gson:${versions.gson_version}"
 
-    implementation 'com.google.guava:guava:27.0.1-android'
+    implementation "com.google.guava:guava:${versions.guava_version}"
 
 }

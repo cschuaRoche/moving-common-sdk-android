@@ -12,12 +12,12 @@ data class AWSConfigDTO(
 
 @Parcelize
 data class CognitoUserPoolDTO(
-    @SerializedName("Default") val Default: CognitoUserPoolDTOImpl
+    @SerializedName("Default") val default: CognitoUserPoolDTOImpl
 ) : Parcelable
 
 @Parcelize
 data class IdentityManagerDTO(
-    @SerializedName("Default") val Default: IdentityManagerDTOImpl = IdentityManagerDTOImpl()
+    @SerializedName("Default") val default: IdentityManagerDTOImpl = IdentityManagerDTOImpl()
 ) : Parcelable
 
 @Parcelize

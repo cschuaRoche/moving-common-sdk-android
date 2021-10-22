@@ -11,6 +11,7 @@ versions.aws = "2.19.0"
 versions.gms = "4.3.10"
 versions.firebase = "28.4.2"
 versions.jacoco = "0.8.7"
+versions.guava_version = "27.0.1-android"
 ext.versions = versions
 
 def static addBuildScriptRepos(RepositoryHandler handler) {
