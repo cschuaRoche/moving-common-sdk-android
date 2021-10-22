@@ -7,6 +7,7 @@ plugins {
 
 apply plugin: "androidx.navigation.safeargs.kotlin"
 apply plugin: 'com.google.firebase.appdistribution'
+apply plugin: 'com.google.gms.google-services'
 
 android {
     compileSdkVersion 30
@@ -22,7 +23,7 @@ android {
     configProperties.load(new FileInputStream(configPropertiesFile))
 
     defaultConfig {
-        applicationId "com.roche.roche.dis.biometrics"
+        applicationId "com.roche.ssg.sample"
         minSdkVersion 24
         targetSdkVersion 30
         versionCode 1
@@ -41,7 +42,7 @@ android {
             firebaseAppDistribution {
                 appId=getProperty('firebase.appid')
                 artifactType="APK"
-                groups="pass-tester-group"
+                groups="ssg-tester-group"
             }
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
@@ -52,7 +53,7 @@ android {
             firebaseAppDistribution {
                 appId=getProperty('firebase.appid')
                 artifactType="APK"
-                testers = "dhaiwat.bhavsar@contractors.roche.com, sanket.shah.ss1@contractors.roche.com"
+                testers = "sanket.shah.ss1@contractors.roche.com"
             }
             testCoverageEnabled true
             debuggable true
@@ -85,6 +86,11 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'com.google.android.material:material:1.2.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+
+    // firebase
+    implementation platform("com.google.firebase:firebase-bom:$versions.firebase")
+    implementation 'com.google.firebase:firebase-analytics-ktx'
+    implementation 'com.google.firebase:firebase-messaging'
 
     // salesforce
     implementation 'com.salesforce.service:chat-core:4.2.0'

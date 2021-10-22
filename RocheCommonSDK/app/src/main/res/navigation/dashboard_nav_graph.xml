@@ -6,18 +6,18 @@
 
     <fragment
         android:id="@+id/biometrics_nav_f"
-        android:name="com.roche.roche.dis.ui.BiometricsFragment"
+        android:name="com.roche.ssg.sample.ui.BiometricsFragment"
         tools:layout="@layout/biometrics_fragment" />
 
     <fragment
         android:id="@+id/recallFragment"
-        android:name="com.roche.roche.dis.ui.RecallFragment"
+        android:name="com.roche.ssg.sample.ui.RecallFragment"
         android:label="fragment_recall"
         tools:layout="@layout/fragment_recall" />
 
     <fragment
         android:id="@+id/mainFragment"
-        android:name="com.roche.roche.dis.ui.MainFragment"
+        android:name="com.roche.ssg.sample.ui.MainFragment"
         android:label="fragment_main"
         tools:layout="@layout/fragment_main">
         <action
@@ -39,18 +39,18 @@
 
     <fragment
         android:id="@+id/utilsFragment"
-        android:name="com.roche.roche.dis.ui.UtilsFragment"
+        android:name="com.roche.ssg.sample.ui.UtilsFragment"
         android:label="fragment_utils"
         tools:layout="@layout/fragment_utils" />
 
     <fragment
         android:id="@+id/releaseLessMaterialFragment"
-        android:name="com.roche.roche.dis.ui.ReleaseLessMaterialFragment"
+        android:name="com.roche.ssg.sample.ui.ReleaseLessMaterialFragment"
         android:label="fragment_utils"
         tools:layout="@layout/fragment_releaseless_material" />
     <fragment
         android:id="@+id/salesforceFragment"
-        android:name="com.roche.roche.dis.salesforce.ui.SalesforceFragment"
+        android:name="com.roche.ssg.sample.salesforce.ui.SalesforceFragment"
         android:label="fragment_salesforce"
         tools:layout="@layout/fragment_salesforce">
 
@@ -65,19 +65,19 @@
 
     <fragment
         android:id="@+id/customChatUIFragment"
-        android:name="com.roche.roche.dis.salesforce.ui.CustomChatUIFragment"
+        android:name="com.roche.ssg.sample.salesforce.ui.CustomChatUIFragment"
         android:label="fragment_custom_chat_ui"
         tools:layout="@layout/custom_chat" />
 
     <fragment
         android:id="@+id/splitIoFragment"
-        android:name="com.roche.roche.dis.splitio.ui.SplitIoFragment"
+        android:name="com.roche.ssg.sample.splitio.ui.SplitIoFragment"
         android:label="fragment_split_io"
         tools:layout="@layout/fragment_split_io" />
 
     <fragment
         android:id="@+id/systemMessagesFragment"
-        android:name="com.roche.roche.dis.systemmessages.ui.SystemMessagesFragment"
+        android:name="com.roche.ssg.sample.systemmessages.ui.SystemMessagesFragment"
         android:label="fragment_system_messages"
         tools:layout="@layout/fragment_system_messages" />
 
