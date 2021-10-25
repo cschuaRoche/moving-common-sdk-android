@@ -1,4 +1,4 @@
-package com.roche.ssg.sample.rochecommon.utils
+package com.roche.ssg.rochecommon.utils
 
 import android.text.Html
 

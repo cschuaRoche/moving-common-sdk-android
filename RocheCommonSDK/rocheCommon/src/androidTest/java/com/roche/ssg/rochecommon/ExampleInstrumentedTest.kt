@@ -1,4 +1,4 @@
-package com.roche.ssg.sample.rochecommon
+package com.roche.ssg.rochecommon
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

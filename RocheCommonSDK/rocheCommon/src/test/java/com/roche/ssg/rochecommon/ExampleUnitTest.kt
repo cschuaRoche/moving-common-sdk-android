@@ -1,4 +1,4 @@
-package com.roche.ssg.sample.rochecommon
+package com.roche.ssg.rochecommon
 
 import org.junit.Test
 

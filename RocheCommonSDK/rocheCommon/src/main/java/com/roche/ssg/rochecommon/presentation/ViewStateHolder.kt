@@ -1,4 +1,4 @@
-package com.roche.ssg.sample.rochecommon.presentation
+package com.roche.ssg.rochecommon.presentation
 
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData

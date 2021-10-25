@@ -1,4 +1,4 @@
-package com.roche.ssg.sample.rochecommon.presentation
+package com.roche.ssg.rochecommon.presentation
 
 import androidx.annotation.MainThread
 import androidx.lifecycle.LifecycleOwner

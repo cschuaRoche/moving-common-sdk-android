@@ -3,8 +3,8 @@ package com.roche.ssg.sample.security.presentation
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
-import com.roche.ssg.sample.rochecommon.dialogs.RocheDialogFactory
-import com.roche.ssg.sample.rochecommon.presentation.observeState
+import com.roche.ssg.rochecommon.dialogs.RocheDialogFactory
+import com.roche.ssg.rochecommon.presentation.observeState
 import javax.inject.Inject
 
 /**

@@ -1,4 +1,4 @@
-package com.roche.ssg.sample.rochecommon.dialogs
+package com.roche.ssg.rochecommon.dialogs
 
 import android.content.Context
 import android.text.Annotation
@@ -14,8 +14,8 @@ import android.view.View
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
-import com.roche.ssg.sample.rochecommon.R
-import com.roche.ssg.sample.rochecommon.databinding.ViewGenericDialogBinding
+import com.roche.ssg.rochecommon.R
+import com.roche.ssg.rochecommon.databinding.ViewGenericDialogBinding
 
 /**
  * This is for showing custom dialog such as Confirmation, YesOrNo, Okay, etc.

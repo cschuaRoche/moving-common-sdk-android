@@ -1,4 +1,4 @@
-package com.roche.ssg.sample.rochecommon.dialogs
+package com.roche.ssg.rochecommon.dialogs
 
 import android.app.Dialog
 

@@ -10,10 +10,10 @@ import com.google.android.vending.licensing.LicenseChecker
 import com.google.android.vending.licensing.LicenseCheckerCallback
 import com.google.android.vending.licensing.Policy
 import com.google.android.vending.licensing.ServerManagedPolicy
-import com.roche.ssg.sample.rochecommon.presentation.ViewEventHolder
-import com.roche.ssg.sample.rochecommon.presentation.ViewEventHolderImpl
-import com.roche.ssg.sample.rochecommon.presentation.ViewStateHolder
-import com.roche.ssg.sample.rochecommon.presentation.ViewStateHolderImpl
+import com.roche.ssg.rochecommon.presentation.ViewEventHolder
+import com.roche.ssg.rochecommon.presentation.ViewEventHolderImpl
+import com.roche.ssg.rochecommon.presentation.ViewStateHolder
+import com.roche.ssg.rochecommon.presentation.ViewStateHolderImpl
 import com.roche.ssg.sample.security.utils.RootDetectUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

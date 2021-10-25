@@ -1,11 +1,11 @@
-package com.roche.ssg.sample.rochecommon.dialogs
+package com.roche.ssg.rochecommon.dialogs
 
 import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.provider.Settings
 import androidx.annotation.StringRes
-import com.roche.ssg.sample.rochecommon.R
+import com.roche.ssg.rochecommon.R
 
 object RocheDialogFactory {
 

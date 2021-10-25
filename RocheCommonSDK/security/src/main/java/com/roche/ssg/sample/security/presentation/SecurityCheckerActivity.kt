@@ -3,7 +3,7 @@ package com.roche.ssg.sample.security.presentation
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import com.roche.ssg.sample.rochecommon.dialogs.RocheDialogFactory
+import com.roche.ssg.rochecommon.dialogs.RocheDialogFactory
 
 abstract class SecurityCheckerActivity : AppCompatActivity() {
 

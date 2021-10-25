@@ -1,4 +1,4 @@
-package com.roche.ssg.sample.rochecommon.dialogs
+package com.roche.ssg.rochecommon.dialogs
 
 import android.app.Dialog
 import android.content.Context
@@ -11,8 +11,8 @@ import android.widget.TextView
 import androidx.annotation.StringRes
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
-import com.roche.ssg.sample.rochecommon.R
-import com.roche.ssg.sample.rochecommon.utils.fromHtml
+import com.roche.ssg.rochecommon.R
+import com.roche.ssg.rochecommon.utils.fromHtml
 
 abstract class RocheDialog<T : ViewDataBinding>(context: Context, themeRes: Int, layoutRes: Int) :
     Dialog(context, themeRes), CloseDialogListener by DialogHelper() {

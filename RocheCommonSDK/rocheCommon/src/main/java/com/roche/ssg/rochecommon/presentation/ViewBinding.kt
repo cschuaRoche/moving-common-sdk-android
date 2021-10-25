@@ -1,4 +1,4 @@
-package com.roche.ssg.sample.rochecommon.presentation
+package com.roche.ssg.rochecommon.presentation
 
 import android.view.View
 import androidx.fragment.app.Fragment
