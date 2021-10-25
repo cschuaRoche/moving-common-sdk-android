@@ -31,7 +31,7 @@ object SystemMessages {
         try {
             val url = baseUrl + SystemMessagesApiService.SYSTEM_MESSAGES_END_POINT
             val response = fetchSystemMessages(url, appOrSamdId, appOrSamdVersion, country)
-            val dismissedMessages = SystemMessagesSharedPref.getDismissedMessages(context)
+            val dismissedMessages = clearExpiredMessages(context, response.systemMessagesList)
             return response.systemMessagesList.filter { (it.type in messageTypeList) && (it.resourceId !in dismissedMessages) }
         } catch (e: Exception) {
             if (e is HttpException) {
@@ -53,6 +53,22 @@ object SystemMessages {
             dismissedMessages.add(resourceId)
             SystemMessagesSharedPref.setDismissedMessages(context, dismissedMessages)
         }
+    }
+
+    /**
+     * clear expired messages from the cache
+     */
+    private fun clearExpiredMessages(
+        context: Context,
+        systemMessages: List<SystemMessage>
+    ): HashSet<String> {
+        val dismissedMessages = SystemMessagesSharedPref.getDismissedMessages(context)
+        if (dismissedMessages.isNotEmpty()) {
+            val resIdList = systemMessages.map { it.resourceId }
+            dismissedMessages.removeAll { it !in resIdList }
+            SystemMessagesSharedPref.setDismissedMessages(context, dismissedMessages)
+        }
+        return dismissedMessages
     }
 
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
