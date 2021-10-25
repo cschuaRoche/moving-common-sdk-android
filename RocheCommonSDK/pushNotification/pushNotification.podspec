@@ -1,5 +1,5 @@
 Pod::Spec.new do |spec|
-    spec.name                     = 'recall'
+    spec.name                     = 'pushNotification'
     spec.version                  = '1.0'
     spec.homepage                 = 'Link to the Shared Module homepage'
     spec.source                   = { :git => "Not Published", :tag => "Cocoapods/#{spec.name}/#{spec.version}" }
@@ -7,7 +7,7 @@ Pod::Spec.new do |spec|
     spec.license                  = ''
     spec.summary                  = 'Some description for the Shared Module'
 
-    spec.vendored_frameworks      = "build/cocoapods/framework/AppRecall.framework"
+    spec.vendored_frameworks      = "build/cocoapods/framework/pushNotification.framework"
     spec.libraries                = "c++"
     spec.module_name              = "#{spec.name}_umbrella"
 
@@ -16,13 +16,13 @@ Pod::Spec.new do |spec|
                 
 
     spec.pod_target_xcconfig = {
-        'KOTLIN_PROJECT_PATH' => ':recall',
-        'PRODUCT_MODULE_NAME' => 'recall',
+        'KOTLIN_PROJECT_PATH' => ':pushNotification',
+        'PRODUCT_MODULE_NAME' => 'pushNotification',
     }
 
     spec.script_phases = [
         {
-            :name => 'Build recall',
+            :name => 'Build pushNotification',
             :execution_position => :before_compile,
             :shell_path => '/bin/sh',
             :script => <<-SCRIPT
