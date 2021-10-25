@@ -1,4 +1,4 @@
-package com.roche.dis.systemmessages
+package com.roche.ssg.systemmessages
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Lifecycle

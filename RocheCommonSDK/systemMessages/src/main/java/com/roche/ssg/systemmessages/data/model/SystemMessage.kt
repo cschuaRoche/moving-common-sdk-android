@@ -1,4 +1,4 @@
-package com.roche.dis.systemmessages.data.model
+package com.roche.ssg.systemmessages.data.model
 
 data class SystemMessage(
     val defaultMessage: String,

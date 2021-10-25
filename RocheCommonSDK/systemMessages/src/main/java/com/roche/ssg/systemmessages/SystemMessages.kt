@@ -1,11 +1,11 @@
-package com.roche.dis.systemmessages
+package com.roche.ssg.systemmessages
 
 import android.content.Context
 import androidx.annotation.VisibleForTesting
-import com.roche.dis.systemmessages.data.api.RetrofitApiService
-import com.roche.dis.systemmessages.data.api.SystemMessagesApiService
-import com.roche.dis.systemmessages.data.model.SystemMessage
-import com.roche.dis.systemmessages.data.model.SystemMessagesResponse
+import com.roche.ssg.systemmessages.data.api.RetrofitApiService
+import com.roche.ssg.systemmessages.data.api.SystemMessagesApiService
+import com.roche.ssg.systemmessages.data.model.SystemMessage
+import com.roche.ssg.systemmessages.data.model.SystemMessagesResponse
 import retrofit2.HttpException
 
 object SystemMessages {

@@ -1,11 +1,11 @@
-package com.roche.dis.systemmessages
+package com.roche.ssg.systemmessages
 
 import android.app.Application
-import com.roche.dis.systemmessages.data.api.RetrofitApiService
-import com.roche.dis.systemmessages.data.api.SystemMessagesApiService
-import com.roche.dis.systemmessages.data.model.Meta
-import com.roche.dis.systemmessages.data.model.SystemMessage
-import com.roche.dis.systemmessages.data.model.SystemMessagesResponse
+import com.roche.ssg.systemmessages.data.api.RetrofitApiService
+import com.roche.ssg.systemmessages.data.api.SystemMessagesApiService
+import com.roche.ssg.systemmessages.data.model.Meta
+import com.roche.ssg.systemmessages.data.model.SystemMessage
+import com.roche.ssg.systemmessages.data.model.SystemMessagesResponse
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every

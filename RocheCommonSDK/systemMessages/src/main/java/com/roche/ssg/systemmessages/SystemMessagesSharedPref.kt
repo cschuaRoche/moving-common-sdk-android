@@ -1,4 +1,4 @@
-package com.roche.dis.systemmessages
+package com.roche.ssg.systemmessages
 
 import android.content.Context
 import androidx.annotation.VisibleForTesting

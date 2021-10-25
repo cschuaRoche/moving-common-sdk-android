@@ -9,9 +9,9 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.roche.dis.systemmessages.SystemMessages
-import com.roche.dis.systemmessages.data.api.RetrofitApiService
-import com.roche.dis.systemmessages.data.model.SystemMessage
+import com.roche.ssg.systemmessages.SystemMessages
+import com.roche.ssg.systemmessages.data.api.RetrofitApiService
+import com.roche.ssg.systemmessages.data.model.SystemMessage
 import com.roche.ssg.sample.R
 import com.roche.ssg.sample.databinding.BottomSheetSystemMessageBinding
 import com.roche.ssg.sample.databinding.FragmentSystemMessagesBinding

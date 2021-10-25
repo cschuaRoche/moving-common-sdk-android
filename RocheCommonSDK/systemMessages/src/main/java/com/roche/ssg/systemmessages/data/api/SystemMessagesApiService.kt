@@ -1,6 +1,6 @@
-package com.roche.dis.systemmessages.data.api
+package com.roche.ssg.systemmessages.data.api
 
-import com.roche.dis.systemmessages.data.model.SystemMessagesResponse
+import com.roche.ssg.systemmessages.data.model.SystemMessagesResponse
 import retrofit2.http.GET
 import retrofit2.http.Query
 import retrofit2.http.Url

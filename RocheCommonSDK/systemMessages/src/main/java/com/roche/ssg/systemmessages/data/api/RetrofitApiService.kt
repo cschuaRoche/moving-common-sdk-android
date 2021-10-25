@@ -1,4 +1,4 @@
-package com.roche.dis.systemmessages.data.api
+package com.roche.ssg.systemmessages.data.api
 
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
