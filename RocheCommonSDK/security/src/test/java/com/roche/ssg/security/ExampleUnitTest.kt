@@ -1,4 +1,4 @@
-package com.roche.ssg.sample.security
+package com.roche.ssg.security
 
 import org.junit.Test
 

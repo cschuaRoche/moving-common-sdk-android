@@ -1,4 +1,4 @@
-package com.roche.ssg.sample.security.presentation
+package com.roche.ssg.security.presentation
 
 import android.os.Bundle
 import android.view.View

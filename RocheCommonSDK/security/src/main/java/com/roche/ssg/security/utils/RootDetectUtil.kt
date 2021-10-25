@@ -1,4 +1,4 @@
-package com.roche.ssg.sample.security.utils
+package com.roche.ssg.security.utils
 
 import android.os.Build
 import java.io.BufferedReader

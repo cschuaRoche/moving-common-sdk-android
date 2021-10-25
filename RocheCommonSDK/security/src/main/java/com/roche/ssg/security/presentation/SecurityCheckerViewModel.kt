@@ -1,4 +1,4 @@
-package com.roche.ssg.sample.security.presentation
+package com.roche.ssg.security.presentation
 
 import android.app.Application
 import android.provider.Settings
@@ -14,7 +14,7 @@ import com.roche.ssg.rochecommon.presentation.ViewEventHolder
 import com.roche.ssg.rochecommon.presentation.ViewEventHolderImpl
 import com.roche.ssg.rochecommon.presentation.ViewStateHolder
 import com.roche.ssg.rochecommon.presentation.ViewStateHolderImpl
-import com.roche.ssg.sample.security.utils.RootDetectUtil
+import com.roche.ssg.security.utils.RootDetectUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject

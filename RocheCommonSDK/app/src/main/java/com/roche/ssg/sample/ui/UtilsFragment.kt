@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.roche.ssg.sample.R
 import com.roche.ssg.sample.databinding.FragmentUtilsBinding
-import com.roche.ssg.sample.security.utils.RootDetectUtil
+import com.roche.ssg.security.utils.RootDetectUtil
 import com.roche.ssg.sample.utils.UnZipUtils
 import java.io.File
 
