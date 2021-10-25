@@ -28,7 +28,6 @@ class SystemMessagesFragment : Fragment() {
         // Inflate the layout for this fragment
         binding = FragmentSystemMessagesBinding.inflate(inflater, container, false)
         setRequestSystemMessagesListener()
-        setClearCacheListener()
         return binding.root
     }
 
@@ -81,20 +80,14 @@ class SystemMessagesFragment : Fragment() {
         return finalText.split(",").map { it.trim() }
     }
 
-    private fun setClearCacheListener() {
-        binding.btnClearCache.setOnClickListener {
-            // TODO clear cache
-        }
-    }
-
     private fun showSystemMessageDialog(title: String, message: String, resourceId: String) {
         val dialog = AlertDialog.Builder(requireContext(), R.style.AlertDialogTheme)
             .setTitle(title)
             .setMessage(message)
             .setCancelable(false)
-            .setPositiveButton(getString(R.string.ok)) { dialog, which ->
+            .setPositiveButton(getString(R.string.ok)) { _, _ ->
                 // do nothing
-            }.setNegativeButton(getString(R.string.do_not_show_again)) { dialog, which ->
+            }.setNegativeButton(getString(R.string.do_not_show_again)) { _, _ ->
                 handleDismissSystemMessage(resourceId)
             }.create()
         dialog.show()
