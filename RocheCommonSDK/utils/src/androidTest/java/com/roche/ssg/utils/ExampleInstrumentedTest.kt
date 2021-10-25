@@ -1,4 +1,4 @@
-package com.roche.ssg.sample.utils
+package com.roche.ssg.utils
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

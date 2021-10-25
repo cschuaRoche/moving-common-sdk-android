@@ -6,7 +6,7 @@ import android.content.SharedPreferences
 import androidx.security.crypto.EncryptedSharedPreferences
 import com.google.gson.Gson
 import com.roche.ssg.systemmessages.SystemMessagesSharedPref.PREF_KEY_DISMISSED_MESSAGES
-import com.roche.ssg.sample.utils.PreferenceUtil
+import com.roche.ssg.utils.PreferenceUtil
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.mockkObject

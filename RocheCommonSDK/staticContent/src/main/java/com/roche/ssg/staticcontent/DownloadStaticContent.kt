@@ -5,8 +5,8 @@ import android.util.Log
 import androidx.annotation.StringDef
 import androidx.annotation.VisibleForTesting
 import com.roche.ssg.staticcontent.entity.ManifestInfo
-import com.roche.ssg.sample.utils.NetworkUtils
-import com.roche.ssg.sample.utils.UnZipUtils
+import com.roche.ssg.utils.NetworkUtils
+import com.roche.ssg.utils.UnZipUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.json.JSONException

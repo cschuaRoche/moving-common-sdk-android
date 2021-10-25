@@ -1,4 +1,4 @@
-package com.roche.ssg.sample.utils
+package com.roche.ssg.utils
 
 object Constants {
     const val COULD_NOT_CLOSE_STREAM = "Warning: Could not close stream!"

@@ -1,4 +1,4 @@
-package com.roche.ssg.sample.utils
+package com.roche.ssg.utils
 
 import io.mockk.MockKAnnotations
 import io.mockk.unmockkAll

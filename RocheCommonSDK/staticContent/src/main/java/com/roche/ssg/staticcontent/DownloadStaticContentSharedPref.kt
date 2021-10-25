@@ -2,10 +2,10 @@ package com.roche.ssg.staticcontent
 
 import android.content.Context
 import androidx.annotation.VisibleForTesting
-import com.roche.ssg.sample.utils.PreferenceUtil
-import com.roche.ssg.sample.utils.get
-import com.roche.ssg.sample.utils.remove
-import com.roche.ssg.sample.utils.set
+import com.roche.ssg.utils.PreferenceUtil
+import com.roche.ssg.utils.get
+import com.roche.ssg.utils.remove
+import com.roche.ssg.utils.set
 
 object DownloadStaticContentSharedPref {
     @VisibleForTesting

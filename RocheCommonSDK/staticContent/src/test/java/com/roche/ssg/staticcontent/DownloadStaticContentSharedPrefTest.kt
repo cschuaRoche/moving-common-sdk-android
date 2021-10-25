@@ -7,8 +7,8 @@ import androidx.security.crypto.EncryptedSharedPreferences
 import com.roche.ssg.staticcontent.DownloadStaticContentSharedPref.PREF_KEY_ETAG_PREFIX
 import com.roche.ssg.staticcontent.DownloadStaticContentSharedPref.PREF_KEY_FILE_PATH_PREFIX
 import com.roche.ssg.staticcontent.DownloadStaticContentSharedPref.PREF_KEY_VERSION
-import com.roche.ssg.sample.utils.PreferenceUtil
-import com.roche.ssg.sample.utils.get
+import com.roche.ssg.utils.PreferenceUtil
+import com.roche.ssg.utils.get
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.mockkObject

@@ -2,8 +2,8 @@ package com.roche.ssg.staticcontent
 
 import android.app.Application
 import com.roche.ssg.staticcontent.entity.ManifestInfo
-import com.roche.ssg.sample.utils.NetworkUtils
-import com.roche.ssg.sample.utils.UnZipUtils
+import com.roche.ssg.utils.NetworkUtils
+import com.roche.ssg.utils.UnZipUtils
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
