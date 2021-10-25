@@ -1,4 +1,4 @@
-package com.roche.ssg.sample.biometrics
+package com.roche.ssg.biometrics
 
 import android.content.Context
 import android.content.Intent
@@ -8,10 +8,10 @@ import androidx.annotation.VisibleForTesting
 import androidx.biometric.BiometricManager
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import com.roche.ssg.sample.biometrics.callback.OnAuthenticationCallback
-import com.roche.ssg.sample.biometrics.sensors.Face
-import com.roche.ssg.sample.biometrics.sensors.Fingerprint
-import com.roche.ssg.sample.biometrics.sensors.Iris
+import com.roche.ssg.biometrics.callback.OnAuthenticationCallback
+import com.roche.ssg.biometrics.sensors.Face
+import com.roche.ssg.biometrics.sensors.Fingerprint
+import com.roche.ssg.biometrics.sensors.Iris
 import java.util.Locale
 
 /**
@@ -20,7 +20,7 @@ import java.util.Locale
  * This will automatically detect which biometrics is available or NONE if both are unavailable.
  * @see "https://developer.android.com/reference/androidx/biometric/BiometricPrompt.PromptInfo.Builder#setAllowedAuthenticators(int)"
  * @param context the application context where the prompt dialog will be shown
- * @param allowedAuthenticators authenticator types - com.roche.roche.dis.biometrics.Authenticator
+ * @param allowedAuthenticators authenticator types - com.roche.ssg.dis.biometrics.Authenticator
  */
 class RocheBiometricsManager(
     private val context: Context,

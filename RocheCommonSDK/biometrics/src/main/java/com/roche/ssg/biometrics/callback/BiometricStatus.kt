@@ -1,4 +1,4 @@
-package com.roche.ssg.sample.biometrics.callback
+package com.roche.ssg.biometrics.callback
 
 import androidx.annotation.IntDef
 

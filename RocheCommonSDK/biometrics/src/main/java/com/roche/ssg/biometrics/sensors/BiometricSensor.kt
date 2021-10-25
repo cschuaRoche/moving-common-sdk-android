@@ -1,4 +1,4 @@
-package com.roche.ssg.sample.biometrics.sensors
+package com.roche.ssg.biometrics.sensors
 
 import android.content.Context
 import android.content.pm.PackageManager

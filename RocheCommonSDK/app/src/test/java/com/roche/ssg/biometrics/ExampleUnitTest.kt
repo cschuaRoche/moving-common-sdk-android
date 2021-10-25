@@ -1,4 +1,4 @@
-package com.roche.ssg.sample.biometrics
+package com.roche.ssg.biometrics
 
 import org.junit.Test
 

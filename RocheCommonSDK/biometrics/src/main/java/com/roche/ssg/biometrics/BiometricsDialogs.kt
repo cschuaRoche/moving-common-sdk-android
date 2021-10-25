@@ -1,15 +1,15 @@
-package com.roche.ssg.sample.biometrics
+package com.roche.ssg.biometrics
 
 import androidx.annotation.Keep
 import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import com.roche.ssg.sample.biometrics.callback.OnAuthenticationCallback
+import com.roche.ssg.biometrics.callback.OnAuthenticationCallback
 
 /**
  * Used for showing Biometrics Dialogs
- * @param allowedAuthenticators authenticator types - com.roche.roche.dis.biometrics.Authenticator
+ * @param allowedAuthenticators authenticator types - com.roche.ssg.dis.biometrics.Authenticator
  * @see "https://developer.android.com/reference/androidx/biometric/BiometricPrompt.PromptInfo.Builder#setAllowedAuthenticators(int)"
  */
 internal class BiometricsDialogs(
