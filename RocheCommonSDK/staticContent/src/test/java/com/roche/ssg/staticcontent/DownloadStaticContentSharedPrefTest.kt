@@ -1,12 +1,12 @@
-package com.roche.ssg.sample.staticcontent
+package com.roche.ssg.staticcontent
 
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.security.crypto.EncryptedSharedPreferences
-import com.roche.ssg.sample.staticcontent.DownloadStaticContentSharedPref.PREF_KEY_ETAG_PREFIX
-import com.roche.ssg.sample.staticcontent.DownloadStaticContentSharedPref.PREF_KEY_FILE_PATH_PREFIX
-import com.roche.ssg.sample.staticcontent.DownloadStaticContentSharedPref.PREF_KEY_VERSION
+import com.roche.ssg.staticcontent.DownloadStaticContentSharedPref.PREF_KEY_ETAG_PREFIX
+import com.roche.ssg.staticcontent.DownloadStaticContentSharedPref.PREF_KEY_FILE_PATH_PREFIX
+import com.roche.ssg.staticcontent.DownloadStaticContentSharedPref.PREF_KEY_VERSION
 import com.roche.ssg.sample.utils.PreferenceUtil
 import com.roche.ssg.sample.utils.get
 import io.mockk.every

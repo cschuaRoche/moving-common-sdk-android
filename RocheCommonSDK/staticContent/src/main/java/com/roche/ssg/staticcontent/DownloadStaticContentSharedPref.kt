@@ -1,4 +1,4 @@
-package com.roche.ssg.sample.staticcontent
+package com.roche.ssg.staticcontent
 
 import android.content.Context
 import androidx.annotation.VisibleForTesting

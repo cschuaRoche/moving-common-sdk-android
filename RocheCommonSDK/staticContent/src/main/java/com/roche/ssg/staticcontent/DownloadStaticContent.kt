@@ -1,10 +1,10 @@
-package com.roche.ssg.sample.staticcontent
+package com.roche.ssg.staticcontent
 
 import android.content.Context
 import android.util.Log
 import androidx.annotation.StringDef
 import androidx.annotation.VisibleForTesting
-import com.roche.ssg.sample.staticcontent.entity.ManifestInfo
+import com.roche.ssg.staticcontent.entity.ManifestInfo
 import com.roche.ssg.sample.utils.NetworkUtils
 import com.roche.ssg.sample.utils.UnZipUtils
 import kotlinx.coroutines.Dispatchers

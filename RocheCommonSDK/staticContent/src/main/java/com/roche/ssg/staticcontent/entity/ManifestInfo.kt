@@ -1,4 +1,4 @@
-package com.roche.ssg.sample.staticcontent.entity
+package com.roche.ssg.staticcontent.entity
 
 data class ManifestInfo(
     val path: String,

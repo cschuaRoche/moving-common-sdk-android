@@ -1,4 +1,4 @@
-package com.roche.ssg.sample.staticcontent
+package com.roche.ssg.staticcontent
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import io.mockk.MockKAnnotations
