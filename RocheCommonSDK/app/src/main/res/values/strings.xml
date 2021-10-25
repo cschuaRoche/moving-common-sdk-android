@@ -74,4 +74,10 @@
     <string name="app_or_samd_version">App or SaMD Version</string>
     <string name="country_optional">Country (Optional)</string>
     <string name="system_messages_not_available">System messages are not available</string>
+
+    <!-- Push Strings-->
+    <string name="push_notification">Push Notification</string>
+    <string name="btn_txt_login">Login</string>
+    <string name="btn_txt_register">Register</string>
+    <string name="btn_txt_unregister">Un-Register</string>
 </resources>
