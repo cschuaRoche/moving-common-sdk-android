@@ -7,13 +7,13 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.roche.ssg.sample.R
-import com.roche.ssg.sample.biometrics.Authenticator
-import com.roche.ssg.sample.biometrics.RocheBiometricsManager
-import com.roche.ssg.sample.biometrics.callback.OnAuthenticationCallback
+import com.roche.ssg.biometrics.Authenticator
+import com.roche.ssg.biometrics.RocheBiometricsManager
+import com.roche.ssg.biometrics.callback.OnAuthenticationCallback
 import com.roche.ssg.sample.databinding.BiometricsFragmentBinding
-import com.roche.ssg.sample.rochecommon.dialogs.RocheDialogFactory
-import com.roche.ssg.sample.rochecommon.presentation.ViewBindingHolder
-import com.roche.ssg.sample.rochecommon.presentation.ViewBindingHolderImpl
+import com.roche.ssg.rochecommon.dialogs.RocheDialogFactory
+import com.roche.ssg.rochecommon.presentation.ViewBindingHolder
+import com.roche.ssg.rochecommon.presentation.ViewBindingHolderImpl
 
 class BiometricsFragment : Fragment(), OnAuthenticationCallback,
     ViewBindingHolder<BiometricsFragmentBinding> by ViewBindingHolderImpl(), View.OnClickListener {

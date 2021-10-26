@@ -7,11 +7,11 @@
 
         <variable
             name="genericDialog"
-            type="com.roche.ssg.sample.rochecommon.dialogs.RocheDialog" />
+            type="com.roche.ssg.rochecommon.dialogs.RocheDialog" />
 
         <variable
             name="genericDialogClickListener"
-            type="com.roche.ssg.sample.rochecommon.dialogs.GenericDialog.OnButtonClickListener" />
+            type="com.roche.ssg.rochecommon.dialogs.GenericDialog.OnButtonClickListener" />
     </data>
 
     <!--   needed in order to position the dialog and set the custom solid background-->

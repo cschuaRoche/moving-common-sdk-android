@@ -4,9 +4,9 @@ import android.app.Application
 import android.util.Log
 import androidx.annotation.StringDef
 import androidx.lifecycle.AndroidViewModel
-import com.roche.ssg.sample.utils.PreferenceUtil
-import com.roche.ssg.sample.utils.get
-import com.roche.ssg.sample.utils.set
+import com.roche.ssg.utils.PreferenceUtil
+import com.roche.ssg.utils.get
+import com.roche.ssg.utils.set
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
