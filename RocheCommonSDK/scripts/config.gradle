@@ -15,6 +15,8 @@ versions.ktor_version = "1.6.3"
 versions.gms = "4.3.10"
 versions.firebase = "28.4.2"
 versions.jacoco = "0.8.7"
+versions.amplify = "1.28.1"
+
 ext.versions = versions
 
 def static addBuildScriptRepos(RepositoryHandler handler) {

@@ -73,6 +73,9 @@ android {
     viewBinding {
         enabled = true
     }
+    configurations {
+        all*.exclude group: 'com.google.guava', module: 'listenablefuture'
+    }
 }
 
 dependencies {
@@ -123,4 +126,7 @@ dependencies {
     //Split.io
     implementation "io.split.client:android-client:${versions.split_version}"
     implementation "com.google.code.gson:gson:${versions.gson_version}"
+
+    //Amplify
+    implementation "com.amplifyframework:aws-auth-cognito:${versions.amplify}"
 }

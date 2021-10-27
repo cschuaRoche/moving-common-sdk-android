@@ -10,7 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.roche.ssg.sample.R
 import com.roche.ssg.sample.databinding.FragmentReleaselessMaterialBinding
-import com.roche.ssg.sample.staticcontent.DownloadStaticContent
+import com.roche.ssg.staticcontent.DownloadStaticContent
 import kotlinx.coroutines.launch
 
 class ReleaseLessMaterialFragment : Fragment() {
