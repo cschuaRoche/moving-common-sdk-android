@@ -1,4 +1,4 @@
-package com.roche.ssg.sample.pushnotification.model
+package com.roche.ssg.pushnotification.model
 
 import kotlinx.serialization.Serializable
 

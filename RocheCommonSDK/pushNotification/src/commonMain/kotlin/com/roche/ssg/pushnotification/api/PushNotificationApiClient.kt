@@ -1,12 +1,12 @@
-package com.roche.ssg.sample.pushnotification.api
+package com.roche.ssg.pushnotification.api
 
-import com.roche.ssg.sample.pushnotification.PushNotificationException
-import com.roche.ssg.sample.pushnotification.getDevice
-import com.roche.ssg.sample.pushnotification.getMake
-import com.roche.ssg.sample.pushnotification.getOS
-import com.roche.ssg.sample.pushnotification.getOSVersion
-import com.roche.ssg.sample.pushnotification.model.DeregisterRequest
-import com.roche.ssg.sample.pushnotification.model.RegisterRequest
+import com.roche.ssg.pushnotification.PushNotificationException
+import com.roche.ssg.pushnotification.getDevice
+import com.roche.ssg.pushnotification.getMake
+import com.roche.ssg.pushnotification.getOS
+import com.roche.ssg.pushnotification.getOSVersion
+import com.roche.ssg.pushnotification.model.DeregisterRequest
+import com.roche.ssg.pushnotification.model.RegisterRequest
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.features.HttpRequestTimeoutException

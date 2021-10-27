@@ -1,4 +1,4 @@
-package com.roche.ssg.sample.pushnotification
+package com.roche.ssg.pushnotification
 
 /**
  * @param status HTTP status
