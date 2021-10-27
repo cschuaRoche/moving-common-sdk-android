@@ -34,26 +34,27 @@ class RegisterPushFragment : Fragment() {
             try {
                 Amplify.addPlugin(AWSCognitoAuthPlugin())
                 Amplify.configure(requireContext())
-                Log.i("MyAmplifyApp", "Initialized Amplify")
+                Log.i("RegisterPushFragment", "Initialized Amplify")
             } catch (error: AmplifyException) {
-                Log.e("MyAmplifyApp", "Could not initialize Amplify", error)
+                Log.e("RegisterPushFragment", "Could not initialize Amplify", error)
             }
 
             Amplify.Auth.signIn("devandroiduser@mailinator.com", "Test@1234",
                 { result ->
                     if (result.isSignInComplete) {
-                        Log.i("AuthQuickstart", "Sign in succeeded")
+                        Log.i("RegisterPushFragment", "Sign in succeeded")
+                        Log.e(
+                            "RegisterPushFragment",
+                            "Token : " + AWSMobileClient.getInstance().tokens.accessToken.tokenString
+                        )
                     } else {
-                        Log.i("AuthQuickstart", "Sign in not complete")
+                        Log.i("RegisterPushFragment", "Sign in not complete")
                     }
                 },
                 {
-                    Log.e("AuthQuickstart", "Failed to sign in", it)
+                    Log.e("RegisterPushFragment", "Failed to sign in", it)
                 }
             )
-            GlobalScope.launch {
-                Log.e("TAG","Token : "+ AWSMobileClient.getInstance().tokens.accessToken.tokenString)
-            }
         }
         binding.btnRegister.setOnClickListener {
 
@@ -61,9 +62,5 @@ class RegisterPushFragment : Fragment() {
         binding.btnUnregister.setOnClickListener {
 
         }
-    }
-
-    private fun login() {
-
     }
 }
