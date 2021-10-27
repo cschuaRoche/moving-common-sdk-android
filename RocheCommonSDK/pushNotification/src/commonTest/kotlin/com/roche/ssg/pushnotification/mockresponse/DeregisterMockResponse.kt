@@ -1,5 +1,5 @@
 package com.roche.ssg.pushnotification.mockresponse
 
-object RegisterMockResponse {
+object DeregisterMockResponse {
     operator fun invoke(): String = ""
 }

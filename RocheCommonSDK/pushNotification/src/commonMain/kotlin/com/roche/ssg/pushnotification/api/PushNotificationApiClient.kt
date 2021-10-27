@@ -49,17 +49,21 @@ class PushNotificationApiClient(httpClientEngine: HttpClientEngine) {
      * @param baseURL Host URL
      * @param appId Application ID
      * @param userId User ID
-     * @param deviceToken Firebase token, which will be registered in Backend
+     * @param firebaseToken Firebase token, which will be registered in Backend
      * @param authorizationToken It need for authentication
      */
     suspend fun registerDevice(
         baseURL: String,
         appId: String,
         userId: String,
-        deviceToken: String,
+        firebaseToken: String,
         appVersion: String,
         country: String,
-        authorizationToken: String
+        authorizationToken: String,
+        os: String = getOS(),
+        osVersion: String = getOSVersion(),
+        device: String = getDevice(),
+        make: String = getMake()
     ): String {
         try {
             return httpClient.use {
@@ -67,8 +71,8 @@ class PushNotificationApiClient(httpClientEngine: HttpClientEngine) {
                     httpClient.post(getCallingUrl(baseURL, REGISTER_END_POINT)) {
 
                         body = RegisterRequest(
-                            userId, deviceToken, getOS(), getOSVersion(), getDevice(),
-                            getMake(), appVersion, country
+                            userId, firebaseToken, os, osVersion, device,
+                            make, appVersion, country
                         )
 
                         contentType(ContentType.Application.Json)
@@ -99,14 +103,14 @@ class PushNotificationApiClient(httpClientEngine: HttpClientEngine) {
      * @param baseURL Host URL
      * @param appId Application ID
      * @param userId User ID
-     * @param deviceToken Firebase token, which will be registered in Backend
+     * @param firebaseToken Firebase token, which will be registered in Backend
      * @param authorizationToken It need for authentication
      */
     suspend fun deregisterDevice(
         baseURL: String,
         appId: String,
         userId: String,
-        deviceToken: String,
+        firebaseToken: String,
         authorizationToken: String
     ): String {
         try {
@@ -114,7 +118,7 @@ class PushNotificationApiClient(httpClientEngine: HttpClientEngine) {
                 val response: String =
                     httpClient.post(getCallingUrl(baseURL, DEREGISTER_END_POINT)) {
 
-                        body = DeregisterRequest(userId, deviceToken)
+                        body = DeregisterRequest(userId, firebaseToken)
 
                         contentType(ContentType.Application.Json)
                         headers {

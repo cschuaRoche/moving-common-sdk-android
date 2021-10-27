@@ -43,6 +43,7 @@ kotlin {
             dependencies {
                 implementation(kotlin("test-common"))
                 implementation(kotlin("test-annotations-common"))
+                implementation( "io.ktor:ktor-client-mock:${versions["ktor_version"]}")
             }
         }
         val androidMain by getting {
