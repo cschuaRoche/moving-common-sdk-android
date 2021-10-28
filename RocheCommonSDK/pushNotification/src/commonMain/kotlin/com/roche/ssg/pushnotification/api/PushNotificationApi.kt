@@ -25,7 +25,7 @@ import io.ktor.network.sockets.SocketTimeoutException
 import io.ktor.utils.io.core.use
 
 
-class PushNotificationApiClient(httpClientEngine: HttpClientEngine) {
+class PushNotificationApi(httpClientEngine: HttpClientEngine) {
 
     constructor() : this(HttpClient().engine)
 

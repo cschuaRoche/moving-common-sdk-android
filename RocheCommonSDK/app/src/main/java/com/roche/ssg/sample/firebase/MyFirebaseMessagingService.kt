@@ -27,11 +27,6 @@ import java.net.URL
  */
 class MyFirebaseMessagingService : FirebaseMessagingService() {
 
-    companion object {
-        const val KEY_FIREBASE_TOKEN = "key_firebase_token"
-        const val PREF_PUSH_NOTIFICATION = "PushNotificationPref"
-    }
-
     override fun onMessageReceived(message: RemoteMessage) {
         super.onMessageReceived(message)
         // TODO display message here
@@ -50,12 +45,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
     override fun onNewToken(token: String) {
         super.onNewToken(token)
         // TODO get new token here
-        //Log.d("MyFirebaseMessagingService", "new token: $token")
-        val sharedPref =
-            this.application.getSharedPreferences("PushNotificationPref", Context.MODE_PRIVATE)
-                .edit()
-        sharedPref.putString(KEY_FIREBASE_TOKEN, token)
-        sharedPref.apply()
+        Log.i("TokenTesting", "Token from onNewToken $token")
     }
 
     /**

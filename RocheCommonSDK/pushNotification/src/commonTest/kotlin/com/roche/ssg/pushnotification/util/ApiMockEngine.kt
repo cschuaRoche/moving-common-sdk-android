@@ -1,6 +1,6 @@
 package com.roche.ssg.pushnotification.util
 
-import com.roche.ssg.pushnotification.api.PushNotificationApiClient
+import com.roche.ssg.pushnotification.api.PushNotificationApi
 import com.roche.ssg.pushnotification.mockresponse.DeregisterMockResponse
 import com.roche.ssg.pushnotification.mockresponse.RegisterMockResponse
 import io.ktor.client.HttpClient
@@ -18,13 +18,13 @@ class ApiMockEngine {
         headersOf("Content-Type" to listOf(ContentType.Application.Json.toString()))
     private val client = HttpClient(MockEngine) {
         install(HttpTimeout) {
-            requestTimeoutMillis = PushNotificationApiClient.TIME_OUT
-            connectTimeoutMillis = PushNotificationApiClient.TIME_OUT
+            requestTimeoutMillis = PushNotificationApi.TIME_OUT
+            connectTimeoutMillis = PushNotificationApi.TIME_OUT
         }
         engine {
             addHandler { request ->
                 when (request.url.encodedPath) {
-                    PushNotificationApiClient.REGISTER_END_POINT -> {
+                    PushNotificationApi.REGISTER_END_POINT -> {
 
                         when {
                             request.headers["Authorization"]?.contains("invalid_mock_auth_token") == true -> {
@@ -40,7 +40,7 @@ class ApiMockEngine {
                         }
 
                     }
-                    PushNotificationApiClient.DEREGISTER_END_POINT -> {
+                    PushNotificationApi.DEREGISTER_END_POINT -> {
 
                         when {
                             request.headers["Authorization"]?.contains("invalid_mock_auth_token") == true -> {

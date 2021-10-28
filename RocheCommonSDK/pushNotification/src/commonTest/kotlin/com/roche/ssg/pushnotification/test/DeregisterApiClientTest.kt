@@ -1,7 +1,7 @@
 package com.roche.ssg.pushnotification.test
 
 import com.roche.ssg.pushnotification.PushNotificationException
-import com.roche.ssg.pushnotification.api.PushNotificationApiClient
+import com.roche.ssg.pushnotification.api.PushNotificationApi
 import com.roche.ssg.pushnotification.runBlockingTest
 import com.roche.ssg.pushnotification.util.ApiMockEngine
 import kotlin.test.Test
@@ -10,7 +10,7 @@ import kotlin.test.assertNotNull
 
 class DeregisterApiClientTest {
     private val apiMockEngine = ApiMockEngine()
-    private val apiMock = PushNotificationApiClient(apiMockEngine.get())
+    private val apiMock = PushNotificationApi(apiMockEngine.get())
 
     @Test
     fun shouldGetValidResponse() = runBlockingTest {
