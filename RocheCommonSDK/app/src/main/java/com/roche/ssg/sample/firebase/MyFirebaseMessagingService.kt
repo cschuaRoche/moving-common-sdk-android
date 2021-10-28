@@ -45,7 +45,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
     override fun onNewToken(token: String) {
         super.onNewToken(token)
         // TODO get new token here
-        Log.d("MyFirebaseMessagingService", "new token: $token")
+        Log.i("TokenTesting", "Token from onNewToken $token")
     }
 
     /**
@@ -62,17 +62,18 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         val pendingIntent: PendingIntent =
             PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT)
-        val notificationBuilder: NotificationCompat.Builder = NotificationCompat.Builder(this, "channel_id")
-            .setContentTitle(notification.title)
-            .setContentText(notification.body)
-            .setAutoCancel(true)
-            .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
-            .setContentIntent(pendingIntent)
-            .setContentInfo(notification.title)
-            .setColor(Color.BLUE)
-            .setLights(Color.BLUE, 1000, 300)
-            .setDefaults(Notification.DEFAULT_VIBRATE)
-            .setSmallIcon(R.drawable.ic_baseline_notification_important)
+        val notificationBuilder: NotificationCompat.Builder =
+            NotificationCompat.Builder(this, "channel_id")
+                .setContentTitle(notification.title)
+                .setContentText(notification.body)
+                .setAutoCancel(true)
+                .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
+                .setContentIntent(pendingIntent)
+                .setContentInfo(notification.title)
+                .setColor(Color.BLUE)
+                .setLights(Color.BLUE, 1000, 300)
+                .setDefaults(Notification.DEFAULT_VIBRATE)
+                .setSmallIcon(R.drawable.ic_baseline_notification_important)
         try {
             val pictureURL = data["picture_url"]
             if (pictureURL != null && "" != pictureURL) {
@@ -80,7 +81,8 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
                 val bigPicture: Bitmap =
                     BitmapFactory.decodeStream(url.openConnection().getInputStream())
                 notificationBuilder.setStyle(
-                    NotificationCompat.BigPictureStyle().bigPicture(bigPicture).setSummaryText(notification.body)
+                    NotificationCompat.BigPictureStyle().bigPicture(bigPicture)
+                        .setSummaryText(notification.body)
                 )
             }
         } catch (e: IOException) {

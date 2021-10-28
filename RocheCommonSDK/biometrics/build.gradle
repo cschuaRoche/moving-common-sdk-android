@@ -7,12 +7,12 @@ apply plugin: 'com.jfrog.artifactory'
 apply plugin: 'maven-publish'
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion versions.compile_sdk_version
     buildToolsVersion "29.0.3"
 
     defaultConfig {
-        minSdkVersion 24
-        targetSdkVersion 30
+        minSdkVersion versions.min_sdk_version
+        targetSdkVersion versions.target_sdk_version
         versionCode 2
         versionName "1.1"
 

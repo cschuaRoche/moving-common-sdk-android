@@ -1,24 +1,21 @@
 package com.roche.ssg.sample.push.ui
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import com.amazonaws.mobile.client.AWSMobileClient
-import com.amplifyframework.AmplifyException
-import com.amplifyframework.auth.cognito.AWSCognitoAuthPlugin
-import com.amplifyframework.core.Amplify
+import androidx.fragment.app.viewModels
+import com.roche.ssg.pushnotification.PushNotificationException
 import com.roche.ssg.sample.databinding.FragmentPushRegisterBinding
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.launch
+import com.roche.ssg.sample.push.vm.PushNotificationViewModel
 
 class RegisterPushFragment : Fragment() {
 
     private lateinit var binding: FragmentPushRegisterBinding
-    private val scope = MainScope()
+
+    private val mPushViewModel: PushNotificationViewModel by viewModels()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -30,37 +27,80 @@ class RegisterPushFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.btnGetCognitoToken.setOnClickListener {
-            try {
-                Amplify.addPlugin(AWSCognitoAuthPlugin())
-                Amplify.configure(requireContext())
-                Log.i("RegisterPushFragment", "Initialized Amplify")
-            } catch (error: AmplifyException) {
-                Log.e("RegisterPushFragment", "Could not initialize Amplify", error)
-            }
+        setLoginListener()
+        setRegisterListener()
+        setUnregisterListener()
+        setViewStateObserver()
+    }
 
-            Amplify.Auth.signIn("devandroiduser@mailinator.com", "Test@1234",
-                { result ->
-                    if (result.isSignInComplete) {
-                        Log.i("RegisterPushFragment", "Sign in succeeded")
-                        Log.e(
-                            "RegisterPushFragment",
-                            "Token : " + AWSMobileClient.getInstance().tokens.accessToken.tokenString
-                        )
-                    } else {
-                        Log.i("RegisterPushFragment", "Sign in not complete")
-                    }
-                },
-                {
-                    Log.e("RegisterPushFragment", "Failed to sign in", it)
+    private fun setViewStateObserver() {
+        mPushViewModel.pushNotificationStates.observe(viewLifecycleOwner, {
+            toggleProgressVisibility()
+            when (it.result) {
+                is PushNotificationViewModel.PushNotificationResult.LoginSuccess -> {
+                    binding.btnRegister.isEnabled = true
+                    binding.btnUnregister.isEnabled = true
+                    showMessage("Login Successful")
                 }
-            )
+                is PushNotificationViewModel.PushNotificationResult.LoginFailed -> {
+                    binding.btnRegister.isEnabled = false
+                    binding.btnUnregister.isEnabled = false
+                    showMessage("Login Failed")
+                }
+                is PushNotificationViewModel.PushNotificationResult.RegistrationSuccess -> {
+                    showMessage("Registration successful ${it.result.response}")
+                }
+                is PushNotificationViewModel.PushNotificationResult.RegistrationFailed -> {
+                    val ex = it.result.error
+                    if (ex is PushNotificationException) {
+                        showMessage("Registration Failed with status ${ex.status}")
+                    } else {
+                        showMessage("Registration Failed")
+                    }
+                }
+                is PushNotificationViewModel.PushNotificationResult.DeRegistrationSuccess -> {
+                    showMessage("Un-registration Successful ${it.result.response}")
+                }
+                is PushNotificationViewModel.PushNotificationResult.DeRegistrationFailed -> {
+                    val ex = it.result.error
+                    if (ex is PushNotificationException) {
+                        showMessage("Un-registration Failed with status ${ex.status}")
+                    } else {
+                        showMessage("Un-registration Failed")
+                    }
+                }
+            }
+        })
+    }
+
+
+    private fun setLoginListener() {
+        binding.btnGetCognitoToken.setOnClickListener {
+            toggleProgressVisibility()
+            mPushViewModel.login()
         }
+    }
+
+    private fun setRegisterListener() {
         binding.btnRegister.setOnClickListener {
-
+            toggleProgressVisibility()
+            mPushViewModel.registerDevice()
         }
+    }
+
+    private fun setUnregisterListener() {
         binding.btnUnregister.setOnClickListener {
-
+            toggleProgressVisibility()
+            mPushViewModel.deregisterDevice()
         }
+    }
+
+    private fun showMessage(message: String) {
+        binding.txtStatus.text = message
+    }
+
+    private fun toggleProgressVisibility() {
+        binding.progressBar.progressBarHolder.isVisible =
+            !binding.progressBar.progressBarHolder.isVisible
     }
 }

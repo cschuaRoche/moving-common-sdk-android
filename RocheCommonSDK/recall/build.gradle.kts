@@ -21,11 +21,11 @@ kotlin {
 
     android()
 
-    val iosTarget: (String, KotlinNativeTarget.() -> Unit) -> KotlinNativeTarget =
-        if (System.getenv("SDK_NAME")?.startsWith("iphoneos") == true)
-            ::iosArm64
-        else
-            ::iosX64
+    val iosTarget: (String, KotlinNativeTarget.() -> Unit) -> KotlinNativeTarget = when {
+        System.getenv("SDK_NAME")?.startsWith("iphoneos") == true -> ::iosArm64
+        System.getenv("NATIVE_ARCH")?.startsWith("arm") == true -> ::iosSimulatorArm64
+        else -> ::iosX64
+    }
 
     iosTarget("ios") {}
 
@@ -81,11 +81,12 @@ kotlin {
 }
 
 android {
-    compileSdkVersion(31)
+    val versions = rootProject.ext["versions"] as HashMap<String, Any>
+    compileSdkVersion(versions["compile_sdk_version"].toString().toInt())
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
     defaultConfig {
-        minSdkVersion(21)
-        targetSdkVersion(31)
+        minSdkVersion(versions["min_sdk_version"].toString().toInt())
+        targetSdkVersion(versions["target_sdk_version"].toString().toInt())
     }
 }
 
