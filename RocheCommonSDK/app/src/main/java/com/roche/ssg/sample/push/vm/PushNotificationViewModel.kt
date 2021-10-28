@@ -33,6 +33,7 @@ class PushNotificationViewModel(application: Application) : AndroidViewModel(app
             Amplify.addPlugin(AWSCognitoAuthPlugin())
             Amplify.configure(getApplication())
         } catch (error: AmplifyException) {
+            if(!(error is Amplify.AlreadyConfiguredException))
             pushNotificationStates.postValue(
                 PushNotificationViewState(
                     PushNotificationResult.AmplifyError
