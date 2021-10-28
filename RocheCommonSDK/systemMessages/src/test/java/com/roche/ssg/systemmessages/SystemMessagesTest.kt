@@ -69,6 +69,7 @@ class SystemMessagesTest : BaseMockkTest() {
     @Test
     fun `getSystemMessages doesn't return dismissed message`() =
         runBlocking {
+            val dismissedMessages = hashSetOf(ALERT_RES_ID)
             coEvery {
                 SystemMessages.fetchSystemMessages(
                     BASE_URL + SystemMessagesApiService.SYSTEM_MESSAGES_END_POINT,
@@ -77,9 +78,13 @@ class SystemMessagesTest : BaseMockkTest() {
                     null
                 )
             } returns getSystemMessageResponse()
-            every { SystemMessagesSharedPref.getDismissedMessages(appContext) } returns hashSetOf(
-                ALERT_RES_ID
-            )
+            every { SystemMessagesSharedPref.getDismissedMessages(appContext) } returns dismissedMessages
+            every {
+                SystemMessagesSharedPref.setDismissedMessages(
+                    appContext,
+                    dismissedMessages
+                )
+            } returns Unit
 
             val messages = SystemMessages.getSystemMessages(
                 appContext,
@@ -97,6 +102,58 @@ class SystemMessagesTest : BaseMockkTest() {
                 )
             }
             verify(exactly = 1) { SystemMessagesSharedPref.getDismissedMessages(appContext) }
+            verify(exactly = 1) {
+                SystemMessagesSharedPref.setDismissedMessages(
+                    appContext,
+                    dismissedMessages
+                )
+            }
+            Assert.assertEquals(1, messages.size)
+            Assert.assertEquals(getQualitySystemMessage(), messages[0])
+        }
+
+    @Test
+    fun `getSystemMessages clears expired dismissed messages`() =
+        runBlocking {
+            val dismissedMessages = hashSetOf(ALERT_RES_ID, "expiredResId")
+            coEvery {
+                SystemMessages.fetchSystemMessages(
+                    BASE_URL + SystemMessagesApiService.SYSTEM_MESSAGES_END_POINT,
+                    APP_SAMD_ID,
+                    APP_SAMD_VERSION,
+                    null
+                )
+            } returns getSystemMessageResponse()
+            every { SystemMessagesSharedPref.getDismissedMessages(appContext) } returns dismissedMessages
+            every {
+                SystemMessagesSharedPref.setDismissedMessages(
+                    appContext,
+                    hashSetOf(ALERT_RES_ID)
+                )
+            } returns Unit
+
+            val messages = SystemMessages.getSystemMessages(
+                appContext,
+                BASE_URL,
+                mutableListOf(MESSAGE_TYPE_QUALITY, MESSAGE_TYPE_ALERT),
+                APP_SAMD_ID,
+                APP_SAMD_VERSION
+            )
+            coVerify(exactly = 1) {
+                SystemMessages.fetchSystemMessages(
+                    BASE_URL + SystemMessagesApiService.SYSTEM_MESSAGES_END_POINT,
+                    APP_SAMD_ID,
+                    APP_SAMD_VERSION,
+                    null
+                )
+            }
+            verify(exactly = 1) { SystemMessagesSharedPref.getDismissedMessages(appContext) }
+            verify(exactly = 1) {
+                SystemMessagesSharedPref.setDismissedMessages(
+                    appContext,
+                    hashSetOf(ALERT_RES_ID)
+                )
+            }
             Assert.assertEquals(1, messages.size)
             Assert.assertEquals(getQualitySystemMessage(), messages[0])
         }
