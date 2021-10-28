@@ -1,7 +1,10 @@
 package com.roche.ssg.sample.push.vm
 
 import android.app.Application
+import android.app.NotificationManager
+import android.os.Build
 import android.util.Log
+import androidx.core.app.NotificationManagerCompat
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -29,9 +32,12 @@ class PushNotificationViewModel(application: Application) : AndroidViewModel(app
         try {
             Amplify.addPlugin(AWSCognitoAuthPlugin())
             Amplify.configure(getApplication())
-            Log.i("RegisterPushFragment", "Initialized Amplify")
         } catch (error: AmplifyException) {
-            Log.e("RegisterPushFragment", "Could not initialize Amplify", error)
+            pushNotificationStates.postValue(
+                PushNotificationViewState(
+                    PushNotificationResult.AmplifyError
+                )
+            )
         }
     }
 
@@ -149,6 +155,7 @@ class PushNotificationViewModel(application: Application) : AndroidViewModel(app
     }
 
     sealed class PushNotificationResult {
+        object AmplifyError : PushNotificationResult()
         object LoginSuccess : PushNotificationResult()
         object LoginFailed : PushNotificationResult()
 
@@ -159,6 +166,15 @@ class PushNotificationViewModel(application: Application) : AndroidViewModel(app
         class DeRegistrationFailed(val error: Exception) : PushNotificationResult()
     }
 
+    fun areNotificationsEnabled(notificationManager: NotificationManagerCompat) = when {
+        notificationManager.areNotificationsEnabled().not() -> false
+        Build.VERSION.SDK_INT >= Build.VERSION_CODES.O -> {
+            notificationManager.notificationChannels.firstOrNull { channel ->
+                channel.importance == NotificationManager.IMPORTANCE_NONE
+            } == null
+        }
+        else -> true
+    }
 }
 
 data class PushNotificationViewState(val result: PushNotificationViewModel.PushNotificationResult)
