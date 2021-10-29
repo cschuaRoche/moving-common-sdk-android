@@ -40,6 +40,12 @@ class RegisterPushFragment : Fragment() {
         mPushViewModel.pushNotificationStates.observe(viewLifecycleOwner, {
             toggleProgressVisibility()
             when (it.result) {
+                is PushNotificationViewModel.PushNotificationResult.AlreadyRegistered ->{
+                    showPushNotEnableDialog(
+                        getString(R.string.push_registered_title),
+                        getString(R.string.push_registered_message)
+                    )
+                }
                 is PushNotificationViewModel.PushNotificationResult.AmplifyError -> {
                     showMessage("Amplify initialization error")
                 }
@@ -89,7 +95,7 @@ class RegisterPushFragment : Fragment() {
 
     private fun setRegisterListener() {
         binding.btnRegister.setOnClickListener {
-            if (mPushViewModel.areNotificationsEnabled(NotificationManagerCompat.from(requireContext()))) {
+            if (mPushViewModel.isNotificationsEnabled(NotificationManagerCompat.from(requireContext()))) {
                 toggleProgressVisibility()
                 mPushViewModel.registerDevice()
             } else {
