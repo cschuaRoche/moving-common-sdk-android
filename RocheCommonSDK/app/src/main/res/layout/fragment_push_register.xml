@@ -19,11 +19,12 @@
 
 
             <androidx.appcompat.widget.AppCompatButton
-                android:layout_marginTop="@dimen/unit_10"
                 android:id="@+id/btn_get_cognito_token"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/unit_10"
                 android:text="@string/btn_txt_login"
+                android:textAllCaps="false"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -34,6 +35,7 @@
                 android:layout_height="wrap_content"
                 android:enabled="false"
                 android:text="@string/btn_txt_register"
+                android:textAllCaps="false"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/btn_get_cognito_token" />
@@ -44,15 +46,16 @@
                 android:layout_height="wrap_content"
                 android:enabled="false"
                 android:text="@string/btn_txt_unregister"
+                android:textAllCaps="false"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/btn_register" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/txt_status"
-                android:layout_marginTop="@dimen/unit_4"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/unit_4"
                 android:textSize="18sp"
                 android:visibility="visible"
                 app:layout_constraintEnd_toEndOf="parent"

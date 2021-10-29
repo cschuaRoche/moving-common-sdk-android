@@ -4,10 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
+import androidx.core.app.NotificationManagerCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.roche.ssg.pushnotification.PushNotificationException
+import com.roche.ssg.sample.R
 import com.roche.ssg.sample.databinding.FragmentPushRegisterBinding
 import com.roche.ssg.sample.push.vm.PushNotificationViewModel
 
@@ -37,6 +40,15 @@ class RegisterPushFragment : Fragment() {
         mPushViewModel.pushNotificationStates.observe(viewLifecycleOwner, {
             toggleProgressVisibility()
             when (it.result) {
+                is PushNotificationViewModel.PushNotificationResult.AlreadyRegistered ->{
+                    showPushNotEnableDialog(
+                        getString(R.string.push_registered_title),
+                        getString(R.string.push_registered_message)
+                    )
+                }
+                is PushNotificationViewModel.PushNotificationResult.AmplifyError -> {
+                    showMessage("Amplify initialization error")
+                }
                 is PushNotificationViewModel.PushNotificationResult.LoginSuccess -> {
                     binding.btnRegister.isEnabled = true
                     binding.btnUnregister.isEnabled = true
@@ -83,8 +95,15 @@ class RegisterPushFragment : Fragment() {
 
     private fun setRegisterListener() {
         binding.btnRegister.setOnClickListener {
-            toggleProgressVisibility()
-            mPushViewModel.registerDevice()
+            if (mPushViewModel.isNotificationsEnabled(NotificationManagerCompat.from(requireContext()))) {
+                toggleProgressVisibility()
+                mPushViewModel.registerDevice()
+            } else {
+                showPushNotEnableDialog(
+                    getString(R.string.push_dialog_title),
+                    getString(R.string.push_dialog_message)
+                )
+            }
         }
     }
 
@@ -102,5 +121,16 @@ class RegisterPushFragment : Fragment() {
     private fun toggleProgressVisibility() {
         binding.progressBar.progressBarHolder.isVisible =
             !binding.progressBar.progressBarHolder.isVisible
+    }
+
+    private fun showPushNotEnableDialog(title: String, message: String) {
+        val dialog = AlertDialog.Builder(requireContext(), R.style.AlertDialogTheme)
+            .setTitle(title)
+            .setMessage(message)
+            .setCancelable(false)
+            .setPositiveButton(getString(R.string.ok)) { _, _ ->
+                // do nothing
+            }.create()
+        dialog.show()
     }
 }

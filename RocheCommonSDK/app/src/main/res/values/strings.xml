@@ -78,6 +78,10 @@
     <!-- Push Strings-->
     <string name="push_notification">Push Notification</string>
     <string name="btn_txt_login">Login</string>
-    <string name="btn_txt_register">Register</string>
-    <string name="btn_txt_unregister">Un-Register</string>
+    <string name="btn_txt_register">Register for Push Notifications</string>
+    <string name="btn_txt_unregister">Unregister for Push Notifications</string>
+    <string name="push_dialog_title">Notification Disabled</string>
+    <string name="push_dialog_message">Please enable Push Notification from the settings for this application</string>
+    <string name="push_registered_title">Already Registered</string>
+    <string name="push_registered_message">Your device already Registered for Push Notification</string>
 </resources>
