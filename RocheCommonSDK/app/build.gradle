@@ -7,6 +7,7 @@ plugins {
 apply plugin: "androidx.navigation.safeargs.kotlin"
 apply plugin: 'com.google.firebase.appdistribution'
 apply plugin: 'com.google.gms.google-services'
+apply from: "signing.gradle"
 
 android {
     compileSdkVersion versions.compile_sdk_version
@@ -34,26 +35,24 @@ android {
         buildConfigField "String", "SALESFORCE_DEPLOYMENT_ID", configProperties["SALESFORCE_DEPLOYMENT_ID"]
         buildConfigField "String", "SALESFORCE_BUTTON_ID", configProperties["SALESFORCE_BUTTON_ID"]
         buildConfigField "String", "SALESFORCE_LIVE_AGENT_POD", configProperties["SALESFORCE_LIVE_AGENT_POD"]
+
+        firebaseAppDistribution {
+            appId=getProperty('firebase.appid')
+            artifactType="APK"
+            groups="ssg-tester-group"
+        }
     }
 
     buildTypes {
         release {
-            firebaseAppDistribution {
-                appId=getProperty('firebase.appid')
-                artifactType="APK"
-                groups="ssg-tester-group"
-            }
             minifyEnabled false
+            debuggable false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             buildConfigField "Boolean", 'ENABLE_SECURITY', "true"
+            signingConfig signingConfigs.release
         }
 
         debug {
-            firebaseAppDistribution {
-                appId=getProperty('firebase.appid')
-                artifactType="APK"
-                testers = "sanket.shah.ss1@contractors.roche.com"
-            }
             testCoverageEnabled true
             debuggable true
             buildConfigField "Boolean", 'ENABLE_SECURITY', "false"
