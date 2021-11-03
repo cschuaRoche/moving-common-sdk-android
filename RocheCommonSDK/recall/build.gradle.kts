@@ -5,6 +5,7 @@ plugins {
     kotlin("plugin.serialization") version "1.4.10"
     kotlin("native.cocoapods")
     id("com.android.library")
+    id("com.chromaticnoise.multiplatform-swiftpackage") version "2.0.3"
 }
 
 version = "1.0"
@@ -22,6 +23,14 @@ kotlin {
             ::iosX64
 
     iosTarget("ios") {}
+
+    multiplatformSwiftPackage {
+        packageName("AppRecall")
+        swiftToolsVersion("5.3")
+        targetPlatforms {
+            iOS { v("13") }
+        }
+    }
 
     cocoapods {
         summary = "Some description for the Shared Module"
