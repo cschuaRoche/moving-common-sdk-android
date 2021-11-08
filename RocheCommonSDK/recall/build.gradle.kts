@@ -5,7 +5,12 @@ plugins {
     kotlin("plugin.serialization") version "1.4.10"
     kotlin("native.cocoapods")
     id("com.android.library")
-    id("com.chromaticnoise.multiplatform-swiftpackage") version "2.0.3"
+
+    jacoco
+}
+
+jacoco {
+    toolVersion = "0.8.7"
 }
 
 version = "1.0"
@@ -16,22 +21,51 @@ kotlin {
 
     android()
 
-    val iosTarget: (String, KotlinNativeTarget.() -> Unit) -> KotlinNativeTarget =
-        if (System.getenv("SDK_NAME")?.startsWith("iphoneos") == true)
-            ::iosArm64
-        else
-            ::iosX64
+    val iosTarget: (String, KotlinNativeTarget.() -> Unit) -> KotlinNativeTarget = when {
+        System.getenv("SDK_NAME")?.startsWith("iphoneos") == true -> ::iosArm64
+//        System.getenv("NATIVE_ARCH")?.startsWith("arm") == true -> ::iosSimulatorArm64
+        else -> ::iosX64
+    }
 
     iosTarget("ios") {}
 
-    multiplatformSwiftPackage {
-        packageName("AppRecall")
-        swiftToolsVersion("5.3")
-        targetPlatforms {
-            iOS { v("13") }
+    ios {
+        binaries.framework("AppRecall")
+    }
+    val frameworkDestinationDir = buildDir.resolve("cocoapods/framework")
+
+    tasks {
+
+        // Custom task to build the DEBUG framework
+        // ./gradlew universalFrameworkDebug
+        register("universalFrameworkDebug", org.jetbrains.kotlin.gradle.tasks.FatFrameworkTask::class) {
+            baseName = "AppRecall"
+            from(
+                iosArm64().binaries.getFramework("AppRecall", "Debug"),
+                iosX64().binaries.getFramework("AppRecall", "Debug")
+            )
+            destinationDir = frameworkDestinationDir
+            group = "AppRecall"
+            description = "Create the debug framework for iOS"
+            dependsOn("linkAppRecallDebugFrameworkIosArm64")
+            dependsOn("linkAppRecallDebugFrameworkIosX64")
+        }
+
+        // Custom task to build the RELEASE framework
+        // ./gradlew universalFrameworkRelease
+        register("universalFrameworkRelease", org.jetbrains.kotlin.gradle.tasks.FatFrameworkTask::class) {
+            baseName = "AppRecall"
+            from(
+                iosArm64().binaries.getFramework("AppRecall", "Release"),
+                iosX64().binaries.getFramework("AppRecall", "Release")
+            )
+            destinationDir = frameworkDestinationDir
+            group = "AppRecall"
+            description = "Create the release framework for iOS"
+            dependsOn("linkAppRecallReleaseFrameworkIosArm64")
+            dependsOn("linkAppRecallReleaseFrameworkIosX64")
         }
     }
-
     cocoapods {
         summary = "Some description for the Shared Module"
         homepage = "Link to the Shared Module homepage"
@@ -84,10 +118,38 @@ kotlin {
 }
 
 android {
-    compileSdkVersion(31)
+    val versions = rootProject.ext["versions"] as HashMap<String, Any>
+    compileSdkVersion(versions["compile_sdk_version"].toString().toInt())
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
     defaultConfig {
-        minSdkVersion(21)
-        targetSdkVersion(31)
+        minSdkVersion(versions["min_sdk_version"].toString().toInt())
+        targetSdkVersion(versions["target_sdk_version"].toString().toInt())
+    }
+}
+
+val jacocoTestReport by tasks.creating(JacocoReport::class.java) {
+    val excludes = ArrayList<String>()
+    File("${project.rootDir}/scripts/file_exclusion.txt").forEachLine { line ->
+        if (!line.contains("//")) {
+            excludes.add(line)
+        }
+    }
+
+    val classFiles = fileTree(baseDir = "${buildDir}/tmp/kotlin-classes/debug/")
+    classFiles.setExcludes(excludes)
+    classDirectories.setFrom(classFiles)
+
+    val coverageSourceDirs = arrayOf(
+        "src/commonMain",
+        "src/jvmMain"
+    )
+
+    sourceDirectories.setFrom(files(coverageSourceDirs))
+    executionData
+        .setFrom(files("${buildDir}/jacoco/testDebugUnitTest.exec"))
+
+    reports {
+        xml.isEnabled = true
+        html.isEnabled = true
     }
 }
