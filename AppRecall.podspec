@@ -2,7 +2,7 @@ Pod::Spec.new do |spec|
     spec.name                     = 'AppRecall'
     spec.version                  = '1.1'
     spec.homepage                 = 'git@bitbucket.org:rochedis/common-sdk-android.git'
-    spec.source                   = { :git => "git@bitbucket.org:rochedis/common-sdk-android.git", :branch => "feature/ios_distribution_pod",
+    spec.source                   = { :git => "git@bitbucket.org:rochedis/common-sdk-android.git", :branch => "feature/ios_pod_with_git",
                                      :tag => "#{spec.version}" }
     spec.authors                  = ''
     spec.license                  = ''
