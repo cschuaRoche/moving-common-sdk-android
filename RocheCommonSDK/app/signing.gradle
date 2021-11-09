@@ -1,0 +1,27 @@
+// modify these configuration from bamboo / jenkins jobs
+android {
+    signingConfigs {
+        release {
+            storeFile file("${rootDir}/" + getProperty('release.kys.file'))
+            storePassword getProperty('release.kys.password')
+            keyAlias getProperty('release.key.alias')
+            keyPassword getProperty('release.key.password')
+        }
+
+        dev {
+            initWith release
+        }
+
+        support {
+            initWith release
+        }
+
+        qa {
+            initWith release
+        }
+
+        integration {
+            initWith release
+        }
+    }
+}
