@@ -22,14 +22,12 @@ local.properties
 *.patch
 
 # Generated files
-bin/
 gen/
 out/
 *.exec
 
 # Gradle files
 .gradle/
-build/cocoapods
 app/version.properties
 
 # lint
