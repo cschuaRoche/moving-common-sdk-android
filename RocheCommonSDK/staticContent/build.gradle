@@ -3,6 +3,9 @@ plugins {
     id 'kotlin-android'
 }
 
+apply plugin: 'com.jfrog.artifactory'
+apply plugin: 'maven-publish'
+
 android {
     compileSdkVersion 30
     buildToolsVersion "30.0.3"
@@ -11,7 +14,7 @@ android {
         minSdkVersion 24
         targetSdkVersion 30
         versionCode 1
-        versionName "1.0"
+        versionName "1.0.1"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
@@ -41,6 +44,46 @@ android {
     }
 }
 
+publishing {
+    publications {
+        aar(MavenPublication) {
+            groupId 'RocheCommonComponent' //put here your groupId
+            artifactId 'releaseLessMaterial' //put here your artifactId
+            version android.defaultConfig.versionName //put here your library version
+
+            // Tell maven to prepare the generated "*.aar" file for publishing
+            artifact("$buildDir/outputs/aar/${project.getName()}-release.aar")
+
+            pom.withXml {
+                def dependencies = asNode().appendNode('dependencies')
+                configurations.api.canBeResolved = true
+                configurations.getByName("api").getResolvedConfiguration().getFirstLevelModuleDependencies().each {
+                    def dependency = dependencies.appendNode('dependency')
+                    dependency.appendNode('groupId', it.moduleGroup)
+                    dependency.appendNode('artifactId', it.moduleName)
+                    dependency.appendNode('version', it.moduleVersion)
+                }
+            }
+        }
+    }
+}
+
+artifactory {
+    contextUrl = 'https://dhs.jfrog.io/dhs/'
+    publish {
+        repository {
+            repoKey = getProperty('artifactory.repokey')
+            username = getProperty('artifactory.user')
+            password = getProperty('artifactory.password')
+        }
+        defaults {
+            // Tell the Artifactory Plugin which artifacts should be published to Artifactory.
+            publications('aar')
+            publishPom = true
+        }
+    }
+}
+
 dependencies {
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib:${versions.kotlin_version}"
@@ -49,7 +92,8 @@ dependencies {
     implementation 'com.google.android.material:material:1.4.0'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.1'
 
-    implementation project(path: ':utils')
+    //compile project(path: ':utils')
+    api 'RocheCommonComponent:utils:1.0.1'
 
     testImplementation 'junit:junit:4.+'
     testImplementation "io.mockk:mockk:1.12.0"
