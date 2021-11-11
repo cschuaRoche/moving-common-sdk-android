@@ -42,7 +42,8 @@ dependencies {
     implementation 'com.squareup.okhttp3:logging-interceptor:3.11.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
 
-    implementation project(path: ':utils')
+    //implementation project(path: ':utils')
+    api "RocheCommonComponent:utils:1.0.1"
 
     testImplementation 'junit:junit:4.13.2'
     testImplementation "io.mockk:mockk:1.12.0"
