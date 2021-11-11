@@ -16,6 +16,7 @@ import com.google.android.gms.tasks.Tasks
 import com.google.firebase.messaging.FirebaseMessaging
 import com.roche.ssg.pushnotification.PushNotificationException
 import com.roche.ssg.pushnotification.api.PushNotificationApi
+import com.roche.ssg.sample.firebase.MyFirebaseMessagingService
 import com.roche.ssg.utils.PreferenceUtil
 import com.roche.ssg.utils.set
 import kotlinx.coroutines.Dispatchers
@@ -208,6 +209,10 @@ class PushNotificationViewModel(application: Application) : AndroidViewModel(app
             APP_PUSH_REGISTRATION_PREFS
         )
         pref.set(PREF_KEY_IS_REGISTER, isRegister)
+    }
+
+    fun getFCMToken(): String {
+        return MyFirebaseMessagingService.getToken(getApplication())
     }
 }
 

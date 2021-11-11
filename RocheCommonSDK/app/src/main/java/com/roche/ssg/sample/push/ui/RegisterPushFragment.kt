@@ -34,6 +34,7 @@ class RegisterPushFragment : Fragment() {
         setRegisterListener()
         setUnregisterListener()
         setViewStateObserver()
+        showFCMToken()
     }
 
     private fun setViewStateObserver() {
@@ -116,6 +117,15 @@ class RegisterPushFragment : Fragment() {
 
     private fun showMessage(message: String) {
         binding.txtStatus.text = message
+    }
+
+    private fun showFCMToken() {
+        binding.editTextToken.setText(
+            getString(
+                R.string.txt_fcm_token_with_label,
+                mPushViewModel.getFCMToken()
+            )
+        )
     }
 
     private fun toggleProgressVisibility() {
