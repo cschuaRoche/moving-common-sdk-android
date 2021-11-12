@@ -128,7 +128,7 @@ object DownloadStaticContent {
             }
 
             // download the file
-            val subDirPath = appVersion + File.separator + targetSubDir
+            val subDirPath = targetSubDir + File.separator + appVersion
             val zipPath =
                 downloadFromUrl(context, manifestInfo.path, progress, subDirPath, allowWifiOnly)
 
@@ -438,7 +438,7 @@ object DownloadStaticContent {
             if (existingVersion.isNotBlank()) {
                 // delete old version's data
                 val path =
-                    context.filesDir.toString() + File.separator + existingVersion + File.separator + targetSubDir
+                    context.filesDir.toString() + File.separator + targetSubDir + File.separator + existingVersion
                 File(path).deleteRecursively()
                 // remove shared pref data
                 DownloadStaticContentSharedPref.removeAllKeysOfAppVersion(
