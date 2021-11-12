@@ -57,6 +57,7 @@ object DownloadStaticContent {
     private const val JSON_KEY_FILE_SIZE = "fileSize"
     private const val JSON_KEY_ORIGINAL_SIZE = "originalSize"
 
+    const val EXCEPTION_TARGET_SUB_DIRECTORY_EMPTY = "Target sub directory is empty"
     const val EXCEPTION_WIFI_NOT_AVAILABLE = "Wifi Not Available"
     const val EXCEPTION_NETWORK_NOT_AVAILABLE = "Network Not Available"
     const val EXCEPTION_NOT_MODIFIED = "Not Modified"
@@ -77,7 +78,7 @@ object DownloadStaticContent {
      * @param locale locale for which static assets needs to be downloaded
      * @param fileKey file key for which static assets needs to be downloaded (e.g. user_manual)
      * @param progress callback which will return the progress of the download
-     * @param targetSubDir optional sub directory where the files will be downloaded to
+     * @param targetSubDir sub directory where the files will be downloaded to
      * @param allowWifiOnly download asset on WIFI only (Default is false).
      *
      * @return downloaded and unzipped static asset's path
@@ -96,10 +97,14 @@ object DownloadStaticContent {
         @LocaleType locale: String,
         fileKey: String,
         progress: (Int) -> Unit,
-        targetSubDir: String? = null,
+        targetSubDir: String,
         allowWifiOnly: Boolean = false
     ): String {
         try {
+            // target sub directory should not be empty
+            if (targetSubDir.isBlank()) {
+                throw IllegalArgumentException(EXCEPTION_TARGET_SUB_DIRECTORY_EMPTY)
+            }
             // read manifest file and get the url
             val manifestInfo = getInfoFromManifest(
                 context,
@@ -107,6 +112,7 @@ object DownloadStaticContent {
                 appVersion,
                 locale,
                 fileKey,
+                targetSubDir,
                 allowWifiOnly
             )
 
@@ -115,27 +121,27 @@ object DownloadStaticContent {
             if (fileExtension.equals(ZIPPED_FILE_EXTENSION, true).not()) {
                 throw IllegalStateException(EXCEPTION_INVALID_MANIFEST_FILE_FORMAT)
             }
-            val subDirPath = if (targetSubDir != null) {
-                appVersion + File.separator + targetSubDir
-            } else {
-                appVersion
-            }
 
+            // check free space to download the file
             if (context.filesDir.usableSpace <= manifestInfo.fileSize) {
                 throw IllegalStateException(EXCEPTION_INSUFFICIENT_STORAGE)
             }
+
             // download the file
+            val subDirPath = targetSubDir + File.separator + appVersion
             val zipPath =
                 downloadFromUrl(context, manifestInfo.path, progress, subDirPath, allowWifiOnly)
 
+            // check free space to unzip the file
             if (context.filesDir.usableSpace <= manifestInfo.originalSize) {
                 throw IllegalStateException(EXCEPTION_INSUFFICIENT_STORAGE)
             }
-            // unzip the file
+
+            // unzip the file and save the path to shared pref
             val unzipPath = unzipFile(context, zipPath, subDirPath)
-            // save unzipping file path to shared pref
             DownloadStaticContentSharedPref.setFilePath(
                 context,
+                targetSubDir,
                 appVersion,
                 locale,
                 fileKey,
@@ -144,13 +150,14 @@ object DownloadStaticContent {
             // Delete zipped file
             File(zipPath).delete()
             // check and delete old version
-            checkAndDeleteOldVersionData(context, appVersion)
+            checkAndDeleteOldVersionData(context, targetSubDir, appVersion)
             return unzipPath
         } catch (e: Exception) {
             if (e.message == EXCEPTION_NOT_MODIFIED) {
                 // return existing file path as manifest is not modified
                 return DownloadStaticContentSharedPref.getFilePath(
                     context,
+                    targetSubDir,
                     appVersion,
                     locale,
                     fileKey
@@ -168,6 +175,7 @@ object DownloadStaticContent {
      * @param appVersion Application version
      * @param locale Locale
      * @param fileKey file key for which static assets needs to be downloaded (e.g. user_manual)
+     * @param targetSubDir sub directory where the files will be downloaded to
      * @param allowWifiOnly download asset on WIFI only (Default is false).
      *
      * @return returns ManifestInfo object
@@ -184,6 +192,7 @@ object DownloadStaticContent {
         appVersion: String,
         @LocaleType locale: String,
         fileKey: String,
+        targetSubDir: String,
         allowWifiOnly: Boolean = false
     ): ManifestInfo {
         checkConnection(context, allowWifiOnly)
@@ -193,10 +202,16 @@ object DownloadStaticContent {
                 urlConnection = getUrlConnection(manifestUrl)
 
                 // get etag and downloaded file path value from secure shared preference
-                val etag =
-                    DownloadStaticContentSharedPref.getETag(context, appVersion, locale, fileKey)
+                val etag = DownloadStaticContentSharedPref.getETag(
+                    context,
+                    targetSubDir,
+                    appVersion,
+                    locale,
+                    fileKey
+                )
                 val filePath = DownloadStaticContentSharedPref.getFilePath(
                     context,
+                    targetSubDir,
                     appVersion,
                     locale,
                     fileKey
@@ -222,6 +237,7 @@ object DownloadStaticContent {
                     if (newETag != null && newETag.isNotEmpty()) {
                         DownloadStaticContentSharedPref.setETag(
                             context,
+                            targetSubDir,
                             appVersion,
                             locale,
                             fileKey,
@@ -245,7 +261,7 @@ object DownloadStaticContent {
      * @param context application context
      * @param fileURL the file url
      * @param progress callback which will return the progress of the download
-     * @param targetSubDir optional sub directory where the files will be downloaded to
+     * @param targetSubDir sub directory where the files will be downloaded to
      * @param allowWifiOnly download asset on WIFI only (Default is false).
      *
      * @return downloaded zipped file's path
@@ -255,7 +271,7 @@ object DownloadStaticContent {
         context: Context,
         fileURL: String,
         progress: (Int) -> Unit,
-        targetSubDir: String? = null,
+        targetSubDir: String,
         allowWifiOnly: Boolean = false
     ): String {
         checkConnection(context, allowWifiOnly)
@@ -265,16 +281,12 @@ object DownloadStaticContent {
 
             val fileLength = connection.contentLength
             val fileName = fileURL.substring(fileURL.lastIndexOf("/") + 1)
-            val absoluteFilePath = context.filesDir.toString()
-            val path = if (targetSubDir != null) {
-                val file = File(absoluteFilePath + File.separator + targetSubDir)
-                if (file.exists().not()) {
-                    file.mkdirs()
-                }
-                file.path + File.separator + fileName
-            } else {
-                absoluteFilePath + File.separator + fileName
+
+            val file = File(context.filesDir.toString() + File.separator + targetSubDir)
+            if (file.exists().not()) {
+                file.mkdirs()
             }
+            val path = file.path + File.separator + fileName
 
             // download the file
             val input: InputStream = BufferedInputStream(connection.inputStream)
@@ -307,7 +319,7 @@ object DownloadStaticContent {
     fun unzipFile(
         context: Context,
         filePath: String,
-        targetSubDir: String? = null
+        targetSubDir: String
     ): String {
         val unzipPath = UnZipUtils.unzipFromAppFiles(filePath, context, targetSubDir)
         if (unzipPath == null) {
@@ -416,17 +428,27 @@ object DownloadStaticContent {
     }
 
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
-    internal fun checkAndDeleteOldVersionData(context: Context, appVersion: String) {
-        val existingVersion = DownloadStaticContentSharedPref.getVersion(context)
+    internal fun checkAndDeleteOldVersionData(
+        context: Context,
+        targetSubDir: String,
+        appVersion: String
+    ) {
+        val existingVersion = DownloadStaticContentSharedPref.getVersion(context, targetSubDir)
         if (existingVersion != appVersion) {
             if (existingVersion.isNotBlank()) {
                 // delete old version's data
-                File(context.filesDir.toString() + File.separator + existingVersion).deleteRecursively()
+                val path =
+                    context.filesDir.toString() + File.separator + targetSubDir + File.separator + existingVersion
+                File(path).deleteRecursively()
                 // remove shared pref data
-                DownloadStaticContentSharedPref.removeAllKeysOfAppVersion(context, existingVersion)
+                DownloadStaticContentSharedPref.removeAllKeysOfAppVersion(
+                    context,
+                    targetSubDir,
+                    existingVersion
+                )
             }
             // update new version
-            DownloadStaticContentSharedPref.setVersion(context, appVersion)
+            DownloadStaticContentSharedPref.setVersion(context, targetSubDir, appVersion)
         }
     }
 }

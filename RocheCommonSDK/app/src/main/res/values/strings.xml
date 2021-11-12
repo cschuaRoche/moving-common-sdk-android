@@ -36,6 +36,8 @@
     <string name="chat_session_ended">Chat session has ended.</string>
     <string name="downloaded_path">Materials downloaded to: %1$s</string>
     <string name="error">Error: %1$s</string>
+    <string name="hint_manifest_url">Manifest URL</string>
+    <string name="hint_target_sub_dir">Target Sub Directory</string>
     <string name="hint_app_version">App Version</string>
     <string name="hint_locale">Locale</string>
     <string name="hint_file_type">File Type</string>

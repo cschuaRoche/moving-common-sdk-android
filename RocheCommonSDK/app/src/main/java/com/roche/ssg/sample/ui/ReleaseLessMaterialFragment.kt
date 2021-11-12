@@ -38,12 +38,13 @@ class ReleaseLessMaterialFragment : Fragment() {
             lifecycleScope.launch {
                 txtStatus.text = try {
                     val path = DownloadStaticContent.downloadStaticAssets(
-                        requireContext(),
-                        MANIFEST_URL,
-                        etAppVersion.text.toString(),
-                        etLocale.text.toString(),
-                        etFileType.text.toString(),
-                        ::showProgress,
+                        context = requireContext(),
+                        manifestUrl = etManifestUrl.text.toString(),
+                        appVersion = etAppVersion.text.toString(),
+                        locale = etLocale.text.toString(),
+                        fileKey = etFileType.text.toString(),
+                        progress = ::showProgress,
+                        targetSubDir = etTargetSubdir.text.toString(),
                         allowWifiOnly = switchWifiOnly.isChecked
                     )
                     getString(R.string.downloaded_path, path)
@@ -61,7 +62,5 @@ class ReleaseLessMaterialFragment : Fragment() {
 
     companion object {
         private const val LOG_TAG = "ReleaseLessMaterial"
-        private const val MANIFEST_URL =
-            "https://static-content.dhp-dev.dhs.platform.navify.com/com.roche.floodlight/docs/floodlight.json"
     }
 }

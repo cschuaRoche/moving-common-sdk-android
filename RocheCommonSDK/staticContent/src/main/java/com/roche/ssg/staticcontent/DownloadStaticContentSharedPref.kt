@@ -12,7 +12,7 @@ object DownloadStaticContentSharedPref {
     internal const val USER_MANUALS_PREFS = "USER_MANUALS_PREFS"
 
     @VisibleForTesting
-    internal const val PREF_KEY_VERSION = "key_version"
+    internal const val PREF_KEY_VERSION_PREFIX = "key_version"
 
     @VisibleForTesting
     internal const val PREF_KEY_ETAG_PREFIX = "key_etag"
@@ -20,67 +20,73 @@ object DownloadStaticContentSharedPref {
     @VisibleForTesting
     internal const val PREF_KEY_FILE_PATH_PREFIX = "key_file_path"
 
-    fun getVersion(context: Context): String {
+    fun getVersion(context: Context, targetSubDir: String): String {
+        val key = "${PREF_KEY_VERSION_PREFIX}_$targetSubDir"
         val pref = PreferenceUtil.createOrGetPreference(context, USER_MANUALS_PREFS)
-        return pref.get(PREF_KEY_VERSION, "") ?: ""
+        return pref.get(key, "") ?: ""
     }
 
-    fun setVersion(context: Context, appVersion: String) {
+    fun setVersion(context: Context, targetSubDir: String, appVersion: String) {
+        val key = "${PREF_KEY_VERSION_PREFIX}_$targetSubDir"
         val pref = PreferenceUtil.createOrGetPreference(context, USER_MANUALS_PREFS)
-        pref.set(PREF_KEY_VERSION, appVersion)
+        pref.set(key, appVersion)
     }
 
     fun getETag(
         context: Context,
+        targetSubDir: String,
         appVersion: String,
         @DownloadStaticContent.LocaleType locale: String,
         fileKey: String
     ): String {
-        val key = generateKey(PREF_KEY_ETAG_PREFIX, appVersion, locale, fileKey)
+        val key = generateKey(PREF_KEY_ETAG_PREFIX, targetSubDir, appVersion, locale, fileKey)
         val pref = PreferenceUtil.createOrGetPreference(context, USER_MANUALS_PREFS)
         return pref.get(key, "") ?: ""
     }
 
     fun setETag(
         context: Context,
+        targetSubDir: String,
         appVersion: String,
         @DownloadStaticContent.LocaleType locale: String,
         fileKey: String,
         eTag: String
     ) {
-        val key = generateKey(PREF_KEY_ETAG_PREFIX, appVersion, locale, fileKey)
+        val key = generateKey(PREF_KEY_ETAG_PREFIX, targetSubDir, appVersion, locale, fileKey)
         val pref = PreferenceUtil.createOrGetPreference(context, USER_MANUALS_PREFS)
         pref.set(key, eTag)
     }
 
     fun getFilePath(
         context: Context,
+        targetSubDir: String,
         appVersion: String,
         @DownloadStaticContent.LocaleType locale: String,
         fileKey: String
     ): String {
-        val key = generateKey(PREF_KEY_FILE_PATH_PREFIX, appVersion, locale, fileKey)
+        val key = generateKey(PREF_KEY_FILE_PATH_PREFIX, targetSubDir, appVersion, locale, fileKey)
         val pref = PreferenceUtil.createOrGetPreference(context, USER_MANUALS_PREFS)
         return pref.get(key, "") ?: ""
     }
 
     fun setFilePath(
         context: Context,
+        targetSubDir: String,
         appVersion: String,
         @DownloadStaticContent.LocaleType locale: String,
         fileKey: String,
         filePath: String
     ) {
-        val key = generateKey(PREF_KEY_FILE_PATH_PREFIX, appVersion, locale, fileKey)
+        val key = generateKey(PREF_KEY_FILE_PATH_PREFIX, targetSubDir, appVersion, locale, fileKey)
         val pref = PreferenceUtil.createOrGetPreference(context, USER_MANUALS_PREFS)
         pref.set(key, filePath)
     }
 
-    fun removeAllKeysOfAppVersion(context: Context, appVersion: String) {
+    fun removeAllKeysOfAppVersion(context: Context, targetSubDir: String, appVersion: String) {
         val pref = PreferenceUtil.createOrGetPreference(context, USER_MANUALS_PREFS)
         for (key in pref.all.keys) {
-            if (key.startsWith("${PREF_KEY_ETAG_PREFIX}_${getAppVersionKey(appVersion)}_") ||
-                key.startsWith("${PREF_KEY_FILE_PATH_PREFIX}_${getAppVersionKey(appVersion)}_")
+            if (key.startsWith("${PREF_KEY_ETAG_PREFIX}_${targetSubDir}_${getAppVersionKey(appVersion)}_") ||
+                key.startsWith("${PREF_KEY_FILE_PATH_PREFIX}_${targetSubDir}_${getAppVersionKey(appVersion)}_")
             ) {
                 pref.remove(key)
             }
@@ -89,10 +95,11 @@ object DownloadStaticContentSharedPref {
 
     private fun generateKey(
         prefix: String,
+        targetSubDir: String,
         appVersion: String,
         @DownloadStaticContent.LocaleType locale: String,
         fileKey: String
-    ) = "${prefix}_${getAppVersionKey(appVersion)}_${locale}_${fileKey}"
+    ) = "${prefix}_${targetSubDir}_${getAppVersionKey(appVersion)}_${locale}_${fileKey}"
 
     private fun getAppVersionKey(appVersion: String) = appVersion.replace(".", "_")
 }
