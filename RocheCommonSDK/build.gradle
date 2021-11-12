@@ -33,6 +33,15 @@ allprojects {
         maven { // salesforce
             url 'http://tokbox.bintray.com/maven/'
         }
+
+        maven {
+            url "https://dhs.jfrog.io/dhs/mobile-android/"
+            // The Artifactory (preferably virtual) repository to resolve from
+            credentials {
+                username = getProperty('artifactory.user')
+                password = getProperty('artifactory.password')
+            }
+        }
     }
 }
 
