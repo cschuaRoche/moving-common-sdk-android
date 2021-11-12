@@ -17,6 +17,9 @@ import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.roche.ssg.sample.MainActivity
 import com.roche.ssg.sample.R
+import com.roche.ssg.utils.PreferenceUtil
+import com.roche.ssg.utils.get
+import com.roche.ssg.utils.set
 import java.io.IOException
 import java.net.URL
 
@@ -44,8 +47,9 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
     override fun onNewToken(token: String) {
         super.onNewToken(token)
-        // TODO get new token here
-        Log.i("TokenTesting", "Token from onNewToken $token")
+        saveToken(token)
+        Log.i("MyFirebaseMessagingService", "Token from onNewToken $token")
+
     }
 
     /**
@@ -106,5 +110,30 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             notificationManager.createNotificationChannel(channel)
         }
         notificationManager.notify(0, notificationBuilder.build())
+    }
+
+    private fun saveToken(token: String) {
+        val pref = PreferenceUtil.createOrGetPreference(
+            this,
+            FCM_PREFS
+        )
+        pref.set(FCM_PREFS_KEY_TOKEN, token)
+    }
+
+    companion object {
+        private const val FCM_PREFS = "FCM_PREFS"
+        private const val FCM_PREFS_KEY_TOKEN = "FCM_PREFS_TOKEN"
+
+        fun getToken(context: Context): String {
+            return getToken(context, FCM_PREFS_KEY_TOKEN)
+        }
+
+        private fun getToken(context: Context, key: String): String {
+            val pref = PreferenceUtil.createOrGetPreference(
+                context,
+                FCM_PREFS
+            )
+            return pref.get(key, "") ?: ""
+        }
     }
 }
