@@ -6,7 +6,7 @@ import android.content.SharedPreferences
 import androidx.security.crypto.EncryptedSharedPreferences
 import com.roche.ssg.staticcontent.DownloadStaticContentSharedPref.PREF_KEY_ETAG_PREFIX
 import com.roche.ssg.staticcontent.DownloadStaticContentSharedPref.PREF_KEY_FILE_PATH_PREFIX
-import com.roche.ssg.staticcontent.DownloadStaticContentSharedPref.PREF_KEY_VERSION
+import com.roche.ssg.staticcontent.DownloadStaticContentSharedPref.PREF_KEY_VERSION_PREFIX
 import com.roche.ssg.utils.PreferenceUtil
 import com.roche.ssg.utils.get
 import io.mockk.every
@@ -49,13 +49,13 @@ class DownloadStaticContentSharedPrefTest : BaseMockkTest() {
 
     @Test
     fun `getVersion should return value from sharedPreferences`() {
-        every { pref.get(PREF_KEY_VERSION, "") } returns APP_VERSION
+        every { pref.get(PREF_KEY_VERSION_PREFIX, "") } returns APP_VERSION
         Assert.assertEquals(APP_VERSION, DownloadStaticContentSharedPref.getVersion(appContext))
     }
 
     @Test
     fun `getVersion should return empty if not set`() {
-        every { pref.get(PREF_KEY_VERSION, "") } returns null
+        every { pref.get(PREF_KEY_VERSION_PREFIX, "") } returns null
         Assert.assertEquals("", DownloadStaticContentSharedPref.getVersion(appContext))
     }
 
