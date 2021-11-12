@@ -15,7 +15,8 @@ How to use the DownloadStaticContent
             "1.2.1",
             LocaleType.EN_US,
             "privacy_policy",
-            ::showProgress
+            ::showProgress,
+            targetSubDir // targetSubDir should be unique per manifest
         )
 
     // optional: display the progress or simply add a log
@@ -26,7 +27,7 @@ How to use the DownloadStaticContent
 How to retrieve manifest info based on the app version, locale and file key
 ----------
     ```
-    val fileUrl = DownloadStaticContent.getUrlFromManifest(context, manifestUrl, appVersion, locale, fileKey)
+    val fileUrl = DownloadStaticContent.getInfoFromManifest(context, manifestUrl, appVersion, locale, fileKey, targetSubDir)
     ```
 How to download a file to the app's files directory
 ----------

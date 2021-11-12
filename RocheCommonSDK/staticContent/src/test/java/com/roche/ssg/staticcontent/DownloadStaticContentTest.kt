@@ -41,6 +41,7 @@ class DownloadStaticContentTest : BaseMockkTest() {
                 APP_VERSION,
                 LOCALE,
                 FILE_KEY,
+                TARGET_SUB_DIRECTORY,
                 false
             )
         } returns getManifestInfo()
@@ -96,6 +97,7 @@ class DownloadStaticContentTest : BaseMockkTest() {
         every {
             DownloadStaticContentSharedPref.setFilePath(
                 appContext,
+                TARGET_SUB_DIRECTORY,
                 APP_VERSION,
                 LOCALE,
                 FILE_KEY,
@@ -105,6 +107,7 @@ class DownloadStaticContentTest : BaseMockkTest() {
         every {
             DownloadStaticContent.checkAndDeleteOldVersionData(
                 appContext,
+                TARGET_SUB_DIRECTORY,
                 APP_VERSION
             )
         } returns Unit
@@ -127,6 +130,7 @@ class DownloadStaticContentTest : BaseMockkTest() {
                 APP_VERSION,
                 LOCALE,
                 FILE_KEY,
+                TARGET_SUB_DIRECTORY,
                 false
             )
         }
@@ -151,6 +155,7 @@ class DownloadStaticContentTest : BaseMockkTest() {
         verify(exactly = 1) {
             DownloadStaticContentSharedPref.setFilePath(
                 appContext,
+                TARGET_SUB_DIRECTORY,
                 APP_VERSION,
                 LOCALE,
                 FILE_KEY,
@@ -160,6 +165,7 @@ class DownloadStaticContentTest : BaseMockkTest() {
         verify(exactly = 1) {
             DownloadStaticContent.checkAndDeleteOldVersionData(
                 appContext,
+                TARGET_SUB_DIRECTORY,
                 APP_VERSION
             )
         }
@@ -177,6 +183,7 @@ class DownloadStaticContentTest : BaseMockkTest() {
                     APP_VERSION,
                     LOCALE,
                     FILE_KEY,
+                    TARGET_SUB_DIRECTORY,
                     false
                 )
             } returns getManifestInfo(zippedFileUrl = "zippedFileUrl.txt")
@@ -205,6 +212,7 @@ class DownloadStaticContentTest : BaseMockkTest() {
                     APP_VERSION,
                     LOCALE,
                     FILE_KEY,
+                    TARGET_SUB_DIRECTORY,
                     false
                 )
             }
@@ -226,6 +234,7 @@ class DownloadStaticContentTest : BaseMockkTest() {
                     APP_VERSION,
                     LOCALE,
                     FILE_KEY,
+                    TARGET_SUB_DIRECTORY,
                     false
                 )
             } returns getManifestInfo()
@@ -255,6 +264,7 @@ class DownloadStaticContentTest : BaseMockkTest() {
                     APP_VERSION,
                     LOCALE,
                     FILE_KEY,
+                    TARGET_SUB_DIRECTORY,
                     false
                 )
             }
@@ -277,6 +287,7 @@ class DownloadStaticContentTest : BaseMockkTest() {
                     APP_VERSION,
                     LOCALE,
                     FILE_KEY,
+                    TARGET_SUB_DIRECTORY,
                     false
                 )
             } returns getManifestInfo()
@@ -291,7 +302,7 @@ class DownloadStaticContentTest : BaseMockkTest() {
                 )
             } returns getZippedFilePath()
 
-            /*try {
+            try {
                 DownloadStaticContent.downloadStaticAssets(
                     appContext,
                     getManifestUrl(),
@@ -307,7 +318,7 @@ class DownloadStaticContentTest : BaseMockkTest() {
                     DownloadStaticContent.EXCEPTION_INSUFFICIENT_STORAGE,
                     e.message
                 )
-            }*/
+            }
 
             coVerify(exactly = 1) {
                 DownloadStaticContent.getInfoFromManifest(
@@ -316,6 +327,7 @@ class DownloadStaticContentTest : BaseMockkTest() {
                     APP_VERSION,
                     LOCALE,
                     FILE_KEY,
+                    TARGET_SUB_DIRECTORY,
                     false
                 )
             }
@@ -338,12 +350,14 @@ class DownloadStaticContentTest : BaseMockkTest() {
                     APP_VERSION,
                     LOCALE,
                     FILE_KEY,
+                    TARGET_SUB_DIRECTORY,
                     false
                 )
             } throws IllegalStateException(DownloadStaticContent.EXCEPTION_NOT_MODIFIED)
             every {
                 DownloadStaticContentSharedPref.getFilePath(
                     appContext,
+                    TARGET_SUB_DIRECTORY,
                     APP_VERSION,
                     LOCALE,
                     FILE_KEY
@@ -367,12 +381,14 @@ class DownloadStaticContentTest : BaseMockkTest() {
                     APP_VERSION,
                     LOCALE,
                     FILE_KEY,
+                    TARGET_SUB_DIRECTORY,
                     false
                 )
             }
             verify(exactly = 1) {
                 DownloadStaticContentSharedPref.getFilePath(
                     appContext,
+                    TARGET_SUB_DIRECTORY,
                     APP_VERSION,
                     LOCALE,
                     FILE_KEY
@@ -393,6 +409,7 @@ class DownloadStaticContentTest : BaseMockkTest() {
         every {
             DownloadStaticContentSharedPref.getETag(
                 appContext,
+                TARGET_SUB_DIRECTORY,
                 APP_VERSION,
                 LOCALE,
                 FILE_KEY
@@ -401,6 +418,7 @@ class DownloadStaticContentTest : BaseMockkTest() {
         every {
             DownloadStaticContentSharedPref.getFilePath(
                 appContext,
+                TARGET_SUB_DIRECTORY,
                 APP_VERSION,
                 LOCALE,
                 FILE_KEY
@@ -412,6 +430,7 @@ class DownloadStaticContentTest : BaseMockkTest() {
         every {
             DownloadStaticContentSharedPref.setETag(
                 appContext,
+                TARGET_SUB_DIRECTORY,
                 APP_VERSION,
                 LOCALE,
                 FILE_KEY,
@@ -424,7 +443,8 @@ class DownloadStaticContentTest : BaseMockkTest() {
             getManifestUrl(),
             APP_VERSION,
             LOCALE,
-            FILE_KEY
+            FILE_KEY,
+            TARGET_SUB_DIRECTORY
         )
         Assert.assertEquals(getZippedFileUrl(), manifestInfo.path)
     }
@@ -437,6 +457,7 @@ class DownloadStaticContentTest : BaseMockkTest() {
             every {
                 DownloadStaticContentSharedPref.getETag(
                     appContext,
+                    TARGET_SUB_DIRECTORY,
                     APP_VERSION,
                     LOCALE,
                     FILE_KEY
@@ -445,6 +466,7 @@ class DownloadStaticContentTest : BaseMockkTest() {
             every {
                 DownloadStaticContentSharedPref.getFilePath(
                     appContext,
+                    TARGET_SUB_DIRECTORY,
                     APP_VERSION,
                     LOCALE,
                     FILE_KEY
@@ -458,7 +480,8 @@ class DownloadStaticContentTest : BaseMockkTest() {
                     getManifestUrl(),
                     APP_VERSION,
                     LOCALE,
-                    FILE_KEY
+                    FILE_KEY,
+                    TARGET_SUB_DIRECTORY
                 )
                 Assert.fail("unzipFile should have thrown EXCEPTION_NOT_MODIFIED error")
             } catch (e: IllegalStateException) {
@@ -475,6 +498,7 @@ class DownloadStaticContentTest : BaseMockkTest() {
             every {
                 DownloadStaticContentSharedPref.getETag(
                     appContext,
+                    TARGET_SUB_DIRECTORY,
                     incorrectAppVersion,
                     LOCALE,
                     FILE_KEY
@@ -483,6 +507,7 @@ class DownloadStaticContentTest : BaseMockkTest() {
             every {
                 DownloadStaticContentSharedPref.getFilePath(
                     appContext,
+                    TARGET_SUB_DIRECTORY,
                     incorrectAppVersion,
                     LOCALE,
                     FILE_KEY
@@ -498,7 +523,8 @@ class DownloadStaticContentTest : BaseMockkTest() {
                     getManifestUrl(),
                     incorrectAppVersion,
                     LOCALE,
-                    FILE_KEY
+                    FILE_KEY,
+                    TARGET_SUB_DIRECTORY
                 )
                 Assert.fail("getUrlFromManifest should have thrown EXCEPTION_MANIFEST_APP_VERSION_NOT_FOUND error")
             } catch (e: IllegalArgumentException) {
@@ -509,6 +535,7 @@ class DownloadStaticContentTest : BaseMockkTest() {
                 verify(exactly = 0) {
                     DownloadStaticContentSharedPref.setETag(
                         appContext,
+                        TARGET_SUB_DIRECTORY,
                         incorrectAppVersion,
                         LOCALE,
                         FILE_KEY,
@@ -527,6 +554,7 @@ class DownloadStaticContentTest : BaseMockkTest() {
             every {
                 DownloadStaticContentSharedPref.getETag(
                     appContext,
+                    TARGET_SUB_DIRECTORY,
                     APP_VERSION,
                     incorrectLocale,
                     FILE_KEY
@@ -535,6 +563,7 @@ class DownloadStaticContentTest : BaseMockkTest() {
             every {
                 DownloadStaticContentSharedPref.getFilePath(
                     appContext,
+                    TARGET_SUB_DIRECTORY,
                     APP_VERSION,
                     incorrectLocale,
                     FILE_KEY
@@ -550,7 +579,8 @@ class DownloadStaticContentTest : BaseMockkTest() {
                     getManifestUrl(),
                     APP_VERSION,
                     incorrectLocale,
-                    FILE_KEY
+                    FILE_KEY,
+                    TARGET_SUB_DIRECTORY
                 )
                 Assert.fail("getUrlFromManifest should have thrown EXCEPTION_MANIFEST_LOCALE_NOT_FOUND error")
             } catch (e: IllegalArgumentException) {
@@ -561,6 +591,7 @@ class DownloadStaticContentTest : BaseMockkTest() {
                 verify(exactly = 0) {
                     DownloadStaticContentSharedPref.setETag(
                         appContext,
+                        TARGET_SUB_DIRECTORY,
                         APP_VERSION,
                         incorrectLocale,
                         FILE_KEY,
@@ -579,6 +610,7 @@ class DownloadStaticContentTest : BaseMockkTest() {
             every {
                 DownloadStaticContentSharedPref.getETag(
                     appContext,
+                    TARGET_SUB_DIRECTORY,
                     APP_VERSION,
                     LOCALE,
                     incorrectFileKey
@@ -587,6 +619,7 @@ class DownloadStaticContentTest : BaseMockkTest() {
             every {
                 DownloadStaticContentSharedPref.getFilePath(
                     appContext,
+                    TARGET_SUB_DIRECTORY,
                     APP_VERSION,
                     LOCALE,
                     incorrectFileKey
@@ -602,7 +635,8 @@ class DownloadStaticContentTest : BaseMockkTest() {
                     getManifestUrl(),
                     APP_VERSION,
                     LOCALE,
-                    incorrectFileKey
+                    incorrectFileKey,
+                    TARGET_SUB_DIRECTORY
                 )
                 Assert.fail("getUrlFromManifest should have thrown EXCEPTION_MANIFEST_FILE_KEY_NOT_FOUND error")
             } catch (e: IllegalArgumentException) {
@@ -613,6 +647,7 @@ class DownloadStaticContentTest : BaseMockkTest() {
                 verify(exactly = 0) {
                     DownloadStaticContentSharedPref.setETag(
                         appContext,
+                        TARGET_SUB_DIRECTORY,
                         APP_VERSION,
                         LOCALE,
                         incorrectFileKey,
@@ -632,7 +667,8 @@ class DownloadStaticContentTest : BaseMockkTest() {
                     getManifestUrl(),
                     APP_VERSION,
                     LOCALE,
-                    FILE_KEY
+                    FILE_KEY,
+                    TARGET_SUB_DIRECTORY
                 )
                 Assert.fail("getUrlFromManifest should have thrown EXCEPTION_NETWORK_NOT_AVAILABLE error")
             } catch (e: IllegalStateException) {
@@ -656,6 +692,7 @@ class DownloadStaticContentTest : BaseMockkTest() {
                     APP_VERSION,
                     LOCALE,
                     FILE_KEY,
+                    TARGET_SUB_DIRECTORY,
                     true
                 )
                 Assert.fail("getUrlFromManifest should have thrown EXCEPTION_NETWORK_NOT_AVAILABLE error")
@@ -735,7 +772,8 @@ class DownloadStaticContentTest : BaseMockkTest() {
         every {
             UnZipUtils.unzipFromAppFiles(
                 getZippedFilePath(),
-                appContext
+                appContext,
+                getSubDir()
             )
         } returns getUnzippedFilePath()
 
@@ -745,7 +783,8 @@ class DownloadStaticContentTest : BaseMockkTest() {
         verify(exactly = 1) {
             UnZipUtils.unzipFromAppFiles(
                 getZippedFilePath(),
-                appContext
+                appContext,
+                getSubDir()
             )
         }
     }
@@ -770,13 +809,35 @@ class DownloadStaticContentTest : BaseMockkTest() {
     @Test
     fun `test checkAndDeleteOldVersionData when existing version in SharedPref doesn't exist`() {
         val existingVersion = ""
-        every { DownloadStaticContentSharedPref.getVersion(appContext) } returns existingVersion
-        every { DownloadStaticContentSharedPref.setVersion(appContext, APP_VERSION) } returns Unit
-        DownloadStaticContent.checkAndDeleteOldVersionData(appContext, APP_VERSION)
-        verify(exactly = 1) { DownloadStaticContentSharedPref.setVersion(appContext, APP_VERSION) }
+        every {
+            DownloadStaticContentSharedPref.getVersion(
+                appContext,
+                TARGET_SUB_DIRECTORY
+            )
+        } returns existingVersion
+        every {
+            DownloadStaticContentSharedPref.setVersion(
+                appContext,
+                TARGET_SUB_DIRECTORY,
+                APP_VERSION
+            )
+        } returns Unit
+        DownloadStaticContent.checkAndDeleteOldVersionData(
+            appContext,
+            TARGET_SUB_DIRECTORY,
+            APP_VERSION
+        )
+        verify(exactly = 1) {
+            DownloadStaticContentSharedPref.setVersion(
+                appContext,
+                TARGET_SUB_DIRECTORY,
+                APP_VERSION
+            )
+        }
         verify(exactly = 0) {
             DownloadStaticContentSharedPref.removeAllKeysOfAppVersion(
                 appContext,
+                TARGET_SUB_DIRECTORY,
                 existingVersion
             )
         }
@@ -786,39 +847,78 @@ class DownloadStaticContentTest : BaseMockkTest() {
     fun `test checkAndDeleteOldVersionData when newer version is different than existing version`() {
         val existingVersion = "1.0.0"
         val newerVersion = "2.0.0"
-        every { DownloadStaticContentSharedPref.getVersion(appContext) } returns existingVersion
+        every {
+            DownloadStaticContentSharedPref.getVersion(
+                appContext,
+                TARGET_SUB_DIRECTORY
+            )
+        } returns existingVersion
         every {
             DownloadStaticContentSharedPref.removeAllKeysOfAppVersion(
                 appContext,
+                TARGET_SUB_DIRECTORY,
                 existingVersion
             )
         } returns Unit
-        every { DownloadStaticContentSharedPref.setVersion(appContext, newerVersion) } returns Unit
+        every {
+            DownloadStaticContentSharedPref.setVersion(
+                appContext,
+                TARGET_SUB_DIRECTORY,
+                newerVersion
+            )
+        } returns Unit
 
-        DownloadStaticContent.checkAndDeleteOldVersionData(appContext, newerVersion)
+        DownloadStaticContent.checkAndDeleteOldVersionData(
+            appContext,
+            TARGET_SUB_DIRECTORY,
+            newerVersion
+        )
         verify(exactly = 1) {
             DownloadStaticContentSharedPref.removeAllKeysOfAppVersion(
                 appContext,
+                TARGET_SUB_DIRECTORY,
                 existingVersion
             )
         }
-        verify(exactly = 1) { DownloadStaticContentSharedPref.setVersion(appContext, newerVersion) }
+        verify(exactly = 1) {
+            DownloadStaticContentSharedPref.setVersion(
+                appContext,
+                TARGET_SUB_DIRECTORY,
+                newerVersion
+            )
+        }
     }
 
     @Test
     fun `test checkAndDeleteOldVersionData when newer version is similar to the existing version`() {
         val existingVersion = "1.0.0"
         val newerVersion = "1.0.0"
-        every { DownloadStaticContentSharedPref.getVersion(appContext) } returns existingVersion
+        every {
+            DownloadStaticContentSharedPref.getVersion(
+                appContext,
+                TARGET_SUB_DIRECTORY
+            )
+        } returns existingVersion
 
-        DownloadStaticContent.checkAndDeleteOldVersionData(appContext, newerVersion)
+        DownloadStaticContent.checkAndDeleteOldVersionData(
+            appContext,
+            TARGET_SUB_DIRECTORY,
+            newerVersion
+        )
         verify(exactly = 0) {
             DownloadStaticContentSharedPref.removeAllKeysOfAppVersion(
                 appContext,
+                TARGET_SUB_DIRECTORY,
                 existingVersion
             )
         }
-        verify(exactly = 0) { DownloadStaticContentSharedPref.setVersion(appContext, newerVersion) }
+        verify(exactly = 0) {
+            DownloadStaticContentSharedPref.setVersion(
+                appContext,
+                TARGET_SUB_DIRECTORY,
+                newerVersion
+            )
+        }
     }
 
     private fun getManifestUrl() = "https://domain-name/docs/manifest.json"
@@ -826,8 +926,8 @@ class DownloadStaticContentTest : BaseMockkTest() {
     private fun getManifestInfo(zippedFileUrl: String = getZippedFileUrl()) =
         ManifestInfo(zippedFileUrl, FILE_SIZE, ORIGINAL_FILE_SIZE)
 
-    private fun getZippedFilePath() = CONTEXT_FILES_DIR + File.separator + "zipped-file.zip"
-    private fun getUnzippedFilePath() = CONTEXT_FILES_DIR
+    private fun getZippedFilePath() = CONTEXT_FILES_DIR + File.separator + getSubDir() + File.separator + "zipped-file.zip"
+    private fun getUnzippedFilePath() = CONTEXT_FILES_DIR + File.separator + getSubDir()
     private fun getETag() = "ETAG"
     private fun getManifestContent(): String {
         return "{\n" +
@@ -848,7 +948,7 @@ class DownloadStaticContentTest : BaseMockkTest() {
     }
 
     private fun getSubDir(): String {
-        return TARGET_SUB_DIRECTORY
+        return TARGET_SUB_DIRECTORY + File.separator + APP_VERSION
     }
 
     companion object {
