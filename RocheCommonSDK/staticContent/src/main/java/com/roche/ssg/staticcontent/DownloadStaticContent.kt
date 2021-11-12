@@ -96,7 +96,7 @@ object DownloadStaticContent {
         @LocaleType locale: String,
         fileKey: String,
         progress: (Int) -> Unit,
-        targetSubDir: String? = null,
+        targetSubDir: String,
         allowWifiOnly: Boolean = false
     ): String {
         try {
@@ -115,11 +115,8 @@ object DownloadStaticContent {
             if (fileExtension.equals(ZIPPED_FILE_EXTENSION, true).not()) {
                 throw IllegalStateException(EXCEPTION_INVALID_MANIFEST_FILE_FORMAT)
             }
-            val subDirPath = if (targetSubDir != null) {
-                appVersion + File.separator + targetSubDir
-            } else {
-                appVersion
-            }
+
+            val subDirPath = appVersion + File.separator + targetSubDir
 
             if (context.filesDir.usableSpace <= manifestInfo.fileSize) {
                 throw IllegalStateException(EXCEPTION_INSUFFICIENT_STORAGE)
@@ -255,7 +252,7 @@ object DownloadStaticContent {
         context: Context,
         fileURL: String,
         progress: (Int) -> Unit,
-        targetSubDir: String? = null,
+        targetSubDir: String,
         allowWifiOnly: Boolean = false
     ): String {
         checkConnection(context, allowWifiOnly)
@@ -266,15 +263,12 @@ object DownloadStaticContent {
             val fileLength = connection.contentLength
             val fileName = fileURL.substring(fileURL.lastIndexOf("/") + 1)
             val absoluteFilePath = context.filesDir.toString()
-            val path = if (targetSubDir != null) {
-                val file = File(absoluteFilePath + File.separator + targetSubDir)
-                if (file.exists().not()) {
-                    file.mkdirs()
-                }
-                file.path + File.separator + fileName
-            } else {
-                absoluteFilePath + File.separator + fileName
+
+            val file = File(absoluteFilePath + File.separator + targetSubDir)
+            if (file.exists().not()) {
+                file.mkdirs()
             }
+            val path = file.path + File.separator + fileName
 
             // download the file
             val input: InputStream = BufferedInputStream(connection.inputStream)
@@ -307,7 +301,7 @@ object DownloadStaticContent {
     fun unzipFile(
         context: Context,
         filePath: String,
-        targetSubDir: String? = null
+        targetSubDir: String
     ): String {
         val unzipPath = UnZipUtils.unzipFromAppFiles(filePath, context, targetSubDir)
         if (unzipPath == null) {

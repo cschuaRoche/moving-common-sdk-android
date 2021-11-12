@@ -44,6 +44,7 @@ class ReleaseLessMaterialFragment : Fragment() {
                         etLocale.text.toString(),
                         etFileType.text.toString(),
                         ::showProgress,
+                        requireContext().packageName,
                         allowWifiOnly = switchWifiOnly.isChecked
                     )
                     getString(R.string.downloaded_path, path)
