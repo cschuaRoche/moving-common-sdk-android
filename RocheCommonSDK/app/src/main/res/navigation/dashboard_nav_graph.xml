@@ -86,4 +86,10 @@
             android:name="com.roche.ssg.sample.push.ui.RegisterPushFragment"
             android:label="fragment_system_messages"
             tools:layout="@layout/fragment_push_register" />
+
+    <fragment
+        android:id="@+id/amplitudeFragment"
+        android:name="com.roche.ssg.sample.amplitude.AmplitudeFragment"
+        android:label="fragment_amplitude"
+        tools:layout="@layout/fragment_amplitude" />
 </navigation>
