@@ -21,17 +21,17 @@ object MenuUtilitesScreenPage : BaseTest() {
         )
     }
 
-    fun verifyGetUserManualButtonText() {
-        BiometricScreenPage.verifyText(
-            ViewMatchers.withId(R.id.btn_user_manual),
-            AppUtils.string(R.string.text_get_statical_user_manual), isSleepRequired = true
-        )
-    }
+//    fun verifyGetUserManualButtonText() {
+//        BiometricScreenPage.verifyText(
+//            ViewMatchers.withId(R.id.btn_user_manual),
+//            AppUtils.string(R.string.text_get_statical_user_manual), isSleepRequired = true
+//        )
+//    }
 
     fun verifyUtitliesScreenPage() {
         verifyCheckDeviceRootedButtonText()
         verifyUnZIPButtonText()
-        verifyGetUserManualButtonText()
+       // verifyGetUserManualButtonText()
     }
 
 
@@ -43,17 +43,17 @@ object MenuUtilitesScreenPage : BaseTest() {
         clickOnButton(ViewMatchers.withId(R.id.btn_unzip), isSleepRequired = true)
     }
 
-    fun clickOnGetUserManualButton() {
-        clickOnButton(ViewMatchers.withId(R.id.btn_user_manual), isSleepRequired = true)
-    }
+//    fun clickOnGetUserManualButton() {
+//        clickOnButton(ViewMatchers.withId(R.id.btn_user_manual), isSleepRequired = true)
+//    }
 
     fun verifyUnZipStatus(status: String) {
         verifyText(ViewMatchers.withId(R.id.txt_unzip_status), status, isSleepRequired = true)
     }
 
-    fun verifyGetUserManualStatus(status: String) {
-        verifyText(ViewMatchers.withId(R.id.txt_user_manual_status), status, isSleepRequired = true)
-    }
+//    fun verifyGetUserManualStatus(status: String) {
+//        verifyText(ViewMatchers.withId(R.id.txt_user_manual_status), status, isSleepRequired = true)
+//    }
 
     fun verifyDeviceRootedStatus(status: String) {
         verifyText(ViewMatchers.withId(R.id.txt_rooted_status), status, isSleepRequired = true)

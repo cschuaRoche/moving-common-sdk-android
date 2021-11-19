@@ -26,10 +26,10 @@ class MenuUtilitesScreenTest : BaseTest() {
         HomeScreenPage.verifyAndClickUtilitiesMenu()
         MenuUtilitesScreenPage.verifyUtitliesScreenPage()
         MenuUtilitesScreenPage.clickOnCheckDeviceRootedButton()
-        MenuUtilitesScreenPage.clickOnGetUserManualButton()
+       // MenuUtilitesScreenPage.clickOnGetUserManualButton()
         MenuUtilitesScreenPage.clickOnUnZIPButton()
         MenuUtilitesScreenPage.verifyUnZipStatus(AppUtils.string(R.string.text_unzip_status_path))
-        MenuUtilitesScreenPage.verifyGetUserManualStatus(AppUtils.string(R.string.text_user_manual_status))
+       // MenuUtilitesScreenPage.verifyGetUserManualStatus(AppUtils.string(R.string.text_user_manual_status))
     }
 
 }

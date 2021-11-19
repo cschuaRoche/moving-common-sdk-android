@@ -145,4 +145,5 @@ object BiometricScreenPage : BaseTest() {
         verifyText(withId(R.string.text_biometric_already_enroll), "Biometric is already enrolled")
     }
 
+
 }
