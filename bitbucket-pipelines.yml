@@ -25,6 +25,7 @@ definitions:
         script:
           - cd RocheCommonSDK
           - ./gradlew $PROJECT:testDebugUnitTest
+          - echo $BITBUCKET_CLONE_DIR
           - ls common-sdk-android/RocheCommonSDK/$PROJECT/build/reports/tests/
         artifacts:
           - common-sdk-android/RocheCommonSDK/$PROJECT/build/reports/tests/**
