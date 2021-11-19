@@ -27,7 +27,7 @@ definitions:
           - ./gradlew $PROJECT:testDebugUnitTest
           - ls RocheCommonSDK/$PROJECT/build/reports/tests/
         artifacts:
-          - RocheCommonSDK/$PROJECT/build/reports/tests/**
+          - common-sdk-android/RocheCommonSDK/$PROJECT/build/reports/tests/**
     - step: &buildArtifact          # step to build Android debug application
         name: Build Application
         size: 2x
