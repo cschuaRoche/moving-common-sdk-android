@@ -17,7 +17,7 @@ definitions:
         script:
           - cd RocheCommonSDK
           - ./gradlew $PROJECT:testDebugUnitTest
-    - step: &runBuild          # step to build Android debug application
+    - step: &buildArtifact          # step to build Android debug application
         name: Build Application
         size: 2x
         caches: # caching speed up subsequent execution https://support.atlassian.com/bitbucket-cloud/docs/cache-dependencies/
@@ -25,8 +25,7 @@ definitions:
         script:
           - cd RocheCommonSDK
           - chmod +x gradlew
-          - ./gradlew assemblerelease appDistributionUploadRelease --stacktrace
-          - ./gradlew biometric:artifactoryPublish
+          - ./gradlew $PROJECT:assembleRelease
         artifacts:
             - RocheCommonSDK/app/build/outputs/apk/debug/app-debug.apk
             - RocheCommonSDK/app/build/outputs/apk/release/app-release.apk
@@ -41,31 +40,35 @@ definitions:
           - export FIREBASE_TOKEN=1//0gUGFeQf_GYLGCgYIARAAGBASNwF-L9IrTsv3YhcRT_UNWturgA2lnnyjafr47cTitw_khjCCj-5-S5PBKXfVazqA6S_GTwrR5zo
           - ./gradlew aR
           - ./gradlew biometric:artifactoryPublish
-    - step: &deployToFirebase          # step to upload the sample application to firebase app distribution
-        name: Build Application
-        size: 2x
-        caches: # caching speed up subsequent execution https://support.atlassian.com/bitbucket-cloud/docs/cache-dependencies/
+    - step: &buildAPP
+        name: Generate the relese build of ssg sample application
+        caches:
           - gradle
         script:
           - cd RocheCommonSDK
           - chmod +x gradlew
-          - export FIREBASE_TOKEN=1//0gUGFeQf_GYLGCgYIARAAGBASNwF-L9IrTsv3YhcRT_UNWturgA2lnnyjafr47cTitw_khjCCj-5-S5PBKXfVazqA6S_GTwrR5zo
-          - ./gradlew assemblerelease appDistributionUploadRelease
+          - ./gradlew app:assembleRelease
+        artifacts:
+          - RocheCommonSDK/app/build/outputs/apk/release/app-release.apk
+    - step: &deployToFirebase
+       name: Deploy To Firebase
+       caches:
+         - node
+       image: node
+       script:
+         - npm install -g firebase-tools
+         - firebase appdistribution:distribute $APK_PATH --app $FIREBASE_APP_ID --groups $FIREBASE_GROUPS
 pipelines:
-  # pipeline definition for all branches
   custom:
     unittestcase-pipeline:
       - variables:
           - name: PROJECT
       - step: *runTestcases
-    build-pipeline:
-      - variables:
-          - name: PROJECT
-          - name: BUILD_TYPE
-      - step: *runBuild
     upload-jfrog-pipeline:
       - variables:
           - name: PROJECT
+      - step: *buildArtifact
       - step: *uploadToJFrog
     deploy-app-firebase-pipeline:
+      - step: *buildAPP
       - step: *deployToFirebase
