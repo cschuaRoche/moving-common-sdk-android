@@ -22,33 +22,10 @@ class ApplitoolBiometricTest : BaseTest() {
 
     val activityTestRuleMain = ActivityScenarioRule(MainActivity::class.java)
 
-
-//    @Before
-//    fun openBiometricPage() {
-//        launchApp()
-//        homeScreenUI()
-//        HomeScreenPage.verifySampleAppMainText()
-//        clickonMainMenu()
-//        openMenubarUI()
-//        HomeScreenPage.VerifyAndClickBiometricMenu()
-//        if (testName.methodName == "testAuthenticationBiometric" ){
-//            BiometricScreenPage.clickOnEnrollBiometric()
-//            AppUtils.redirectToFingerEnrollmentScreen()
-//        }
-//    }
-//
-//    @After
-//    fun stopScript() {
-//        Log.i(AppUtils.TAG, "Stop Fingerprint")
-//        if (testName.methodName == "testAuthenticationBiometric")
-//            AppUtils.setSecurityLockToNone()
-//        termiateApp()
-//    }
-
     @Test
    fun testBiometricPageUI() {
         launchApp()
-        //homeScreenUI()
+        homeScreenUI()
         HomeScreenPage.verifySampleAppMainText()
         clickonMainMenu()
         openMenubarUI()
@@ -63,7 +40,7 @@ class ApplitoolBiometricTest : BaseTest() {
         BiometricScreenPage.verifyFaceSupportedStatus(AppUtils.string(R.string.text_status_false))
         BiometricScreenPage.verifyIrisSupportedStatus(AppUtils.string(R.string.text_status_false))
         BiometricScreenPage.verifyIsBiometricEnrolledStatus(AppUtils.string(R.string.text_status_false))
-
+        termiateApp()
     }
 
     @Test

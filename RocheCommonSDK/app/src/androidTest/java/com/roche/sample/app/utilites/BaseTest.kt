@@ -60,8 +60,8 @@ open class BaseTest : UtiliteTest() {
     }
 
     fun homeScreenUI() {
-        eyes.open("Sample App!", "Biometrics Features Check")
-        eyes.checkWindow("Sample App Home Page")
+        eyes.open("Sample App!", "Biometrics Page Check")
+        eyes.checkWindow("Sample App!")
     }
 
     fun openMenubarUI() {
