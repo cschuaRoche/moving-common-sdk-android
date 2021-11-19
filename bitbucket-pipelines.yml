@@ -16,7 +16,7 @@ definitions:
           - gradle
         script:
           - cd RocheCommonSDK
-          - ./gradlew [PROJECT]:testDebugUnitTest
+          - ./gradlew $PROJECT:testDebugUnitTest
     - step: &runBuild          # step to build Android debug application
         name: Build Application
         size: 2x
