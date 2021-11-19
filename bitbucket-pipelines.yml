@@ -18,7 +18,7 @@ definitions:
           - cd RocheCommonSDK
           - if [[ PROJECT == "bundle" ]]; then
           - ./gradlew [PROJECT]:testDebugUnitTest
-     step: &runBuild          # step to build Android debug application
+    - step: &runBuild          # step to build Android debug application
         name: Build Application
         size: 2x
         caches: # caching speed up subsequent execution https://support.atlassian.com/bitbucket-cloud/docs/cache-dependencies/
@@ -31,27 +31,27 @@ definitions:
         artifacts:
             - RocheCommonSDK/app/build/outputs/apk/debug/app-debug.apk
             - RocheCommonSDK/app/build/outputs/apk/release/app-release.apk
-   - step: &uploadToJFrog          # step to upload the library artifact to JFrog artifactory
-       name: Build Application
-       size: 2x
-       caches:
-         - gradle
-       script:
-         - cd RocheCommonSDK
-         - chmod +x gradlew
-         - export FIREBASE_TOKEN=1//0gUGFeQf_GYLGCgYIARAAGBASNwF-L9IrTsv3YhcRT_UNWturgA2lnnyjafr47cTitw_khjCCj-5-S5PBKXfVazqA6S_GTwrR5zo
-         - ./gradlew aR
-         - ./gradlew biometric:artifactoryPublish
-   - step: &deployToFirebase          # step to upload the sample application to firebase app distribution
-       name: Build Application
-       size: 2x
-       caches: # caching speed up subsequent execution https://support.atlassian.com/bitbucket-cloud/docs/cache-dependencies/
-         - gradle
-       script:
-         - cd RocheCommonSDK
-         - chmod +x gradlew
-         - export FIREBASE_TOKEN=1//0gUGFeQf_GYLGCgYIARAAGBASNwF-L9IrTsv3YhcRT_UNWturgA2lnnyjafr47cTitw_khjCCj-5-S5PBKXfVazqA6S_GTwrR5zo
-         - ./gradlew assemblerelease appDistributionUploadRelease
+    - step: &uploadToJFrog          # step to upload the library artifact to JFrog artifactory
+        name: Build Application
+        size: 2x
+        caches:
+          - gradle
+        script:
+          - cd RocheCommonSDK
+          - chmod +x gradlew
+          - export FIREBASE_TOKEN=1//0gUGFeQf_GYLGCgYIARAAGBASNwF-L9IrTsv3YhcRT_UNWturgA2lnnyjafr47cTitw_khjCCj-5-S5PBKXfVazqA6S_GTwrR5zo
+          - ./gradlew aR
+          - ./gradlew biometric:artifactoryPublish
+    - step: &deployToFirebase          # step to upload the sample application to firebase app distribution
+        name: Build Application
+        size: 2x
+        caches: # caching speed up subsequent execution https://support.atlassian.com/bitbucket-cloud/docs/cache-dependencies/
+          - gradle
+        script:
+          - cd RocheCommonSDK
+          - chmod +x gradlew
+          - export FIREBASE_TOKEN=1//0gUGFeQf_GYLGCgYIARAAGBASNwF-L9IrTsv3YhcRT_UNWturgA2lnnyjafr47cTitw_khjCCj-5-S5PBKXfVazqA6S_GTwrR5zo
+          - ./gradlew assemblerelease appDistributionUploadRelease
 pipelines:
   # pipeline definition for all branches
   custom:
