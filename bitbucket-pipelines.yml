@@ -16,8 +16,8 @@ definitions:
           - gradle
         script:
           - cd RocheCommonSDK
-          - if [[ $BUILD_TYPE == "bundle" ]]; then
-          - ./gradlew [$BUILD_TYPE]:testDebugUnitTest
+          - if [[ PROJECT == "bundle" ]]; then
+          - ./gradlew [PROJECT]:testDebugUnitTest
      step: &runBuild          # step to build Android debug application
         name: Build Application
         size: 2x
