@@ -25,6 +25,7 @@ definitions:
         script:
           - cd RocheCommonSDK
           - ./gradlew $PROJECT:testDebugUnitTest
+          - ls
           - echo $BITBUCKET_CLONE_DIR
           - ls $BITBUCKET_CLONE_DIR
           - ls $PROJECT/build/reports/tests/testDebugUnitTest
