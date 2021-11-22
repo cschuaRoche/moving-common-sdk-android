@@ -44,9 +44,6 @@ definitions:
           - RocheCommonSDK/app/build/outputs/apk/release/app-release.apk
     - step: &uploadToJFrog          # step to upload the library artifact to JFrog artifactory
         name: Build Application
-        size: 2x
-        caches:
-          - gradle
         script:
           - pipe: jfrog/jfrog-setup-cli:1.0.0
           - source ./jfrog-setup-cli.sh
