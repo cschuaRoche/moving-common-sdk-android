@@ -50,6 +50,7 @@ definitions:
         script:
           - pipe: jfrog/jfrog-setup-cli:1.0.0
           - source ./jfrog-setup-cli.sh
+          - jfrog c --url=$JFROG_URL --user=$JFROG_USER_NAME --password=$JFROG_USER_PWD
           - jfrog rt ping
     - step: &buildAPP
         name: Generate the relese build of ssg sample application
