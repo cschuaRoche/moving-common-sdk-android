@@ -30,7 +30,7 @@ definitions:
           - ls $BITBUCKET_CLONE_DIR
           - ls $PROJECT/build/reports/tests/testDebugUnitTest
         artifacts:
-          - $PROJECT/build/reports/tests/testDebugUnitTest/index.html
+          - biometrics/build/reports/tests/testDebugUnitTest/index.html
     - step: &buildArtifact          # step to build Android debug application
         name: Build Application
         size: 2x
