@@ -31,6 +31,7 @@ definitions:
           - ls $PROJECT/build/reports/tests/testDebugUnitTest
         artifacts:
           - biometrics/build/reports/tests/testDebugUnitTest/index.html
+          - RocheCommonSDK/biometrics/build/test-results/testDebugUnitTest/TEST-com.roche.ssg.biometrics.RocheBiometricsManagerTest.xml
     - step: &buildArtifact          # step to build Android debug application
         name: Build Application
         size: 2x
