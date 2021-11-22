@@ -22,17 +22,15 @@ definitions:
         size: 2x
         caches: # caching speed up subsequent execution https://support.atlassian.com/bitbucket-cloud/docs/cache-dependencies/
           - gradle
+        image: atlassian/default-image:2    
         script:
           - cd RocheCommonSDK
           - ./gradlew $PROJECT:testDebugUnitTest
           - ls
-          - echo $BITBUCKET_CLONE_DIR
-          - ls $BITBUCKET_CLONE_DIR
-          - ls $PROJECT/build/reports/tests/testDebugUnitTest
           - zip -r test-result.zip $PROJECT/build/reports/tests/testDebugUnitTest
         artifacts:
           - biometrics/build/reports/tests/testDebugUnitTest/**
-          - test-result.zip
+          - RocheCommonSDK/test-result.zip
     - step: &buildArtifact          # step to build Android debug application
         name: Build Application
         size: 2x
