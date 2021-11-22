@@ -87,4 +87,5 @@
     <string name="push_dialog_message">Please enable Push Notification from the settings for this application</string>
     <string name="push_registered_title">Already Registered</string>
     <string name="push_registered_message">Your device already Registered for Push Notification</string>
+    <string name="amplitude">Amplitude</string>
 </resources>
