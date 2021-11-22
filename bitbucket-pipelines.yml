@@ -27,9 +27,9 @@ definitions:
           - ./gradlew $PROJECT:testDebugUnitTest
           - echo $BITBUCKET_CLONE_DIR
           - ls $BITBUCKET_CLONE_DIR
-          - ls $PROJECT/build/reports/tests/
+          - ls $PROJECT/build/reports/tests/testDebugUnitTest
         artifacts:
-          - $PROJECT/build/reports/tests/**
+          - $PROJECT/build/reports/tests/testDebugUnitTest/index.html
     - step: &buildArtifact          # step to build Android debug application
         name: Build Application
         size: 2x
