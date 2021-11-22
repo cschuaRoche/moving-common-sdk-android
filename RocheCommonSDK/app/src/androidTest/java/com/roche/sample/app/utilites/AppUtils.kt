@@ -2,6 +2,7 @@ package com.roche.sample.app.utilites
 
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.provider.Settings
 import android.util.Log
 import androidx.annotation.IdRes
@@ -74,10 +75,15 @@ object AppUtils {
         val etReenterPin =
             uiDevice.findObject(UiSelector().resourceId("com.android.settings:id/password_entry"))
         etReenterPin.text = "1234"
-
-        val btnConfirm =
-            uiDevice.wait(Until.findObject(By.text("CONFIRM").enabled(true)), 2000)
-        btnConfirm.click()
+        if(Build.VERSION.SDK_INT >=28) {
+            val btnConfirm =
+                uiDevice.wait(Until.findObject(By.text("CONFIRM").enabled(true)), 2000)
+            btnConfirm.click()
+        }else {
+            val btnok =
+                uiDevice.wait(Until.findObject(By.text("OK").enabled(true)), 2000)
+            btnok.click()
+        }
     }
 
     private fun chooseLockScreenDisplay() {

@@ -85,6 +85,7 @@ open class BaseTest : UtiliteTest() {
     }
 
     fun authenticateStatusElementUI() {
+        eyes.checkElement(R.id.btn_authenticate,"Authenticate Button Text")
         eyes.checkElement(R.id.txt_status_authenticate,"Authenticate Status")
     }
 
@@ -93,7 +94,7 @@ open class BaseTest : UtiliteTest() {
     }
 
     fun BiometricOpenApplitool() {
-        eyes.open("Sample App!", "Enroll Authenticate Biometric Features Check")
+        eyes.open("Sample App!", "Enroll Authenticate Biometric Check")
         eyes.checkWindow("Sample App Home Page")
     }
 
