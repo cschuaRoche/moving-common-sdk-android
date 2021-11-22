@@ -48,11 +48,9 @@ definitions:
         caches:
           - gradle
         script:
-          - cd RocheCommonSDK
-          - chmod +x gradlew
-          - export FIREBASE_TOKEN=1//0gUGFeQf_GYLGCgYIARAAGBASNwF-L9IrTsv3YhcRT_UNWturgA2lnnyjafr47cTitw_khjCCj-5-S5PBKXfVazqA6S_GTwrR5zo
-          - ./gradlew aR
-          - ./gradlew biometric:artifactoryPublish
+          - pipe: jfrog/jfrog-setup-cli:1.0.0
+          - source ./jfrog-setup-cli.sh
+          - jfrog rt ping
     - step: &buildAPP
         name: Generate the relese build of ssg sample application
         caches:
