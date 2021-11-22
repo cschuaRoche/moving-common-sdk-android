@@ -29,7 +29,7 @@ definitions:
           - ls
           - zip -r test-result.zip $PROJECT/build/reports/tests/testDebugUnitTest
         artifacts:
-          - biometrics/build/reports/tests/testDebugUnitTest/**
+          - RocheCommonSDK/biometrics/build/reports/tests/testDebugUnitTest/**
           - RocheCommonSDK/test-result.zip
     - step: &buildArtifact          # step to build Android debug application
         name: Build Application
