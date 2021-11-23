@@ -86,6 +86,7 @@ pipelines:
     upload-jfrog-pipeline:
       - variables:
           - name: PROJECT
+          - name: VERSION
       - step: *buildArtifact
     # - step: *uploadToJFrog
     deploy-app-firebase-pipeline:
