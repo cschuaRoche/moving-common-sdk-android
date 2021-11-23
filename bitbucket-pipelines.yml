@@ -42,7 +42,12 @@ definitions:
           - ls $PROJECT/build
           - ls $PROJECT/build/outputs
           - ls $PROJECT/build/outputs/aar
-        artifacts:
+          - pipe: jfrog/jfrog-setup-cli:1.0.0
+          - source ./jfrog-setup-cli.sh
+          - jfrog rt c --url=$JFROG_URL --user=$JFROG_USER_NAME --password=$JFROG_USER_PWD
+          - jfrog rt ping
+          - jfrog rt u "RocheCommonSDK/$PROJECT/build/outputs/aar/$PROJECT-release.aar" mobile-android/RocheCommonComponent/$PROJECT/
+    artifacts:
           - RocheCommonSDK/$PROJECT/build/outputs/aar/release/$PROJECT-release.apk
     - step: &uploadToJFrog          # step to upload the library artifact to JFrog artifactory
         name: Upload to jfrog
