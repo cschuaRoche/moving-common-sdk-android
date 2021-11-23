@@ -41,13 +41,13 @@ definitions:
           - RocheCommonSDK/app/build/outputs/apk/debug/app-debug.apk
           - RocheCommonSDK/app/build/outputs/apk/release/app-release.apk
     - step: &uploadToJFrog          # step to upload the library artifact to JFrog artifactory
-        name: Build Application
+        name: Upload to jfrog
         script:
           - pipe: jfrog/jfrog-setup-cli:1.0.0
           - source ./jfrog-setup-cli.sh
           - jfrog rt c --url=$JFROG_URL --user=$JFROG_USER_NAME --password=$JFROG_USER_PWD
           - jfrog rt ping
-          - jfrog rt u "RocheCommonSDK/app/build/outputs/apk/release/app-release.apk" mobile-android/RocheCommonComponent/biometrics/
+          - jfrog rt u "RocheCommonSDK/$PROJECT/build/outputs/aar/biometrics-release.aar" mobile-android/RocheCommonComponent/biometrics/
     - step: &buildAPP
         name: Generate the relese build of ssg sample application
         caches:
