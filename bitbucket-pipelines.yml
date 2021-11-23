@@ -27,7 +27,7 @@ definitions:
           - ./gradlew $PROJECT:testDebugUnitTest
           - ls
         artifacts:
-          - RocheCommonSDK/biometrics/build/reports/tests/testDebugUnitTest/**
+          - RocheCommonSDK/$PROJECT/build/reports/tests/testDebugUnitTest/**
     - step: &buildArtifact          # step to build Android debug application
         name: Build Application
         size: 2x
@@ -47,6 +47,7 @@ definitions:
           - source ./jfrog-setup-cli.sh
           - jfrog rt c --url=$JFROG_URL --user=$JFROG_USER_NAME --password=$JFROG_USER_PWD
           - jfrog rt ping
+          - jfrog rt u "RocheCommonSDK/app/build/outputs/apk/release/app-release.apk" mobile-android/RocheCommonComponent/biometrics/
     - step: &buildAPP
         name: Generate the relese build of ssg sample application
         caches:
