@@ -1,5 +1,7 @@
 package com.roche.ssg.sample.amplitude
 
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -71,6 +73,9 @@ class AmplitudeFragment : Fragment() {
                 setFlagVersionOneZero()
                 setFlagVersionOneOne()
                 setFlagUnitedStatesUsers()
+                setFlagStudy()
+                setExperimentPercentTest()
+                setExperimentSignUpCreateAccount()
                 setConfiguration()
             }
         })
@@ -100,11 +105,34 @@ class AmplitudeFragment : Fragment() {
         }
     }
 
-    private fun setFlagUnitedStatesUsers(){
+    private fun setFlagUnitedStatesUsers() {
         if (amplitudeViewModel.getFlagUnitedStatesUsers()) {
             binding.btnC.text = getString(R.string.enabled)
             binding.btnC.isEnabled = true
         }
+    }
+
+    private fun setFlagStudy() {
+        if (amplitudeViewModel.getFlagStudy()) {
+            binding.btnD.text = getString(R.string.enabled)
+            binding.btnD.isEnabled = true
+        }
+    }
+
+    private fun setExperimentPercentTest() {
+        if (amplitudeViewModel.getExperimentPercentTest()) {
+            binding.btnE.text = getString(R.string.enabled)
+            binding.btnE.isEnabled = true
+        }
+    }
+
+    private fun setExperimentSignUpCreateAccount() {
+        val experiment = amplitudeViewModel.getExperimentSignUpCreateAccount()
+        binding.btnF.isEnabled = true
+        binding.btnF.text = experiment?.text
+        val color = Color.parseColor(experiment?.color)
+        binding.btnF.backgroundTintList = ColorStateList.valueOf(color)
+        //binding.btnF.setTextColor(Color.parseColor(experiment.textcolor))
     }
 
     private fun setConfiguration() {
