@@ -87,7 +87,7 @@ pipelines:
       - variables:
           - name: PROJECT
       - step: *buildArtifact
-      - step: *uploadToJFrog
+    # - step: *uploadToJFrog
     deploy-app-firebase-pipeline:
       - step: *buildAPP
       - step: *deployToFirebase
