@@ -37,15 +37,11 @@ definitions:
           - cd RocheCommonSDK
           - chmod +x gradlew
           - ./gradlew $PROJECT:assembleRelease
-          - ls
-          - ls $PROJECT
-          - ls $PROJECT/build
-          - ls $PROJECT/build/outputs
-          - ls $PROJECT/build/outputs/aar
           - pipe: jfrog/jfrog-setup-cli:1.0.0
           - source ./jfrog-setup-cli.sh
           - jfrog rt c --url=$JFROG_URL --user=$JFROG_USER_NAME --password=$JFROG_USER_PWD
           - jfrog rt ping
+          - jfrog rt mvn clean install -f $PROJECT/build/publications/aar/pom-default.xml --build-name test --build-number 1.0.0
           - jfrog rt u "$PROJECT/build/outputs/aar/$PROJECT-release.aar" mobile-android/RocheCommonComponent/$PROJECT/$VERSION
       artifacts:
           - RocheCommonSDK/$PROJECT/build/outputs/aar/release/$PROJECT-release.apk
