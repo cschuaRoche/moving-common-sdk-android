@@ -56,7 +56,7 @@ definitions:
           - source ./jfrog-setup-cli.sh
           - jfrog rt c --url=$JFROG_URL --user=$JFROG_USER_NAME --password=$JFROG_USER_PWD
           - jfrog rt ping
-          - jfrog rt u "RocheCommonSDK/$PROJECT/build/outputs/aar/biometrics-release.aar" mobile-android/RocheCommonComponent/biometrics/
+          - jfrog rt u "RocheCommonSDK/$PROJECT/build/outputs/aar/biometrics-release.aar" mobile-android/RocheCommonComponent/biometrics/$VERSION
     - step: &buildAPP
         name: Generate the relese build of ssg sample application
         caches:
