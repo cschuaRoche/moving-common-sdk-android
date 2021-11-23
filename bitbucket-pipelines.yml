@@ -38,10 +38,10 @@ definitions:
           - chmod +x gradlew
           - ./gradlew $PROJECT:assembleRelease
           - ls
-          - ls RocheCommonSDK/$PROJECT
-          - ls RocheCommonSDK/$PROJECT/build
-          - ls RocheCommonSDK/$PROJECT/build/outputs
-          - ls RocheCommonSDK/$PROJECT/build/outputs/aar
+          - ls $PROJECT
+          - ls $PROJECT/build
+          - ls $PROJECT/build/outputs
+          - ls $PROJECT/build/outputs/aar
         artifacts:
           - RocheCommonSDK/$PROJECT/build/outputs/aar/release/$PROJECT-release.apk
     - step: &uploadToJFrog          # step to upload the library artifact to JFrog artifactory
