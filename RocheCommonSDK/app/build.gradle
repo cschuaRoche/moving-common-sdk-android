@@ -131,6 +131,7 @@ dependencies {
     implementation "com.amplifyframework:aws-auth-cognito:${versions.amplify}"
 
     //Amplitude Analytics
-    implementation 'com.amplitude:android-sdk:2.34.1'
-    implementation 'com.squareup.okhttp3:okhttp:4.2.2'
+    implementation "com.amplitude:android-sdk:${versions.amplitude_android_sdk}"
+    implementation "com.squareup.okhttp3:okhttp:${versions.okhttp}"
+    implementation "com.amplitude:experiment-android-client:${versions.amplitude_experiment_android_client}"
 }

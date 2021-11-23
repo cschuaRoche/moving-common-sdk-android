@@ -1,4 +1,4 @@
-package com.roche.ssg.sample
+package com.roche.ssg.sample.vm
 
 import android.app.Application
 import android.util.Log
