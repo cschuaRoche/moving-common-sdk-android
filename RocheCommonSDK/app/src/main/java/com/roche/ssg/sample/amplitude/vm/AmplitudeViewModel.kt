@@ -96,4 +96,4 @@ class AmplitudeViewModel(application: Application) : AndroidViewModel(applicatio
 
 }
 
-data class ExperimentNewUser(val text: String, val color: String)
+data class ExperimentNewUser(val text: String, val color: String, val textColor: String)
