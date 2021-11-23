@@ -66,8 +66,18 @@ definitions:
          - npm install -g firebase-tools
          - firebase appdistribution:distribute $APK_PATH --app $FIREBASE_APP_ID --groups $FIREBASE_GROUPS
 pipelines:
+  #default:
+  #  - step: *runTests
   custom:
     unittestcase-pipeline:
       - variables:
           - name: PROJECT
       - step: *runTestsForModule
+    upload-jfrog-pipeline:
+      - variables:
+          - name: PROJECT
+      - step: *buildArtifact
+      - step: *uploadToJFrog
+    deploy-app-firebase-pipeline:
+      - step: *buildAPP
+      - step: *deployToFirebase
