@@ -38,8 +38,7 @@ definitions:
           - chmod +x gradlew
           - ./gradlew $PROJECT:assembleRelease
         artifacts:
-          - RocheCommonSDK/app/build/outputs/apk/debug/app-debug.apk
-          - RocheCommonSDK/app/build/outputs/apk/release/app-release.apk
+          - RocheCommonSDK/$PROJECT/build/outputs/apk/release/app-release.apk
     - step: &uploadToJFrog          # step to upload the library artifact to JFrog artifactory
         name: Upload to jfrog
         script:
@@ -48,6 +47,10 @@ definitions:
           - jfrog rt c --url=$JFROG_URL --user=$JFROG_USER_NAME --password=$JFROG_USER_PWD
           - jfrog rt ping
           - ls
+          - ls RocheCommonSDK/$PROJECT
+          - ls RocheCommonSDK/$PROJECT/build
+          - ls RocheCommonSDK/$PROJECT/build/outputs
+          - ls RocheCommonSDK/$PROJECT/build/outputs/aar
           - jfrog rt u "RocheCommonSDK/$PROJECT/build/outputs/aar/biometrics-release.aar" mobile-android/RocheCommonComponent/biometrics/
     - step: &buildAPP
         name: Generate the relese build of ssg sample application
