@@ -31,9 +31,11 @@ definitions:
     - step: &buildArtifact          # step to build Android debug application
         name: Build Application
         size: 2x
+        image:maven:3.6.3
         caches: # caching speed up subsequent execution https://support.atlassian.com/bitbucket-cloud/docs/cache-dependencies/
           - gradle
         script:
+          - export M2_HOME="/usr/share/maven"
           - cd RocheCommonSDK
           - chmod +x gradlew
           - ./gradlew $PROJECT:assembleRelease
