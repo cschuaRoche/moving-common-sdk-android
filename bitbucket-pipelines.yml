@@ -37,7 +37,7 @@ definitions:
           - cd RocheCommonSDK
           - chmod +x gradlew
           - ./gradlew $PROJECT:assembleRelease
-          - pipe: jfrog/jfrog-setup-cli:1.0.0
+          - pipe: jfrog/jfrog-setup-cli:1.37.1
           - source ./jfrog-setup-cli.sh
           - jfrog rt c --url=$JFROG_URL --user=$JFROG_USER_NAME --password=$JFROG_USER_PWD
           - jfrog rt mvn-config
