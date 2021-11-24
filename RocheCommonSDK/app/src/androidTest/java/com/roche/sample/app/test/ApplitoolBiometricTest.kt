@@ -61,7 +61,6 @@ class ApplitoolBiometricTest : BaseTest() {
         authenticateStatusUI()
         authenticateStatusElementUI()
         BiometricScreenPage.verifyAuthenticateStatus(AppUtils.string(R.string.text_successful_status_number))
-        Log.i(AppUtils.TAG, "Stop Fingerprint")
         AppUtils.setSecurityLockToNone()
         termiateApp()
     }
