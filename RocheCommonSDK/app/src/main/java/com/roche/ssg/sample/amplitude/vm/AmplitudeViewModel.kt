@@ -38,18 +38,20 @@ class AmplitudeViewModel(application: Application) : AndroidViewModel(applicatio
             try {
                 val apiKey = "client-ZG6BB6P9EjfojouJ1RJ4Y56iW65JZPK1"
 
-                // (2) Configure and initialize the experiment client
                 val config = ExperimentConfig()
                 client = Experiment.initialize(getApplication(), apiKey, config)
 
-                // (3) Fetch variants for a user
-                val user = ExperimentUser.builder()
-                    .userId(users[selectedUser.position].userID)
-                    .version(users[selectedUser.position].version)
-                    .country(users[selectedUser.position].country)
-                    .userProperty("study", users[selectedUser.position].study)
-                    .build()
-                client.fetch(user).get()
+                try {
+                    val experimentUser = ExperimentUser.builder()
+                        .userId(users[selectedUser.position].userID)
+                        .version(users[selectedUser.position].version)
+                        .country(users[selectedUser.position].country)
+                        .userProperty("study", users[selectedUser.position].study)
+                        .build()
+                    client.fetch(experimentUser).get()
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
                 response.postValue(true)
             } catch (e: Exception) {
                 e.printStackTrace()

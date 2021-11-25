@@ -130,9 +130,15 @@ class AmplitudeFragment : Fragment() {
         val experiment = amplitudeViewModel.getExperimentSignUpCreateAccount()
         binding.btnF.isEnabled = true
         binding.btnF.text = experiment?.text
-        val color = Color.parseColor(experiment?.color)
-        binding.btnF.backgroundTintList = ColorStateList.valueOf(color)
-        binding.btnF.setTextColor(Color.parseColor(experiment?.textColor))
+        if (experiment?.color != null) {
+            val color = Color.parseColor(experiment.color)
+            binding.btnF.backgroundTintList = ColorStateList.valueOf(color)
+        }
+
+        if (experiment?.textColor != null) {
+            binding.btnF.setTextColor(Color.parseColor(experiment?.textColor))
+        }
+
     }
 
     private fun setConfiguration() {
