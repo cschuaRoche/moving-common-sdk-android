@@ -11,16 +11,20 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import com.roche.ssg.sample.R
+import com.roche.ssg.sample.data.users
 import com.roche.ssg.sample.databinding.FragmentSplitIoBinding
 import com.roche.ssg.sample.splitio.vm.SplitViewModel
+import com.roche.ssg.sample.vm.UsersViewModel
 
 
 class SplitIoFragment : Fragment() {
 
     private lateinit var binding: FragmentSplitIoBinding
 
-    private val splitViewModel: SplitViewModel by activityViewModels()
+    private val splitViewModel: SplitViewModel by viewModels()
+    private val usersViewModel: UsersViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -44,7 +48,7 @@ class SplitIoFragment : Fragment() {
             Toast.makeText(context, "Enabled Button D..", Toast.LENGTH_LONG).show()
         }
 
-        val currentUser = splitViewModel.users[splitViewModel.selectedUser.position]
+        val currentUser = users[usersViewModel.selectedUser.position]
 
         // Set title
         binding.user.text = currentUser.userName
@@ -60,7 +64,7 @@ class SplitIoFragment : Fragment() {
 
     private fun observeSplitData() {
 
-        splitViewModel.initClient().observe(viewLifecycleOwner, {
+        splitViewModel.initClient(usersViewModel.selectedUser).observe(viewLifecycleOwner, {
             if (it) {
                 binding.isDataAvailable = true
                 setVersionTreatment()

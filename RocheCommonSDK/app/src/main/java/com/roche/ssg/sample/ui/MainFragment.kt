@@ -8,14 +8,15 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import androidx.fragment.app.activityViewModels
 import com.roche.ssg.sample.R
+import com.roche.ssg.sample.data.users
 import com.roche.ssg.sample.databinding.FragmentMainBinding
-import com.roche.ssg.sample.splitio.vm.SplitViewModel
+import com.roche.ssg.sample.vm.UsersViewModel
 
 
 class MainFragment : Fragment() {
 
     private lateinit var binding: FragmentMainBinding
-    private val splitViewModel: SplitViewModel by activityViewModels()
+    private val usersViewModel: UsersViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -23,7 +24,7 @@ class MainFragment : Fragment() {
     ): View {
         // Inflate the layout for this fragment
         binding = FragmentMainBinding.inflate(inflater, container, false)
-        binding.item = splitViewModel.selectedUser
+        binding.item = usersViewModel.selectedUser
         setAllUsers()
         return binding.root
     }
@@ -32,7 +33,7 @@ class MainFragment : Fragment() {
         val adapter = ArrayAdapter(
             requireContext(),
             R.layout.support_simple_spinner_dropdown_item,
-            splitViewModel.users.map { it.userName })
+            users.map { it.userName })
         binding.spinnerUsers.adapter = adapter
     }
 }
