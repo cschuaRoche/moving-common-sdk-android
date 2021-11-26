@@ -18,8 +18,8 @@ class DeregisterApiClientTest {
             "https://floodlight.dhp-dev.dhs.platform.navify.com",
             "test",
             "1234",
-            "mock_firebase_token",
             "valid_mock_auth_token",
+            "mock_firebase_token"
         )
         assertNotNull(response)
     }
@@ -31,8 +31,8 @@ class DeregisterApiClientTest {
                 "https://floodlight.dhp-dev.dhs.platform.navify.com",
                 "test",
                 "1234",
-                "mock_firebase_token",
-                "invalid_mock_auth_token"
+                "invalid_mock_auth_token",
+                "mock_firebase_token"
             )
         }
     }

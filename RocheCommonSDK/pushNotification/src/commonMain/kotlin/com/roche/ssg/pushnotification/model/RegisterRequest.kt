@@ -3,13 +3,21 @@ package com.roche.ssg.pushnotification.model
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class RegisterRequest(
+internal data class RegisterRequest(
     val userId: String,
-    val token: String,
+    val deviceToken: String,
     val os: String,
+    val deviceInfo: DeviceInfo,
+    val metadata: Metadata
+)
+
+@Serializable
+data class DeviceInfo(
     val osVersion: String,
     val model: String,
     val make: String,
-    val appVersion: String,
-    val country: String
+    val appVersion: String
 )
+
+@Serializable
+internal data class Metadata(val country: String)

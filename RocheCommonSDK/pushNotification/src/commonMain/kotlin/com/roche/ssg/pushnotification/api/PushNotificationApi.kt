@@ -6,7 +6,11 @@ import com.roche.ssg.pushnotification.getMake
 import com.roche.ssg.pushnotification.getOS
 import com.roche.ssg.pushnotification.getOSVersion
 import com.roche.ssg.pushnotification.model.DeregisterRequest
+import com.roche.ssg.pushnotification.model.DeregisterResponse
+import com.roche.ssg.pushnotification.model.DeviceInfo
+import com.roche.ssg.pushnotification.model.Metadata
 import com.roche.ssg.pushnotification.model.RegisterRequest
+import com.roche.ssg.pushnotification.model.RegisterResponse
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.features.HttpRequestTimeoutException
@@ -58,21 +62,23 @@ class PushNotificationApi(httpClientEngine: HttpClientEngine) {
         userId: String,
         firebaseToken: String,
         appVersion: String,
-        country: String,
         authorizationToken: String,
+        country: String="",
         os: String = getOS(),
         osVersion: String = getOSVersion(),
         device: String = getDevice(),
         make: String = getMake()
-    ): String {
+    ): RegisterResponse {
         try {
             return httpClient.use {
-                val response: String =
+                val response: RegisterResponse =
                     httpClient.post(getCallingUrl(baseURL, REGISTER_END_POINT)) {
 
                         body = RegisterRequest(
-                            userId, firebaseToken, os, osVersion, device,
-                            make, appVersion, country
+                            userId, firebaseToken, os, DeviceInfo(
+                                osVersion, device,
+                                make, appVersion
+                            ), Metadata(country)
                         )
 
                         contentType(ContentType.Application.Json)
@@ -110,12 +116,12 @@ class PushNotificationApi(httpClientEngine: HttpClientEngine) {
         baseURL: String,
         appId: String,
         userId: String,
-        firebaseToken: String,
-        authorizationToken: String
-    ): String {
+        authorizationToken: String,
+        firebaseToken: String = "",
+    ): DeregisterResponse {
         try {
             return httpClient.use {
-                val response: String =
+                val response: DeregisterResponse =
                     httpClient.post(getCallingUrl(baseURL, DEREGISTER_END_POINT)) {
 
                         body = DeregisterRequest(userId, firebaseToken)
