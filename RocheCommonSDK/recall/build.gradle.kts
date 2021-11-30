@@ -1,5 +1,7 @@
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 
+val versions = rootProject.ext["versions"] as HashMap<String, Any>
+
 plugins {
     kotlin("multiplatform")
     kotlin("plugin.serialization") version "1.4.10"
@@ -66,7 +68,7 @@ kotlin {
         val androidTest by getting {
             dependencies {
                 implementation(kotlin("test-junit"))
-                implementation("junit:junit:4.13.2")
+                implementation("junit:junit:${versions["junit"]}")
                 implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.5.2")
             }
         }
