@@ -8,6 +8,8 @@
     <string name="biometrics">Biometrics</string>
     <string name="unzip">UnZip</string>
     <string name="is_rooted">Check If Device Rooted</string>
+    <string name="security">Security</string>
+    <string name="check_is_security_valid">Is App Security Valid</string>
     <string name="start_chat">Start Chat</string>
     <string name="enter">Enter</string>
     <string name="start_full_chat">Start Chat - Full Screen</string>
