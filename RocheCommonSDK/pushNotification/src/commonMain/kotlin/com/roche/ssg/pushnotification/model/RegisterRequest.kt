@@ -20,4 +20,4 @@ data class DeviceInfo(
 )
 
 @Serializable
-internal data class Metadata(val country: String)
+internal data class Metadata(val country: String, val orgId: String, val hcpId: String)

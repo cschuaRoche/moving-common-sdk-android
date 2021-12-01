@@ -109,8 +109,8 @@ class PushNotificationViewModel(application: Application) : AndroidViewModel(app
                     appId,
                     Amplify.Auth.currentUser.userId,
                     getFirebaseToken()!!,
-                    appVersion,
                     getAuthToken()!!,
+                    appVersion,
                     country,
                 )
                 Log.i("RegisterPushFragment", "Response from Server $response")
