@@ -36,6 +36,10 @@ android {
         buildConfigField "String", "SALESFORCE_BUTTON_ID", configProperties["SALESFORCE_BUTTON_ID"]
         buildConfigField "String", "SALESFORCE_LIVE_AGENT_POD", configProperties["SALESFORCE_LIVE_AGENT_POD"]
 
+        buildConfigField "String", "BASE_URL", configProperties["BASE_URL"]
+        buildConfigField "String", "LICENSE_KEY", configProperties["LICENSE_KEY"]
+        buildConfigField "Boolean", 'IS_OFFLINE_MODE', configProperties["IS_OFFLINE_MODE"]
+
         firebaseAppDistribution {
             appId=getProperty('firebase.appid')
             artifactType="APK"
@@ -113,7 +117,7 @@ dependencies {
     //uiautomator
     androidTestImplementation 'androidx.test.uiautomator:uiautomator:2.2.0'
     implementation project(path: ':rocheCommon')
-//    implementation project(path: ':utils')
+    //implementation project(path: ':utils')
     implementation 'RocheCommonComponent:utils:1.0.1'
 
     // testing

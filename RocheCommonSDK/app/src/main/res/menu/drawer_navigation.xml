@@ -46,7 +46,7 @@
 
         <item
             android:id="@+id/securityCheckerFragment"
-            android:title="@string/security"
+            android:title="@string/verify_license"
             app:actionLayout="@layout/action_view_arrow" />
 
         <item
