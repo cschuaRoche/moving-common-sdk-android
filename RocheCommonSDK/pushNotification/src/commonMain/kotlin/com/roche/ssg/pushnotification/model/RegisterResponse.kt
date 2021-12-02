@@ -5,16 +5,12 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class RegisterResponse(
     val meta: Meta,
-    val resourceId: String,
+    val endpointId:String,
     val userId: String,
-    val token: String,
+    val deviceToken: String,
     val os: String,
-    val osVersion: String,
-    val model: String,
-    val make: String,
-    val appVersion: String,
-    val country: String
+    val deviceInfo: DeviceInfo,
 )
 
 @Serializable
-data class Meta(val transactionId: String, val requestTime: Long)
+data class Meta(val requestTime: String, val transactionId: String)
