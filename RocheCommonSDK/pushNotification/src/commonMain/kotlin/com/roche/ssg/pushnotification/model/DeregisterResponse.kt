@@ -6,5 +6,6 @@ import kotlinx.serialization.Serializable
 data class DeregisterResponse(
     val meta: Meta,
     val userId: String,
-    val token: String
+    val successEndpoints: MutableList<String>? = null,
+    val failureEndpoints: MutableList<String>? = null
 )
