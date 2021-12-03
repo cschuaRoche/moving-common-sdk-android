@@ -62,14 +62,14 @@ class PushNotificationApi(httpClientEngine: HttpClientEngine) {
         userId: String,
         firebaseToken: String,
         authorizationToken: String,
-        appVersion: String = "",
-        country: String = "",
-        os: String = getOS(),
-        osVersion: String = getOSVersion(),
-        device: String = getDevice(),
-        make: String = getMake(),
-        orgId: String = "",
-        hcpId: String = ""
+        appVersion: String? = "",
+        country: String? = "",
+        os: String? = getOS(),
+        osVersion: String? = getOSVersion(),
+        device: String? = getDevice(),
+        make: String? = getMake(),
+        orgId: String? = "",
+        hcpId: String? = ""
     ): RegisterResponse {
         try {
             return httpClient.use {
