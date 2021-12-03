@@ -26,8 +26,8 @@ android {
         applicationId "com.roche.ssg.sample"
         minSdkVersion versions.min_sdk_version
         targetSdkVersion versions.target_sdk_version
-        versionCode 2
-        versionName "1.0.1"
+        versionCode 4
+        versionName "1.0.3"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -35,6 +35,10 @@ android {
         buildConfigField "String", "SALESFORCE_DEPLOYMENT_ID", configProperties["SALESFORCE_DEPLOYMENT_ID"]
         buildConfigField "String", "SALESFORCE_BUTTON_ID", configProperties["SALESFORCE_BUTTON_ID"]
         buildConfigField "String", "SALESFORCE_LIVE_AGENT_POD", configProperties["SALESFORCE_LIVE_AGENT_POD"]
+
+        buildConfigField "String", "BASE_URL", configProperties["BASE_URL"]
+        buildConfigField "String", "LICENSE_KEY", configProperties["LICENSE_KEY"]
+        buildConfigField "Boolean", 'IS_OFFLINE_MODE', configProperties["IS_OFFLINE_MODE"]
 
         firebaseAppDistribution {
             appId=getProperty('firebase.appid')
@@ -107,6 +111,9 @@ dependencies {
     implementation project(path: ':systemMessages')
     implementation project(path: ':pushNotification')
 
+    //  this is required if the security library is integrated via project source
+    implementation project(path: ':lvl_library')
+
     implementation "androidx.biometric:biometric:1.2.0-alpha03"
     implementation "androidx.security:security-crypto:1.1.0-alpha02"
 
@@ -117,7 +124,7 @@ dependencies {
     implementation 'RocheCommonComponent:utils:1.0.1'
 
     // testing
-    testImplementation 'junit:junit:4.+'
+    testImplementation "junit:junit:${versions.junit}"
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
     androidTestImplementation 'com.android.support.test:rules:1.0.2'

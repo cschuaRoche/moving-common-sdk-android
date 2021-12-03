@@ -88,6 +88,12 @@
             tools:layout="@layout/fragment_push_register" />
 
     <fragment
+        android:id="@+id/securityCheckerFragment"
+        android:name="com.roche.ssg.sample.security.ui.MySecurityCheckerFragment"
+        android:label="fragment_security_checker"
+        tools:layout="@layout/fragment_security_checker" />
+
+    <fragment
         android:id="@+id/amplitudeFragment"
         android:name="com.roche.ssg.sample.amplitude.AmplitudeFragment"
         android:label="fragment_amplitude"

@@ -60,39 +60,9 @@ implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
 ```
 
 ## How To Use the Library
-### To enable or disable the license check for a specific build variant or flavor 
-Add a buildConfigField in your app's build.gradle file:
-```
-    buildTypes {
-        release {
-            buildConfigField "boolean", "VALIDATE_LICENSE", "true"
-        }
-        debug {
-            buildConfigField "boolean", "VALIDATE_LICENSE", "false"
-        }
-    }
-```
-### In your Splash Screen or Main Activity you can extend the SecurityCheckerActivity.
-```
-class SplashActivity : SecurityCheckerActivity() {
-    
-    override fun provideBaseUrl(): String {
-        val country = FloodlightApplication.getApplicationCountry(this)
-        val environment = country?.environment ?: getEnvironment(SupportedCountry.US)
-        return environment.url + "/"
-
-    }
-
-    override fun shouldValidateLicense() = BuildConfig.VALIDATE_LICENSE // boolean to enable/disable
-
-    override fun provideLicensingKey() = YOUR_LICENSE_KEY
-
-    override fun onInvalidLicense() {
-        // show a blocking error popup or exit the app to prevent user from using the app
-    }
-}
-```
-### You may also integrate the SecurityCheckerViewModel instead.
+### Integrate the SecurityCheckerViewModel into your Activity
+The best way to integrate the security library is by using the SecurityCheckerViewModel.
+In this example, we will update the Activity based on the SecurityCheckerViewModel's viewStates. 
 ```
 class SplashActivity : YourBaseActivity() {
     private val securityViewModel: SecurityCheckerViewModel by viewModels()
@@ -135,5 +105,38 @@ class SplashActivity : YourBaseActivity() {
     override fun onDestroy() {
         super.onDestroy()
         securityViewModel.onDestroy() // make sure to call destroy to avoid memory leaks
+    }
+```
+### You may extend the SecurityCheckerActivity or SecurityCheckerFragment as well.
+#### Note that this requires Dagger to be integrated since the Views injects the SecurityViewModel
+```
+class SplashActivity : SecurityCheckerActivity() {
+    
+    override fun provideBaseUrl(): String {
+        val country = FloodlightApplication.getApplicationCountry(this)
+        val environment = country?.environment ?: getEnvironment(SupportedCountry.US)
+        return environment.url + "/"
+
+    }
+
+    override fun shouldValidateLicense() = BuildConfig.VALIDATE_LICENSE // boolean to enable/disable
+
+    override fun provideLicensingKey() = YOUR_LICENSE_KEY
+
+    override fun onInvalidLicense() {
+        // show a blocking error popup or exit the app to prevent user from using the app
+    }
+}
+```
+#### To enable or disable the license check for a specific build variant or flavor
+Add a buildConfigField in your app's build.gradle file:
+```
+    buildTypes {
+        release {
+            buildConfigField "boolean", "VALIDATE_LICENSE", "true"
+        }
+        debug {
+            buildConfigField "boolean", "VALIDATE_LICENSE", "false"
+        }
     }
 ```

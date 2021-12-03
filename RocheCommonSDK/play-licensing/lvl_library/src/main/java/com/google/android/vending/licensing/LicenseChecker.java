@@ -284,7 +284,7 @@ public class LicenseChecker implements ServiceConnection {
                 final String signature) {
             mHandler.post(new Runnable() {
                 public void run() {
-                    Log.i(TAG, "Received response.");
+                    Log.i(TAG, "Received response: " + responseCode);
                     // Make sure it hasn't already timed out.
                     if (mChecksInProgress.contains(mValidator)) {
                         clearTimeout();
