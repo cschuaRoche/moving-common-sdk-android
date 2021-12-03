@@ -77,10 +77,10 @@ class PushNotificationApi(httpClientEngine: HttpClientEngine) {
                     httpClient.post(getCallingUrl(baseURL, REGISTER_END_POINT)) {
 
                         body = RegisterRequest(
-                            userId, firebaseToken, os, DeviceInfo(
-                                osVersion, device,
-                                make, appVersion
-                            ), Metadata(country, orgId, hcpId)
+                            userId, firebaseToken, os ?: "", DeviceInfo(
+                                osVersion ?: "", device ?: "",
+                                make ?: "", appVersion ?: ""
+                            ), Metadata(country ?: "", orgId ?: "", hcpId ?: "")
                         )
 
                         contentType(ContentType.Application.Json)
