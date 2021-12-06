@@ -13,7 +13,7 @@ import io.mockk.impl.annotations.MockK
 import io.mockk.mockkObject
 import io.mockk.verify
 import kotlinx.coroutines.runBlocking
-import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.ResponseBody
 import org.junit.Assert
 import org.junit.Before
@@ -196,7 +196,7 @@ class SystemMessagesTest : BaseMockkTest() {
         runBlocking {
             val error = Response.error<String>(
                 RetrofitApiService.APIResponseCode.NOT_FOUND,
-                ResponseBody.create(MediaType.parse("text/plain"), "Test Server Error")
+                ResponseBody.create("text/plain".toMediaTypeOrNull(), "Test Server Error")
             )
             coEvery {
                 SystemMessages.fetchSystemMessages(
