@@ -16,6 +16,8 @@ import com.google.android.gms.tasks.Tasks
 import com.google.firebase.messaging.FirebaseMessaging
 import com.roche.ssg.pushnotification.PushNotificationException
 import com.roche.ssg.pushnotification.api.PushNotificationApi
+import com.roche.ssg.pushnotification.model.DeregisterResponse
+import com.roche.ssg.pushnotification.model.RegisterResponse
 import com.roche.ssg.sample.firebase.MyFirebaseMessagingService
 import com.roche.ssg.utils.PreferenceUtil
 import com.roche.ssg.utils.set
@@ -88,7 +90,9 @@ class PushNotificationViewModel(application: Application) : AndroidViewModel(app
 
     fun registerDevice(
         baseUrl: String = "https://floodlight.dhp-dev.dhs.platform.navify.com",
-        appId: String = "test", appVersion: String = "1.3.1", country: String = "us",
+        appId: String = "com.roche.floodlight",
+        appVersion: String = "1.3.1",
+        country: String = "us",
     ) {
         if (getIsRegistration()) {
             pushNotificationStates.postValue(
@@ -105,9 +109,9 @@ class PushNotificationViewModel(application: Application) : AndroidViewModel(app
                     appId,
                     Amplify.Auth.currentUser.userId,
                     getFirebaseToken()!!,
+                    getAuthToken()!!,
                     appVersion,
                     country,
-                    getAuthToken()!!
                 )
                 Log.i("RegisterPushFragment", "Response from Server $response")
                 saveIsRegistration(true)
@@ -136,7 +140,7 @@ class PushNotificationViewModel(application: Application) : AndroidViewModel(app
 
     fun deregisterDevice(
         baseUrl: String = "https://floodlight.dhp-dev.dhs.platform.navify.com",
-        appId: String = "test"
+        appId: String = "com.roche.floodlight"
     ) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -144,8 +148,8 @@ class PushNotificationViewModel(application: Application) : AndroidViewModel(app
                     baseUrl,
                     appId,
                     Amplify.Auth.currentUser.userId,
-                    getFirebaseToken()!!,
-                    getAuthToken()!!
+                    getAuthToken()!!,
+                    getFirebaseToken()!!
                 )
                 Log.i("RegisterPushFragment", "Response from Server $response")
                 saveIsRegistration(false)
@@ -177,11 +181,11 @@ class PushNotificationViewModel(application: Application) : AndroidViewModel(app
         object LoginSuccess : PushNotificationResult()
         object LoginFailed : PushNotificationResult()
 
-        class RegistrationSuccess(val response: String) : PushNotificationResult()
+        class RegistrationSuccess(val response: RegisterResponse) : PushNotificationResult()
         class RegistrationFailed(val error: Exception) : PushNotificationResult()
         object AlreadyRegistered : PushNotificationResult()
 
-        class DeRegistrationSuccess(val response: String) : PushNotificationResult()
+        class DeRegistrationSuccess(val response: DeregisterResponse) : PushNotificationResult()
         class DeRegistrationFailed(val error: Exception) : PushNotificationResult()
     }
 

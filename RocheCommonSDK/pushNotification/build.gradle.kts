@@ -54,7 +54,7 @@ kotlin {
         val androidTest by getting {
             dependencies {
                 implementation(kotlin("test-junit"))
-                implementation("junit:junit:4.13.2")
+                implementation("junit:junit:${versions["junit"]}")
             }
         }
         val iosMain by getting {

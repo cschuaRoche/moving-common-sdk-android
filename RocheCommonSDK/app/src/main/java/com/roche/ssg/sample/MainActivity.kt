@@ -3,8 +3,10 @@ package com.roche.ssg.sample
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
@@ -14,6 +16,7 @@ import com.roche.ssg.sample.databinding.ActivityMainBinding
 import androidx.navigation.ui.onNavDestinationSelected
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupWithNavController
+import com.amplitude.api.Amplitude
 
 class MainActivity : AppCompatActivity() {
 
@@ -42,6 +45,8 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.setDisplayShowTitleEnabled(false)// remove default titles of the fragments
         setupActionBarWithNavController(navController, appBarConfiguration)
         binding.mainNavigationView.setupWithNavController(navController)
+
+        setDrawerListener()
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -53,5 +58,28 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return item.onNavDestinationSelected(findNavController(R.id.main_nav_host))
                 || super.onOptionsItemSelected(item)
+    }
+
+    private fun setDrawerListener() {
+        binding.mainDrawerLayout.addDrawerListener(object : DrawerLayout.DrawerListener {
+            override fun onDrawerSlide(drawerView: View, slideOffset: Float) {}
+
+            override fun onDrawerOpened(drawerView: View) {
+                logEvent("menu_open")
+            }
+
+            override fun onDrawerClosed(drawerView: View) {}
+
+            override fun onDrawerStateChanged(newState: Int) {}
+        })
+    }
+
+    private fun logEvent(event: String) {
+        try {
+            val client = Amplitude.getInstance()
+            client.logEvent(event)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 }
