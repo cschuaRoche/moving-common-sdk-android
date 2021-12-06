@@ -28,32 +28,6 @@ definitions:
           - ls
         artifacts:
           - RocheCommonSDK/$PROJECT/build/reports/tests/testDebugUnitTest/**
-    - step: &buildArtifact          # step to build Android debug application
-        name: Build Application
-        size: 2x
-        caches: # caching speed up subsequent execution https://support.atlassian.com/bitbucket-cloud/docs/cache-dependencies/
-          - gradle
-        script:
-          - cd RocheCommonSDK
-          - chmod +x gradlew
-          - ./gradlew $PROJECT:assembleRelease
-          - export M2_HOME="/user/share/maven"
-          - pipe: jfrog/jfrog-setup-cli:1.22.1
-          - source ./jfrog-setup-cli.sh
-          - jfrog rt c --url=$JFROG_URL --user=$JFROG_USER_NAME --password=$JFROG_USER_PWD
-          - jfrog rt mvn-config
-          - jfrog rt mvn clean install
-          - jfrog rt bp test 1.0.0
-      artifacts:
-        - RocheCommonSDK/$PROJECT/build/outputs/aar/release/$PROJECT-release.apk
-    - step: &uploadToJFrog          # step to upload the library artifact to JFrog artifactory
-        name: Upload to jfrog
-        script:
-          - pipe: jfrog/jfrog-setup-cli:1.0.0
-          - source ./jfrog-setup-cli.sh
-          - jfrog rt c --url=$JFROG_URL --user=$JFROG_USER_NAME --password=$JFROG_USER_PWD
-          - jfrog rt ping
-          - jfrog rt u "RocheCommonSDK/$PROJECT/build/outputs/aar/biometrics-release.aar" mobile-android/RocheCommonComponent/biometrics/$VERSION
     - step: &buildAPP
         name: Generate the relese build of ssg sample application
         caches:
@@ -80,12 +54,6 @@ pipelines:
       - variables:
           - name: PROJECT
       - step: *runTestsForModule
-    upload-jfrog-pipeline:
-      - variables:
-          - name: PROJECT
-          - name: VERSION
-      - step: *buildArtifact
-    # - step: *uploadToJFrog
     deploy-app-firebase-pipeline:
       - step: *buildAPP
       - step: *deployToFirebase
