@@ -39,11 +39,6 @@ android {
         buildConfigField "String", "LICENSE_KEY", configProperties["LICENSE_KEY"]
         buildConfigField "Boolean", 'IS_OFFLINE_MODE', configProperties["IS_OFFLINE_MODE"]
 
-        firebaseAppDistribution {
-            appId=getProperty('firebase.appid')
-            artifactType="APK"
-            groups="ssg-tester-group"
-        }
     }
 
     buildTypes {
