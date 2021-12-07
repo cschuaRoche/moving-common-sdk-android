@@ -43,6 +43,9 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             Log.d("MyFirebaseMessagingService", "consuming notification")
             showNotification(notification, data)
         }
+
+        // Use data for Roche pinpoint
+        showNotificationForRoche(data)
     }
 
     override fun onNewToken(token: String) {
@@ -50,6 +53,65 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         saveToken(token)
         Log.i("MyFirebaseMessagingService", "Token from onNewToken $token")
 
+    }
+
+    /**
+     * Create and show a custom notification containing the received FCM message.
+     *
+     * @param notification FCM notification payload received.
+     * @param data FCM data payload received.
+     */
+    private fun showNotificationForRoche(
+        data: Map<String, String>
+    ) {
+        val intent = Intent(this, MainActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        val pendingIntent: PendingIntent =
+            PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT)
+        val notificationBuilder: NotificationCompat.Builder =
+            NotificationCompat.Builder(this, "channel_id")
+                .setContentTitle(data["pinpoint.notification.title"])
+                .setContentText(data["pinpoint.notification.body"])
+                .setAutoCancel(true)
+                .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
+                .setContentIntent(pendingIntent)
+                .setContentInfo(data["pinpoint.notification.title"])
+                .setColor(Color.BLUE)
+                .setLights(Color.BLUE, 1000, 300)
+                .setDefaults(Notification.DEFAULT_VIBRATE)
+                .setSmallIcon(R.drawable.ic_baseline_notification_important)
+        try {
+            val pictureURL = data["pinpoint.campaign.campaign_id"]
+            if (pictureURL != null && "" != pictureURL) {
+                val url = URL(pictureURL)
+                val bigPicture: Bitmap =
+                    BitmapFactory.decodeStream(url.openConnection().getInputStream())
+                notificationBuilder.setStyle(
+                    NotificationCompat.BigPictureStyle().bigPicture(bigPicture)
+                        .setSummaryText(data["pinpoint.notification.body"])
+                )
+            }
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+        val notificationManager: NotificationManager =
+            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+        // Notification Channel is required for Android O and above
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(
+                "channel_id", "channel_name", NotificationManager.IMPORTANCE_DEFAULT
+            )
+            channel.description = "channel description"
+            channel.setShowBadge(true)
+            channel.canShowBadge()
+            channel.enableLights(true)
+            channel.lightColor = Color.RED
+            channel.enableVibration(true)
+            channel.vibrationPattern = longArrayOf(100, 200, 300, 400, 500)
+            notificationManager.createNotificationChannel(channel)
+        }
+        notificationManager.notify(0, notificationBuilder.build())
     }
 
     /**

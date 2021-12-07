@@ -13,10 +13,10 @@ internal data class RegisterRequest(
 
 @Serializable
 data class DeviceInfo(
-    val osVersion: String,
-    val model: String,
-    val make: String,
-    val appVersion: String
+    val osVersion: String?,
+    val model: String?,
+    val make: String?,
+    val appVersion: String?
 )
 
 @Serializable
