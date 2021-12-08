@@ -8,6 +8,12 @@
     <string name="biometrics">Biometrics</string>
     <string name="unzip">UnZip</string>
     <string name="is_rooted">Check If Device Rooted</string>
+    <string name="verify_license">Verify License</string>
+    <string name="valid_license">The App license is valid.</string>
+    <string name="valid_license_debug">The App license is always valid in Debug Mode.</string>
+    <string name="security_check_ignored">The security check is ignored.</string>
+    <string name="retry_security_check">Security check error, please try again later.</string>
+    <string name="check_is_security_valid">Is App Security Valid</string>
     <string name="start_chat">Start Chat</string>
     <string name="enter">Enter</string>
     <string name="start_full_chat">Start Chat - Full Screen</string>
@@ -36,11 +42,14 @@
     <string name="chat_session_ended">Chat session has ended.</string>
     <string name="downloaded_path">Materials downloaded to: %1$s</string>
     <string name="error">Error: %1$s</string>
+    <string name="hint_manifest_url">Manifest URL</string>
+    <string name="hint_target_sub_dir">Target Sub Directory</string>
     <string name="hint_app_version">App Version</string>
     <string name="hint_locale">Locale</string>
     <string name="hint_file_type">File Type</string>
     <string name="txt_wifi_only">Wifi Only</string>
     <string name="txt_download">Download</string>
+    <string name="txt_fcm_token_with_label">FCM Token: %1$s</string>
 
     <!-- Salesforce strings must be included if you want to localize them -->
     <!--
@@ -63,15 +72,26 @@
     <string name="disabled">Disabled</string>
     <string name="enabled">Enabled</string>
     <string name="user">USER</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
     <string name="system_messages">System Messages</string>
-    <string name="type">Comma Separated Message Types</string>
+    <string name="type">Comma separated valid message types</string>
     <string name="request_system_messages">Request system messages</string>
     <string name="clear_cache">Clear Cache</string>
     <string name="ok">Okay</string>
     <string name="do_not_show_again">Do not show again</string>
-    <string name="app_or_samd_id">App or SAMD ID</string>
-    <string name="app_or_samd_version">App or SAMD Version</string>
+    <string name="app_or_samd_id">App or SaMD ID</string>
+    <string name="app_or_samd_version">App or SaMD Version</string>
     <string name="country_optional">Country (Optional)</string>
+    <string name="system_messages_not_available">System messages are not available</string>
+
+    <!-- Push Strings-->
+    <string name="push_notification">Push Notification</string>
+    <string name="btn_txt_login">Login</string>
+    <string name="btn_txt_register">Register for Push Notifications</string>
+    <string name="btn_txt_unregister">Unregister for Push Notifications</string>
+    <string name="push_dialog_title">Notification Disabled</string>
+    <string name="push_dialog_message">Please enable Push Notification from the settings for this application</string>
+    <string name="push_registered_title">Already Registered</string>
+    <string name="push_registered_message">Your device already Registered for Push Notification</string>
+    <string name="amplitude">Amplitude</string>
 </resources>

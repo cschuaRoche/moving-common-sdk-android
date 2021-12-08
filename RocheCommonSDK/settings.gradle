@@ -4,7 +4,9 @@ include ':rocheCommon'
 include ':biometrics'
 include ':app'
 project(':lvl_library').projectDir = new File(rootDir, 'play-licensing/lvl_library/')
-rootProject.name = "RocheCommonSampleApp"
+rootProject.name = "RocheSSGLibraries"
 include ':utils'
 include ':staticContent'
 include ':recall'
+include ':systemMessages'
+include ':pushNotification'

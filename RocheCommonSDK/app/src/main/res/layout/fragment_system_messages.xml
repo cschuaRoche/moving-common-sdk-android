@@ -6,96 +6,114 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="15dp"
         tools:context=".SystemMessagesFragment">
 
-        <androidx.appcompat.widget.AppCompatEditText
-            android:id="@+id/et_type"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:hint="@string/base_url"
-            android:inputType="text"
-            android:lines="1"
-            android:maxLines="1"
-            android:minHeight="48dp"
-            android:singleLine="true"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="15dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent">
 
-        <androidx.appcompat.widget.AppCompatEditText
-            android:id="@+id/et_url"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:hint="@string/type"
-            android:inputType="text"
-            android:lines="1"
-            android:maxLines="1"
-            android:minHeight="48dp"
-            android:singleLine="true"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/et_type" />
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/et_url"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/base_url"
+                android:inputType="text"
+                android:lines="1"
+                android:maxLines="1"
+                android:minHeight="48dp"
+                android:singleLine="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.appcompat.widget.AppCompatEditText
-            android:id="@+id/et_app_samd_id"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:hint="@string/app_or_samd_id"
-            android:inputType="text"
-            android:lines="1"
-            android:maxLines="1"
-            android:minHeight="48dp"
-            android:singleLine="true"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/et_url" />
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/et_type"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/type"
+                android:inputType="text"
+                android:lines="1"
+                android:maxLines="1"
+                android:minHeight="48dp"
+                android:singleLine="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/et_url" />
 
-        <androidx.appcompat.widget.AppCompatEditText
-            android:id="@+id/et_app_samd_version"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:hint="@string/app_or_samd_version"
-            android:inputType="text"
-            android:lines="1"
-            android:maxLines="1"
-            android:minHeight="48dp"
-            android:singleLine="true"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/et_app_samd_id" />
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/et_app_samd_id"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/app_or_samd_id"
+                android:inputType="text"
+                android:lines="1"
+                android:maxLines="1"
+                android:minHeight="48dp"
+                android:singleLine="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/et_type" />
 
-        <androidx.appcompat.widget.AppCompatEditText
-            android:id="@+id/et_country"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:hint="@string/country_optional"
-            android:inputType="text"
-            android:lines="1"
-            android:maxLines="1"
-            android:minHeight="48dp"
-            android:singleLine="true"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/et_app_samd_version" />
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/et_app_samd_version"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/app_or_samd_version"
+                android:inputType="text"
+                android:lines="1"
+                android:maxLines="1"
+                android:minHeight="48dp"
+                android:singleLine="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/et_app_samd_id" />
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btn_request_system_messages"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@string/request_system_messages"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/et_country" />
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/et_country"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/country_optional"
+                android:inputType="text"
+                android:lines="1"
+                android:maxLines="1"
+                android:minHeight="48dp"
+                android:singleLine="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/et_app_samd_version" />
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btn_clear_cache"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@string/clear_cache"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/btn_request_system_messages" />
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_request_system_messages"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/request_system_messages"
+                app:layout_constraintBottom_toTopOf="@id/txt_error"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/et_country" />
 
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/txt_error"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/unit_2"
+                android:textColor="@android:color/holo_red_dark"
+                android:textSize="18sp"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/btn_request_system_messages" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <include
+            android:id="@+id/progress_bar"
+            layout="@layout/v_progress_view"
+            tools:visibility="visible" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

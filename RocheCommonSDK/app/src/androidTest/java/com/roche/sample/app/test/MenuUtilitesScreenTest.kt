@@ -1,10 +1,9 @@
 package com.roche.sample.app.test
 
-import android.view.Menu
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.roche.roche.dis.MainActivity
-import com.roche.roche.dis.R
+import com.roche.ssg.sample.MainActivity
+import com.roche.ssg.sample.R
 import com.roche.sample.app.pages.HomeScreenPage
 import com.roche.sample.app.pages.MenuUtilitesScreenPage
 import com.roche.sample.app.utilites.AppUtils

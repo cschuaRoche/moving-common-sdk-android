@@ -6,9 +6,11 @@ plugins {
 
 apply plugin: "androidx.navigation.safeargs.kotlin"
 apply plugin: 'com.google.firebase.appdistribution'
+apply plugin: 'com.google.gms.google-services'
+apply from: "signing.gradle"
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion versions.compile_sdk_version
     buildToolsVersion "29.0.3"
 
     packagingOptions {
@@ -21,11 +23,11 @@ android {
     configProperties.load(new FileInputStream(configPropertiesFile))
 
     defaultConfig {
-        applicationId "com.roche.roche.dis.biometrics"
-        minSdkVersion 24
-        targetSdkVersion 30
-        versionCode 1
-        versionName "1.0"
+        applicationId "com.roche.ssg.sample"
+        minSdkVersion versions.min_sdk_version
+        targetSdkVersion versions.target_sdk_version
+        versionCode 4
+        versionName "1.0.3"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -33,26 +35,28 @@ android {
         buildConfigField "String", "SALESFORCE_DEPLOYMENT_ID", configProperties["SALESFORCE_DEPLOYMENT_ID"]
         buildConfigField "String", "SALESFORCE_BUTTON_ID", configProperties["SALESFORCE_BUTTON_ID"]
         buildConfigField "String", "SALESFORCE_LIVE_AGENT_POD", configProperties["SALESFORCE_LIVE_AGENT_POD"]
+
+        buildConfigField "String", "BASE_URL", configProperties["BASE_URL"]
+        buildConfigField "String", "LICENSE_KEY", configProperties["LICENSE_KEY"]
+        buildConfigField "Boolean", 'IS_OFFLINE_MODE', configProperties["IS_OFFLINE_MODE"]
+
+        firebaseAppDistribution {
+            appId=getProperty('firebase.appid')
+            artifactType="APK"
+            groups="ssg-tester-group"
+        }
     }
 
     buildTypes {
         release {
-            firebaseAppDistribution {
-                appId=getProperty('firebase.appid')
-                artifactType="APK"
-                groups="pass-tester-group"
-            }
             minifyEnabled false
+            debuggable false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             buildConfigField "Boolean", 'ENABLE_SECURITY', "true"
+            signingConfig signingConfigs.release
         }
 
         debug {
-            firebaseAppDistribution {
-                appId=getProperty('firebase.appid')
-                artifactType="APK"
-                testers = "dhaiwat.bhavsar@contractors.roche.com, sanket.shah.ss1@contractors.roche.com"
-            }
             testCoverageEnabled true
             debuggable true
             buildConfigField "Boolean", 'ENABLE_SECURITY', "false"
@@ -72,6 +76,9 @@ android {
     viewBinding {
         enabled = true
     }
+    configurations {
+        all*.exclude group: 'com.google.guava', module: 'listenablefuture'
+    }
 }
 
 dependencies {
@@ -85,6 +92,11 @@ dependencies {
     implementation 'com.google.android.material:material:1.2.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
 
+    // firebase
+    implementation platform("com.google.firebase:firebase-bom:$versions.firebase")
+    implementation 'com.google.firebase:firebase-analytics-ktx'
+    implementation 'com.google.firebase:firebase-messaging'
+
     // salesforce
     implementation 'com.salesforce.service:chat-core:4.2.0'
     implementation 'com.salesforce.service:chat-ui:4.2.0'
@@ -95,19 +107,24 @@ dependencies {
     implementation project(path: ':staticContent')
     implementation project(path: ':biometrics')
     implementation project(path: ':security')
-
-
     implementation project(path: ':recall')
+    implementation project(path: ':systemMessages')
+    implementation project(path: ':pushNotification')
+
+    //  this is required if the security library is integrated via project source
+    implementation project(path: ':lvl_library')
+
     implementation "androidx.biometric:biometric:1.2.0-alpha03"
     implementation "androidx.security:security-crypto:1.1.0-alpha02"
 
     //uiautomator
     androidTestImplementation 'androidx.test.uiautomator:uiautomator:2.2.0'
     implementation project(path: ':rocheCommon')
-    implementation project(path: ':utils')
+    //implementation project(path: ':utils')
+    implementation 'RocheCommonComponent:utils:1.0.1'
 
     // testing
-    testImplementation 'junit:junit:4.+'
+    testImplementation "junit:junit:${versions.junit}"
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
     androidTestImplementation 'com.android.support.test:rules:1.0.2'
@@ -116,4 +133,12 @@ dependencies {
     //Split.io
     implementation "io.split.client:android-client:${versions.split_version}"
     implementation "com.google.code.gson:gson:${versions.gson_version}"
+
+    //Amplify
+    implementation "com.amplifyframework:aws-auth-cognito:${versions.amplify}"
+
+    //Amplitude Analytics
+    implementation "com.amplitude:android-sdk:${versions.amplitude_android_sdk}"
+    implementation "com.squareup.okhttp3:okhttp:${versions.okhttp}"
+    implementation "com.amplitude:experiment-android-client:${versions.amplitude_experiment_android_client}"
 }
