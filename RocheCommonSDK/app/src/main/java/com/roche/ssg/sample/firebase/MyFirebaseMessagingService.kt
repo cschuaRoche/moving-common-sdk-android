@@ -27,7 +27,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         val notification: RemoteMessage.Notification? = message.notification
         val data: Map<String, String> = message.data
 
-        NotificationUtils(this).showRocheNotification(notification, data, getPendingIntent())
+        NotificationUtils(this).showRocheNotification(data, getPendingIntent())
     }
 
     private fun getPendingIntent(): PendingIntent {
