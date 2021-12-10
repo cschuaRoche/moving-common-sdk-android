@@ -89,4 +89,14 @@
     <string name="push_registered_message">Your device already Registered for Push Notification</string>
     <string name="amplitude">Amplitude</string>
     <string name="navify_platform_login">Navify Platform Login</string>
+    <string name="login_to_navify">Login to Navify Platform</string>
+    <string name="authentication_successful">Authentication Successful</string>
+    <string name="logout">Logout</string>
+    <string name="authentication_failed">Authentication Failed</string>
+    <string name="email_verified">Email Verified</string>
+    <string name="name">Name</string>
+    <string name="preferred_username">Preferred Username</string>
+    <string name="given_name">Given Name</string>
+    <string name="family_name">Family Name</string>
+    <string name="email">Email</string>
 </resources>
