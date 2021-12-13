@@ -114,8 +114,8 @@ dependencies {
     //uiautomator
     androidTestImplementation 'androidx.test.uiautomator:uiautomator:2.2.0'
     implementation project(path: ':rocheCommon')
-    //implementation project(path: ':utils')
-    implementation 'RocheCommonComponent:utils:1.0.1'
+    implementation project(path: ':utils')
+    //implementation 'RocheCommonComponent:utils:1.0.1'
 
     // testing
     testImplementation "junit:junit:${versions.junit}"
