@@ -20,7 +20,7 @@ class NavifyLoginFragment : Fragment() {
     private lateinit var mBinding: FragmentNavifyLoginBinding
 
     private val mNavifyLoginViewModel: NavifyLoginViewModel by viewModels()
-
+    private var isLoginFLow = true
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -40,12 +40,22 @@ class NavifyLoginFragment : Fragment() {
                 || currentState is NavifyLoginViewModel.NavifyLoginResult.LoginFailed
             ) {
                 login()
+            } else {
+                logout()
             }
         }
     }
 
     private fun login() {
-        resultLauncher.launch(Intent(activity, LoginActivity::class.java))
+        val intent = Intent(activity, LoginActivity::class.java)
+        intent.putExtra("AUTH_FLOW", 1)
+        isLoginFLow = true
+        resultLauncher.launch(intent)
+    }
+
+    private fun logout() {
+        isLoginFLow = false
+        mNavifyLoginViewModel.logout()
     }
 
     private var resultLauncher =
@@ -60,7 +70,8 @@ class NavifyLoginFragment : Fragment() {
             } else if (result.resultCode == Activity.RESULT_CANCELED) {
                 Log.i("Testing", "Authentication cancelled")
             }
-            mNavifyLoginViewModel.validateAuthCode(authCode)
+            if (isLoginFLow)
+                mNavifyLoginViewModel.validateAuthCode(authCode)
         }
 
     private fun setViewStateObserver() {
@@ -87,6 +98,15 @@ class NavifyLoginFragment : Fragment() {
                 }
                 is NavifyLoginViewModel.NavifyLoginResult.LoginUserInfoFailed -> {
                     hideUserInfo()
+                }
+                is NavifyLoginViewModel.NavifyLoginResult.LogoutSuccessful -> {
+                    val intent = Intent(activity, LoginActivity::class.java)
+                    intent.putExtra("AUTH_FLOW", 2)
+                    isLoginFLow = false
+                    resultLauncher.launch(intent)
+                }
+                is NavifyLoginViewModel.NavifyLoginResult.LogoutFailed -> {
+
                 }
             }
         })

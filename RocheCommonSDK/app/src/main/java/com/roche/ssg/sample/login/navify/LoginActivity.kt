@@ -10,18 +10,47 @@ import com.roche.ssg.sample.R
 
 class LoginActivity : AppCompatActivity() {
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.i("Testing", "inside onCreate")
         setContentView(R.layout.activity_login)
 
+        if(intent.hasExtra("AUTH_FLOW")){
+            val flowType=intent.getIntExtra("AUTH_FLOW",0)
+            if(flowType==1){
+                startLogin()
+            }else if (flowType==2){
+                startLogout()
+            }
+        }
+    }
+
+    private fun startLogin(){
         val scope = "openid"
         val redirectUri = "roche://com.roche.ssg/auth/callback"
         val clientId = "ssg-dev-reference-app-patient"
 
         val builtUri =
             Uri.parse("https://keycloak.appdevus.platform.navify.com/auth/realms/patients/protocol/openid-connect/auth?")
+                .buildUpon()
+                .appendQueryParameter("client_id", clientId)
+                .appendQueryParameter("scope", scope)
+                .appendQueryParameter("redirect_uri", redirectUri)
+                .appendQueryParameter("response_type", "code")
+
+        val browserIntent =
+            Intent(Intent.ACTION_VIEW, builtUri.build())
+                .setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_HISTORY or Intent.FLAG_FROM_BACKGROUND)
+        startActivity(browserIntent)
+    }
+
+    private fun startLogout(){
+        val redirectUri = "roche://com.roche.ssg/auth/callback"
+        val clientId = "2o544hm96i0jsf1eie7a97ve6h"
+        val scope = "openid"
+
+        val builtUri =
+            Uri.parse("https://ssg-patient-dev.auth.us-east-1.amazoncognito.com/logout?")
                 .buildUpon()
                 .appendQueryParameter("client_id", clientId)
                 .appendQueryParameter("scope", scope)
