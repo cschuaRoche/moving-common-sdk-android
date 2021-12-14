@@ -7,19 +7,53 @@
 # Note: This docker image is created and maintained by a non official third party. For more details see: https://hub.docker.com/r/androidsdk/android-30
 image: androidsdk/android-30
 
+definitions:
+  steps:
+    - step: &runTests          # step to build Android debug application
+        name: Execute Unit testcase
+        size: 2x
+        caches:       # caching speed up subsequent execution https://support.atlassian.com/bitbucket-cloud/docs/cache-dependencies/
+          - gradle
+        script:
+          - cd RocheCommonSDK
+          - ./gradlew testDebugUnitTest
+    - step: &runTestsForModule         # step to build Android debug application
+        name: Execute Unit testcase
+        size: 2x
+        caches: # caching speed up subsequent execution https://support.atlassian.com/bitbucket-cloud/docs/cache-dependencies/
+          - gradle
+        script:
+          - cd RocheCommonSDK
+          - ./gradlew $PROJECT:testDebugUnitTest
+          - ls
+        artifacts:
+          - RocheCommonSDK/$PROJECT/build/reports/tests/testDebugUnitTest/**
+    - step: &buildAPP
+        name: Generate the relese build of ssg sample application
+        caches:
+          - gradle
+        script:
+          - cd RocheCommonSDK
+          - chmod +x gradlew
+          - ./gradlew app:assembleRelease
+        artifacts:
+          - RocheCommonSDK/app/build/outputs/apk/release/app-release.apk
+    - step: &deployToFirebase
+        name: Deploy To Firebase
+        caches:
+          - node
+        image: node
+        script:
+          - npm install -g firebase-tools
+          - firebase appdistribution:distribute $APK_PATH --app $FIREBASE_APP_ID --groups $FIREBASE_GROUPS
 pipelines:
-  default:                # pipeline definition for all branches
-        - step:           # step to build Android debug application
-            name: Android Debug Application
-            size: 2x
-            caches:       # caching speed up subsequent execution https://support.atlassian.com/bitbucket-cloud/docs/cache-dependencies/
-              - gradle
-            script:
-              - cd RocheCommonSDK
-              - chmod +x gradlew
-              - export FIREBASE_TOKEN=1//0gUGFeQf_GYLGCgYIARAAGBASNwF-L9IrTsv3YhcRT_UNWturgA2lnnyjafr47cTitw_khjCCj-5-S5PBKXfVazqA6S_GTwrR5zo
-              - ./gradlew assemblerelease appDistributionUploadRelease --stacktrace
-              - ./gradlew biometric:artifactoryPublish
-            artifacts:
-              - RocheCommonSDK/app/build/outputs/apk/debug/app-debug.apk     # artifacts are files that are produced by a step https://support.atlassian.com/bitbucket-cloud/docs/use-artifacts-in-steps/
-              
+  default:
+    - step: *runTests
+  custom:
+    unittestcase-pipeline:
+      - variables:
+          - name: PROJECT
+      - step: *runTestsForModule
+    deploy-app-firebase-pipeline:
+      - step: *buildAPP
+      - step: *deployToFirebase

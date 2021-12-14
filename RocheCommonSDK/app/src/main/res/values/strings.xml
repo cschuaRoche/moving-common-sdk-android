@@ -8,6 +8,12 @@
     <string name="biometrics">Biometrics</string>
     <string name="unzip">UnZip</string>
     <string name="is_rooted">Check If Device Rooted</string>
+    <string name="verify_license">Verify License</string>
+    <string name="valid_license">The App license is valid.</string>
+    <string name="valid_license_debug">The App license is always valid in Debug Mode.</string>
+    <string name="security_check_ignored">The security check is ignored.</string>
+    <string name="retry_security_check">Security check error, please try again later.</string>
+    <string name="check_is_security_valid">Is App Security Valid</string>
     <string name="start_chat">Start Chat</string>
     <string name="enter">Enter</string>
     <string name="start_full_chat">Start Chat - Full Screen</string>

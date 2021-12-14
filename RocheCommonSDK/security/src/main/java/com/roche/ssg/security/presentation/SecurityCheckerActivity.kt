@@ -46,21 +46,27 @@ abstract class SecurityCheckerActivity : AppCompatActivity() {
     }
 
     protected open fun onDeviceRooted() {
-        RocheDialogFactory.showRootedDeviceDialog(this) {
-            finish()
+        if (!isFinishing) {
+            RocheDialogFactory.showRootedDeviceDialog(this) {
+                finish()
+            }
         }
     }
 
     protected open fun onInvalidLicense() {
-        RocheDialogFactory.showInvalidLicenseDialog(this) {
-            finish()
+        if (!isFinishing) {
+            RocheDialogFactory.showInvalidLicenseDialog(this) {
+                finish()
+            }
         }
     }
 
     protected open fun onRetry() {
-        // We don't have a specific logic for retry, so default to network error
-        RocheDialogFactory.showNonCancellableNetworkErrorDialog(this) {
-            finish()
+        if (!isFinishing) {
+            // We don't have a specific logic for retry, so default to network error
+            RocheDialogFactory.showNonCancellableNetworkErrorDialog(this) {
+                finish()
+            }
         }
     }
 

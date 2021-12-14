@@ -22,11 +22,7 @@ class RegisterApiClientTest {
             "mock_firebase_token",
             "valid_mock_auth_token",
             "1.3.1",
-            "us",
-            "mock_os",
-            "mock_os_version",
-            "mock_device",
-            "mock_make"
+            "us"
         )
         assertNotNull(response)
     }
@@ -41,11 +37,7 @@ class RegisterApiClientTest {
                 "mock_firebase_token",
                 "invalid_mock_auth_token",
                 "1.3.1",
-                "us",
-                "mock_os",
-                "mock_os_version",
-                "mock_device",
-                "mock_make"
+                "us"
             )
         }
     }
