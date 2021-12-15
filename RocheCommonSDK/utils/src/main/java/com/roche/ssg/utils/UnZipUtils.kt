@@ -2,7 +2,6 @@ package com.roche.ssg.utils
 
 import android.content.Context
 import android.util.Log
-import org.apache.commons.compress.utils.IOUtils
 import java.io.*
 import java.util.zip.ZipEntry
 import java.util.zip.ZipInputStream
@@ -121,7 +120,7 @@ object UnZipUtils {
         val outputFile =
             File(destDirectory.toString() + File.separator + zipEntry.name)
         outputFile.parentFile?.mkdirs()
-        IOUtils.copy(zipStream, FileOutputStream(outputFile))
+        zipStream.copyTo(FileOutputStream(outputFile))
         zipStream.closeEntry()
     }
 
