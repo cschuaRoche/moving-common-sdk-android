@@ -49,8 +49,8 @@ dependencies {
     implementation 'com.google.android.material:material:1.4.0'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.1'
 
-    implementation project(path: ':utils')
-    //api 'RocheCommonComponent:utils:1.0.1'
+    //implementation project(path: ':utils')
+    api 'RocheCommonComponent:utils:1.0.2'
 
     testImplementation "junit:junit:${versions.junit}"
     testImplementation "io.mockk:mockk:1.12.0"

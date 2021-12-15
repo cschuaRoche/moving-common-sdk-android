@@ -27,13 +27,6 @@ allprojects {
         google()
         jcenter()
 
-        maven { // salesforce
-            url 'https://s3.amazonaws.com/salesforcesos.com/android/maven/release'
-        }
-        maven { // salesforce
-            url 'http://tokbox.bintray.com/maven/'
-        }
-
         maven {
             url "https://dhs.jfrog.io/dhs/mobile-android/"
             // The Artifactory (preferably virtual) repository to resolve from
@@ -42,6 +35,16 @@ allprojects {
                 password = getProperty('artifactory.password')
             }
         }
+
+        maven { // salesforce
+            url 'https://s3.amazonaws.com/salesforcesos.com/android/maven/release'
+        }
+
+        maven { // salesforce
+            url 'http://tokbox.bintray.com/maven/'
+        }
+
+
     }
 }
 
