@@ -58,7 +58,7 @@ class RecallApiClient(httpClientEngine: HttpClientEngine) {
             initLogger()
         }
     }
-
+    @Throws(RecallException::class,Exception::class)
     suspend fun checkAppRecall(baseURL: String, appId: String, appVersion: String, country: String): AppRecallResponse {
         try {
             return httpClient.use {
@@ -87,7 +87,7 @@ class RecallApiClient(httpClientEngine: HttpClientEngine) {
             }
         }
     }
-
+    @Throws(RecallException::class,Exception::class)
     suspend fun checkSaMDRecall(baseURL: String, country: String, samdIds: List<String>): List<SamdResponse> {
         try {
             return httpClient.use {
