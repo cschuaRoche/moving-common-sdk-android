@@ -45,7 +45,8 @@ definitions:
         image: node
         script:
           - npm install -g firebase-tools
-          - firebase appdistribution:distribute $APK_PATH --app $FIREBASE_APP_ID --groups $FIREBASE_GROUPS
+          - firebase appdistribution:distribute $APK_PATH --app $FIREBASE_APP_ID --release-notes-file $RELEASE_NOTES_PATH --groups $FIREBASE_GROUPS
+
 pipelines:
   default:
     - step: *runTests
