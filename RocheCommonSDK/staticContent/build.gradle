@@ -11,7 +11,7 @@ android {
         minSdkVersion 24
         targetSdkVersion 30
         versionCode 1
-        versionName "1.0.2"
+        versionName "1.0.3"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
@@ -49,8 +49,8 @@ dependencies {
     implementation 'com.google.android.material:material:1.4.0'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.1'
 
-    implementation project(path: ':utils')
-    //api 'RocheCommonComponent:utils:1.0.1'
+    //implementation project(path: ':utils')
+    api 'RocheCommonComponent:utils:1.0.2'
 
     testImplementation "junit:junit:${versions.junit}"
     testImplementation "io.mockk:mockk:1.12.0"
