@@ -7,6 +7,7 @@ internal data class RegisterRequest(
     val userId: String,
     val deviceToken: String,
     val os: String,
+    val channelType: String,
     val deviceInfo: DeviceInfo,
     val metadata: Metadata
 )
