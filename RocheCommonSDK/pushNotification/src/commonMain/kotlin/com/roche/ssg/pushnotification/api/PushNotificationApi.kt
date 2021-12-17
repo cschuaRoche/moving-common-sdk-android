@@ -56,6 +56,7 @@ class PushNotificationApi(httpClientEngine: HttpClientEngine) {
      * @param firebaseToken Firebase token, which will be registered in Backend
      * @param authorizationToken It need for authentication
      */
+    @Throws(PushNotificationException::class,Exception::class)
     suspend fun registerDevice(
         baseURL: String,
         appId: String,
@@ -110,6 +111,7 @@ class PushNotificationApi(httpClientEngine: HttpClientEngine) {
      * @param firebaseToken Firebase token, which will be registered in Backend
      * @param authorizationToken It need for authentication
      */
+    @Throws(PushNotificationException::class,Exception::class)
     suspend fun deregisterDevice(
         baseURL: String,
         appId: String,
