@@ -25,6 +25,8 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
+    // TODO: Create a configuration file with these values: redircectUri, clientId, scope, baseurl, method, etc.
+    // TODO: Create a LoginViewModel where it will get these configurations and expose it back to the View - LoginActivity.
     private fun startLogin(){
         val scope = "openid"
         val redirectUri = "roche://com.roche.ssg/auth/callback"
@@ -44,6 +46,7 @@ class LoginActivity : AppCompatActivity() {
         startActivity(browserIntent)
     }
 
+    // TODO: This is the work around solution we had to do because the default redirect behavior does not work with Cognito, Logout from cognito is not required
     private fun startLogout(){
         val redirectUri = "roche://com.roche.ssg/auth/callback"
         val clientId = "2o544hm96i0jsf1eie7a97ve6h"

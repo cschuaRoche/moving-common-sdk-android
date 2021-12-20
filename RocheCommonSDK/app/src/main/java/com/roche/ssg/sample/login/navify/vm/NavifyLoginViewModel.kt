@@ -33,6 +33,7 @@ class NavifyLoginViewModel : ViewModel() {
         }
     }
 
+    // TODO: Move connection and API call to a Repository.
     private fun getToken(authCode: String) {
 
         viewModelScope.launch {
@@ -79,6 +80,7 @@ class NavifyLoginViewModel : ViewModel() {
         }
     }
 
+    // TODO: Move connection and API call to a Repository.
     private fun getUserInfo(token: Token) {
 
         viewModelScope.launch {
@@ -116,6 +118,7 @@ class NavifyLoginViewModel : ViewModel() {
         }
     }
 
+    // TODO: Move connection and API call to a Repository.
     fun logout() {
         viewModelScope.launch {
             withContext(Dispatchers.IO){
