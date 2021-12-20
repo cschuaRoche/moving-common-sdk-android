@@ -1,6 +1,8 @@
 package com.roche.ssg.staticcontent
 
+import android.app.DownloadManager
 import android.content.Context
+import android.net.Uri
 import android.util.Log
 import androidx.annotation.StringDef
 import androidx.annotation.VisibleForTesting
@@ -11,14 +13,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.json.JSONException
 import org.json.JSONObject
-import java.io.BufferedInputStream
 import java.io.BufferedReader
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
-import java.io.InputStream
 import java.io.InputStreamReader
-import java.io.OutputStream
 import java.net.HttpURLConnection
 import java.net.URL
 import java.net.UnknownHostException
@@ -67,6 +66,7 @@ object DownloadStaticContent {
     const val EXCEPTION_MANIFEST_FILE_KEY_NOT_FOUND = "Manifest File Key Not Found"
     const val EXCEPTION_UNZIPPING_FILE = "Error In Unzipping The File"
     const val EXCEPTION_INSUFFICIENT_STORAGE = "Insufficient Storage"
+    const val EXCEPTION_DOWNLOAD_FAILED = "Downloading Failed"
 
     /**
      * Download static assets and unzips them of given app version, locale and file key.
@@ -266,7 +266,7 @@ object DownloadStaticContent {
      *
      * @return downloaded zipped file's path
      */
-    @Throws(IOException::class)
+    @Throws(IOException::class, IllegalStateException::class)
     suspend fun downloadFromUrl(
         context: Context,
         fileURL: String,
@@ -276,12 +276,7 @@ object DownloadStaticContent {
     ): String {
         checkConnection(context, allowWifiOnly)
         return withContext(Dispatchers.IO) {
-            val connection = getUrlConnection(fileURL)
-            connection.connect()
-
-            val fileLength = connection.contentLength
             val fileName = fileURL.substring(fileURL.lastIndexOf("/") + 1)
-
             val file = File(context.filesDir.toString() + File.separator + targetSubDir)
             if (file.exists().not()) {
                 file.mkdirs()
@@ -289,18 +284,22 @@ object DownloadStaticContent {
             val path = file.path + File.separator + fileName
 
             // download the file
-            val input: InputStream = BufferedInputStream(connection.inputStream)
-            try {
-                writeStream(input, path, fileLength, progress)
-                path
-            } catch (e: IOException) {
-                Log.e(LOG_TAG, "Exception ${e.localizedMessage}")
-                throw e
-            } finally {
-                // close streams
-                input.close()
-                connection.disconnect()
+            val request = DownloadManager.Request(Uri.parse(fileURL))
+            if (allowWifiOnly) {
+                request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI)
+            } else {
+                request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI or DownloadManager.Request.NETWORK_MOBILE)
             }
+            request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_HIDDEN)
+            val downloadManager =
+                context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+            val downloadId = downloadManager.enqueue(request)
+            val isDownloadSuccessful = trackProgress(downloadId, downloadManager, progress)
+            if (!isDownloadSuccessful) {
+                throw IllegalStateException(EXCEPTION_DOWNLOAD_FAILED)
+            }
+            moveDownloadToInternalDir(downloadId, downloadManager, path, context)
+            path
         }
     }
 
@@ -346,34 +345,65 @@ object DownloadStaticContent {
         return sb.toString()
     }
 
-    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
-    internal suspend fun writeStream(
-        input: InputStream,
-        path: String,
-        fileLength: Int,
+    private suspend fun trackProgress(
+        downloadId: Long,
+        downloadManager: DownloadManager,
         progress: (Int) -> Unit
-    ) {
-        val output: OutputStream = FileOutputStream(path)
-        try {
-            val data = ByteArray(4096)
-            var total: Long = 0
-            var count: Int
-            while (input.read(data).also { count = it } != -1) {
-                // publishing the progress....
-                total += count
-                if (fileLength > 0) { // only if total length is known
-                    withContext(Dispatchers.Main) {
-                        progress(((total * 100 / fileLength).toInt()))
+    ): Boolean {
+        var isDownloadFinished = false
+        var isDownloadSuccessful = false
+        while (!isDownloadFinished) {
+            val cursor = downloadManager.query(DownloadManager.Query().setFilterById(downloadId))
+            if (cursor.moveToFirst()) {
+                when (cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS))) {
+                    DownloadManager.STATUS_FAILED -> {
+                        isDownloadSuccessful = false
+                        isDownloadFinished = true
+                    }
+                    DownloadManager.STATUS_RUNNING -> {
+                        val total =
+                            cursor.getLong(cursor.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES))
+                        if (total >= 0) {
+                            val downloaded =
+                                cursor.getLong(cursor.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR))
+                            withContext(Dispatchers.Main) {
+                                progress((downloaded * 100L / total).toInt())
+                            }
+                        }
+                    }
+                    DownloadManager.STATUS_SUCCESSFUL -> {
+                        progress(100)
+                        isDownloadSuccessful = true
+                        isDownloadFinished = true
                     }
                 }
-                output.write(data, 0, count)
             }
-        } catch (e: IOException) {
-            throw e
-        } finally {
-            output.flush()
-            output.close()
+            cursor.close()
         }
+        return isDownloadSuccessful
+    }
+
+    private fun moveDownloadToInternalDir(
+        downloadId: Long,
+        downloadManager: DownloadManager,
+        destPath: String,
+        context: Context
+    ) {
+        val uri = downloadManager.getUriForDownloadedFile(downloadId)
+        val inputStream = context.contentResolver.openInputStream(uri)
+        val outputFile = File(destPath)
+        val outputStream = FileOutputStream(outputFile)
+        val buf = ByteArray(1024)
+        var len: Int
+        while (run {
+                len = inputStream!!.read(buf)
+                len
+            } > 0) {
+            outputStream.write(buf, 0, len)
+        }
+        outputStream.close()
+        inputStream?.close()
+        downloadManager.remove(downloadId)
     }
 
     @Throws(IllegalArgumentException::class, JSONException::class)
