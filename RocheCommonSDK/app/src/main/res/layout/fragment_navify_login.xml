@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <data>
+
+        <variable
+            name="user"
+            type="com.roche.ssg.sample.login.navify.data.UserInfo" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="20dp">
+
+        <TextView
+            android:id="@+id/txt_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:text="@string/authenticate"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@id/flow_user"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/txt_label_email_verified"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/email_verified"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/txt_email_verified"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@{user.emailVerified}"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/txt_label_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/name"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/txt_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@{user.name}"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/txt_label_preferred_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/preferred_username"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/txt_preferred_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@{user.preferredUsername}"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/txt_label_given_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/given_name"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/txt_given_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@{user.givenName}"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/txt_label_family_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/family_name"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/txt_family_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@{user.familyName}"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/txt_label_email"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/email"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/txt_email"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@{user.email}"
+            android:textSize="20sp" />
+
+        <androidx.constraintlayout.helper.widget.Flow
+            android:id="@+id/flow_user"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:constraint_referenced_ids="txt_label_email_verified,txt_email_verified,txt_label_name,txt_name,txt_label_preferred_name,txt_preferred_name,txt_label_given_name,txt_given_name,txt_label_family_name,txt_family_name,txt_label_email,txt_email"
+            app:flow_horizontalAlign="start"
+            app:flow_maxElementsWrap="2"
+            app:flow_verticalGap="8dp"
+            app:flow_wrapMode="chain"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/btn_login"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:text="@string/login_to_navify"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/flow_user" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

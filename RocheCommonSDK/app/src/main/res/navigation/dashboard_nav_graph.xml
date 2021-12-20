@@ -98,4 +98,11 @@
         android:name="com.roche.ssg.sample.amplitude.AmplitudeFragment"
         android:label="fragment_amplitude"
         tools:layout="@layout/fragment_amplitude" />
+
+    <fragment
+        android:id="@+id/navifyLoginFragment"
+        android:name="com.roche.ssg.sample.login.navify.NavifyLoginFragment"
+        android:label="fragment_navify_login"
+        tools:layout="@layout/fragment_navify_login" />
+
 </navigation>
