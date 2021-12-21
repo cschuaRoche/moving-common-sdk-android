@@ -17,7 +17,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:hint="@string/base_url"
-                android:text="https://floodlight.dhp-dev.dhs.platform.navify.com"
+                android:text="@string/floodlight_host"
                 android:importantForAutofill="no"
                 android:inputType="textUri" />
 
@@ -26,7 +26,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:hint="@string/app_id"
-                android:text="com.roche.ssg.test.application"
+                android:text="@string/ssg_test_application"
                 android:importantForAutofill="no"
                 android:inputType="textUri" />
 
@@ -35,7 +35,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:hint="@string/app_version"
-                android:text="1.0"
+                android:text="@string/version_1_0"
                 android:importantForAutofill="no"
                 android:inputType="textUri" />
 
@@ -44,7 +44,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:hint="@string/country"
-                android:text="fr"
+                android:text="@string/locale_fr"
                 android:importantForAutofill="no"
                 android:inputType="textUri" />
 
@@ -70,7 +70,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:hint="@string/base_url"
-                android:text="https://floodlight.dhp-dev.dhs.platform.navify.com"
+                android:text="@string/floodlight_host"
                 android:importantForAutofill="no"
                 android:inputType="textUri" />
 
@@ -79,14 +79,14 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:hint="@string/country"
-                android:text="fr"
+                android:text="@string/locale_fr"
                 android:importantForAutofill="no"
                 android:inputType="textUri" />
 
             <EditText
                 android:id="@+id/et_samds"
                 android:layout_width="0dp"
-                android:text="com.roche.ssg.test.samd.one:1.0.0,com.roche.ssg.test.samd.two:1.0.1"
+                android:text="@string/samd_id"
                 android:layout_height="wrap_content"
                 android:hint="@string/samds"
                 android:importantForAutofill="no"
