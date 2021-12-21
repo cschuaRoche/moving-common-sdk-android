@@ -27,6 +27,7 @@
                 android:maxLines="1"
                 android:minHeight="48dp"
                 android:singleLine="true"
+                android:text="@string/floodlight_host"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -41,6 +42,7 @@
                 android:maxLines="1"
                 android:minHeight="48dp"
                 android:singleLine="true"
+                android:text="@string/system_messages_type"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/et_url" />
@@ -55,6 +57,7 @@
                 android:maxLines="1"
                 android:minHeight="48dp"
                 android:singleLine="true"
+                android:text="@string/system_messages_samd"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/et_type" />
@@ -68,6 +71,7 @@
                 android:lines="1"
                 android:maxLines="1"
                 android:minHeight="48dp"
+                android:text="@string/system_message_samd_version"
                 android:singleLine="true"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

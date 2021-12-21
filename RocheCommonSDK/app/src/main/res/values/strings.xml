@@ -105,4 +105,16 @@
     <string name="given_name">Given Name</string>
     <string name="family_name">Family Name</string>
     <string name="email">Email</string>
+    <string name="floodlight_host">https://floodlight.dhp-dev.dhs.platform.navify.com</string>
+    <string name="ssg_test_application">com.roche.ssg.test.application</string>
+    <string name="version_1_0">1.0</string>
+    <string name="locale_fr">fr</string>
+    <string name="samd_id">com.roche.ssg.test.samd.one:1.0.0,com.roche.ssg.test.samd.two:1.0.1</string>
+    <string name="static_content_base_url">https://static-content.dhp-dev.dhs.platform.navify.com/com.roche.floodlight/sdk/docs/sdk-metadata.json</string>
+    <string name="static_content_version">1.4.0</string>
+    <string name="static_content_locale">pt_BR</string>
+    <string name="static_content_file_type">assessment_user_manuals</string>
+    <string name="system_messages_type">quality,system</string>
+    <string name="system_messages_samd">com.roche.floodlight</string>
+    <string name="system_message_samd_version">1.3.2</string>
 </resources>
