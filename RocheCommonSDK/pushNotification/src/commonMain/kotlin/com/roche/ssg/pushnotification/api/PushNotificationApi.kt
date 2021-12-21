@@ -61,6 +61,7 @@ class PushNotificationApi(httpClientEngine: HttpClientEngine) {
         baseURL: String,
         appId: String,
         userId: String,
+        channelType: String,
         firebaseToken: String,
         authorizationToken: String,
         appVersion: String = "",
@@ -74,7 +75,7 @@ class PushNotificationApi(httpClientEngine: HttpClientEngine) {
                     httpClient.post(getCallingUrl(baseURL, REGISTER_END_POINT)) {
 
                         body = RegisterRequest(
-                            userId, firebaseToken, getOS(), DeviceInfo(
+                            userId, firebaseToken, getOS(), channelType,DeviceInfo(
                                 getOSVersion(), getDevice(),
                                 getMake(), appVersion
                             ), Metadata(country, orgId, hcpId)
