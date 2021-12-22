@@ -7,38 +7,61 @@ import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.roche.ssg.sample.R
+import com.roche.ssg.sample.login.navify.data.LoginConfiguration
+import dagger.hilt.android.AndroidEntryPoint
 
+
+@AndroidEntryPoint
 class LoginActivity : AppCompatActivity() {
+
+    companion object {
+        const val KEY_AUTH_CODE = "auth_code"
+        const val KEY_LOGIN_CONFIGURATION = "login_configuration"
+
+        const val FLOW_AUTH_LOGIN = 1
+        const val FLOW_AUTH_LOGOUT = 2
+    }
+
+    private lateinit var mLoginConfiguration: LoginConfiguration
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.i("Testing", "inside onCreate")
         setContentView(R.layout.activity_login)
 
-        if(intent.hasExtra("AUTH_FLOW")){
-            val flowType=intent.getIntExtra("AUTH_FLOW",0)
-            if(flowType==1){
+        if (intent.hasExtra(KEY_LOGIN_CONFIGURATION)) {
+            mLoginConfiguration =
+                intent.getSerializableExtra(KEY_LOGIN_CONFIGURATION) as LoginConfiguration
+        }
+
+        if (intent.hasExtra(KEY_AUTH_CODE)) {
+            val flowType = intent.getIntExtra(KEY_AUTH_CODE, 0)
+            if (flowType == FLOW_AUTH_LOGIN) {
                 startLogin()
-            }else if (flowType==2){
+            } else if (flowType == FLOW_AUTH_LOGOUT) {
                 startLogout()
             }
         }
     }
 
-    // TODO: Create a configuration file with these values: redircectUri, clientId, scope, baseurl, method, etc.
-    // TODO: Create a LoginViewModel where it will get these configurations and expose it back to the View - LoginActivity.
-    private fun startLogin(){
-        val scope = "openid"
-        val redirectUri = "roche://com.roche.ssg/auth/callback"
-        val clientId = "ssg-dev-reference-app-patient"
+    private fun startLogin() {
 
         val builtUri =
-            Uri.parse("https://keycloak.appdevus.platform.navify.com/auth/realms/patients/protocol/openid-connect/auth?")
+            Uri.parse("${mLoginConfiguration.authUrl}?")
                 .buildUpon()
-                .appendQueryParameter("client_id", clientId)
-                .appendQueryParameter("scope", scope)
-                .appendQueryParameter("redirect_uri", redirectUri)
-                .appendQueryParameter("response_type", "code")
+                .appendQueryParameter(
+                    "client_id",
+                    mLoginConfiguration.clientId
+                )
+                .appendQueryParameter("scope", mLoginConfiguration.scope)
+                .appendQueryParameter(
+                    "redirect_uri",
+                    mLoginConfiguration.redirectUri
+                )
+                .appendQueryParameter(
+                    "response_type",
+                    mLoginConfiguration.responseType
+                )
 
         val browserIntent =
             Intent(Intent.ACTION_VIEW, builtUri.build())
@@ -47,18 +70,24 @@ class LoginActivity : AppCompatActivity() {
     }
 
     // TODO: This is the work around solution we had to do because the default redirect behavior does not work with Cognito, Logout from cognito is not required
-    private fun startLogout(){
-        val redirectUri = "roche://com.roche.ssg/auth/callback"
-        val clientId = "2o544hm96i0jsf1eie7a97ve6h"
-        val scope = "openid"
+    private fun startLogout() {
 
         val builtUri =
-            Uri.parse("https://ssg-patient-dev.auth.us-east-1.amazoncognito.com/logout?")
+            Uri.parse("${mLoginConfiguration.cognitoLogoutUrl}?")
                 .buildUpon()
-                .appendQueryParameter("client_id", clientId)
-                .appendQueryParameter("scope", scope)
-                .appendQueryParameter("redirect_uri", redirectUri)
-                .appendQueryParameter("response_type", "code")
+                .appendQueryParameter(
+                    "client_id",
+                    mLoginConfiguration.logoutClientId
+                )
+                .appendQueryParameter("scope", mLoginConfiguration.scope)
+                .appendQueryParameter(
+                    "redirect_uri",
+                    mLoginConfiguration.redirectUri
+                )
+                .appendQueryParameter(
+                    "response_type",
+                    mLoginConfiguration.responseType
+                )
 
         val browserIntent =
             Intent(Intent.ACTION_VIEW, builtUri.build())

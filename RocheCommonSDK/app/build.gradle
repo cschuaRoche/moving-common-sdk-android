@@ -2,6 +2,7 @@ plugins {
     id 'com.android.application'
     id 'kotlin-android'
     id 'kotlin-kapt'
+    id 'dagger.hilt.android.plugin'
 }
 
 apply plugin: "androidx.navigation.safeargs.kotlin"
@@ -135,4 +136,8 @@ dependencies {
     implementation "com.amplitude:android-sdk:${versions.amplitude_android_sdk}"
     implementation "com.squareup.okhttp3:okhttp:${versions.okhttp}"
     implementation "com.amplitude:experiment-android-client:${versions.amplitude_experiment_android_client}"
+
+    //Hilt
+    implementation "com.google.dagger:hilt-android:${versions.hilt}"
+    kapt "com.google.dagger:hilt-compiler:${versions.hilt}"
 }
