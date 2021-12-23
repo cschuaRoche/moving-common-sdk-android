@@ -14,7 +14,9 @@ import androidx.fragment.app.viewModels
 import com.roche.ssg.sample.R
 import com.roche.ssg.sample.databinding.FragmentNavifyLoginBinding
 import com.roche.ssg.sample.login.navify.vm.NavifyLoginViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class NavifyLoginFragment : Fragment() {
 
     private lateinit var mBinding: FragmentNavifyLoginBinding
@@ -47,10 +49,8 @@ class NavifyLoginFragment : Fragment() {
     }
 
     private fun login() {
-        val intent = Intent(activity, LoginActivity::class.java)
-        intent.putExtra("AUTH_FLOW", 1)
         isLoginFLow = true
-        resultLauncher.launch(intent)
+        launchLoginActivity(LoginActivity.FLOW_AUTH_LOGIN)
     }
 
     private fun logout() {
@@ -100,10 +100,8 @@ class NavifyLoginFragment : Fragment() {
                     hideUserInfo()
                 }
                 is NavifyLoginViewModel.NavifyLoginResult.LogoutSuccessful -> {
-                    val intent = Intent(activity, LoginActivity::class.java)
-                    intent.putExtra("AUTH_FLOW", 2)
                     isLoginFLow = false
-                    resultLauncher.launch(intent)
+                    launchLoginActivity(LoginActivity.FLOW_AUTH_LOGOUT)
                 }
                 is NavifyLoginViewModel.NavifyLoginResult.LogoutFailed -> {
 
@@ -114,5 +112,15 @@ class NavifyLoginFragment : Fragment() {
 
     private fun hideUserInfo() {
         mBinding.flowUser.visibility = View.GONE
+    }
+
+    private fun launchLoginActivity(authFlow: Int) {
+        val intent = Intent(activity, LoginActivity::class.java)
+        intent.putExtra(LoginActivity.KEY_AUTH_CODE, authFlow)
+        intent.putExtra(
+            LoginActivity.KEY_LOGIN_CONFIGURATION,
+            mNavifyLoginViewModel.loginConfiguration
+        )
+        resultLauncher.launch(intent)
     }
 }
