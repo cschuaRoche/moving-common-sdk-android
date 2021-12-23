@@ -30,6 +30,7 @@ definitions:
           - RocheCommonSDK/$PROJECT/build/reports/tests/testDebugUnitTest/**
     - step: &buildAPP
         name: Generate the relese build of ssg sample application
+        size: 2x
         caches:
           - gradle
         script:
