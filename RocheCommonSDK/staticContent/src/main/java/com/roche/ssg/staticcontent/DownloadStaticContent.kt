@@ -345,7 +345,8 @@ object DownloadStaticContent {
         return sb.toString()
     }
 
-    private suspend fun trackProgress(
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    internal suspend fun trackProgress(
         downloadId: Long,
         downloadManager: DownloadManager,
         progress: (Int) -> Unit
@@ -383,7 +384,8 @@ object DownloadStaticContent {
         return isDownloadSuccessful
     }
 
-    private fun moveDownloadToInternalDir(
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    internal fun moveDownloadToInternalDir(
         downloadId: Long,
         downloadManager: DownloadManager,
         destPath: String,
