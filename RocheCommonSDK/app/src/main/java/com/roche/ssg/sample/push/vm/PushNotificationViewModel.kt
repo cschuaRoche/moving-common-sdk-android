@@ -31,6 +31,7 @@ class PushNotificationViewModel(application: Application) : AndroidViewModel(app
     companion object {
         const val APP_PUSH_REGISTRATION_PREFS = "PUSH_REGISTRATION_PREFS"
         const val PREF_KEY_IS_REGISTER = "key_is_register"
+        const val CHANNEL_TYPE = "GCM"
     }
 
     init {
@@ -108,10 +109,11 @@ class PushNotificationViewModel(application: Application) : AndroidViewModel(app
                     baseUrl,
                     appId,
                     Amplify.Auth.currentUser.userId,
+                    CHANNEL_TYPE,
                     getFirebaseToken()!!,
                     getAuthToken()!!,
                     appVersion,
-                    country,
+                    country
                 )
                 Log.i("RegisterPushFragment", "Response from Server $response")
                 saveIsRegistration(true)

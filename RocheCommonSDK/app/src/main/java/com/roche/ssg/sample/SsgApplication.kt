@@ -2,7 +2,9 @@ package com.roche.ssg.sample
 
 import android.app.Application
 import com.amplitude.api.Amplitude
+import dagger.hilt.android.HiltAndroidApp
 
+@HiltAndroidApp
 class SsgApplication : Application() {
 
     override fun onCreate() {

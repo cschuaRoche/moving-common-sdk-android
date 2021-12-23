@@ -56,10 +56,12 @@ class PushNotificationApi(httpClientEngine: HttpClientEngine) {
      * @param firebaseToken Firebase token, which will be registered in Backend
      * @param authorizationToken It need for authentication
      */
+    @Throws(PushNotificationException::class,Exception::class)
     suspend fun registerDevice(
         baseURL: String,
         appId: String,
         userId: String,
+        channelType: String,
         firebaseToken: String,
         authorizationToken: String,
         appVersion: String = "",
@@ -73,7 +75,7 @@ class PushNotificationApi(httpClientEngine: HttpClientEngine) {
                     httpClient.post(getCallingUrl(baseURL, REGISTER_END_POINT)) {
 
                         body = RegisterRequest(
-                            userId, firebaseToken, getOS(), DeviceInfo(
+                            userId, firebaseToken, getOS(), channelType,DeviceInfo(
                                 getOSVersion(), getDevice(),
                                 getMake(), appVersion
                             ), Metadata(country, orgId, hcpId)
@@ -110,6 +112,7 @@ class PushNotificationApi(httpClientEngine: HttpClientEngine) {
      * @param firebaseToken Firebase token, which will be registered in Backend
      * @param authorizationToken It need for authentication
      */
+    @Throws(PushNotificationException::class,Exception::class)
     suspend fun deregisterDevice(
         baseURL: String,
         appId: String,

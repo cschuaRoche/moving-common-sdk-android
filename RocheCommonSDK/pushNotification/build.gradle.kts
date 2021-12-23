@@ -25,8 +25,8 @@ kotlin {
     cocoapods {
         summary = "Some description for the Shared Module"
         homepage = "Link to the Shared Module homepage"
-        ios.deploymentTarget = "14.1"
-        frameworkName = "pushNotification"
+        ios.deploymentTarget = "12.0"
+        frameworkName = "pushNotificationSDK"
         // set path to your ios project podfile, e.g. podfile = project.file("../iosApp/Podfile")
     }
     

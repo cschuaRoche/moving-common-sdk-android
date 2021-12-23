@@ -1,0 +1,13 @@
+{
+  "client_id": "ssg-dev-reference-app-patient",
+  "client_secret": "aec38cd1-24fe-4ed9-8990-9af376100930",
+  "scope": "openid",
+  "redirect_uri": "roche://com.roche.ssg/auth/callback",
+  "response_type": "code",
+  "auth_url": "https://keycloak.appdevus.platform.navify.com/auth/realms/patients/protocol/openid-connect/auth",
+  "token_url": "https://keycloak.appdevus.platform.navify.com/auth/realms/patients/protocol/openid-connect/token",
+  "user_info_url": "https://keycloak.appdevus.platform.navify.com/auth/realms/patients/protocol/openid-connect/userinfo",
+  "logout_url": "https://keycloak.appdevus.platform.navify.com/auth/realms/patients/protocol/openid-connect/logout",
+  "cognito_logout_url": "https://ssg-patient-dev.auth.us-east-1.amazoncognito.com/logout",
+  "logout_client_id": "2o544hm96i0jsf1eie7a97ve6h"
+}

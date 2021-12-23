@@ -54,5 +54,10 @@
             android:title="@string/amplitude"
             app:actionLayout="@layout/action_view_arrow" />
 
+        <item
+            android:id="@+id/navifyLoginFragment"
+            android:title="@string/navify_platform_login"
+            app:actionLayout="@layout/action_view_arrow" />
+
     </group>
 </menu>
