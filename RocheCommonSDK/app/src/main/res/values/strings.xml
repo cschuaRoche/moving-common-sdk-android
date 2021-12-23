@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Common Sample App</string>
+    <string name="app_name">SSG</string>
     <string name="biometric_confirm_title">Do you want to allow "RocheCommonSampleApp" to use biometrics?</string>
     <string name="biometric_enable_desc">In order to be able to use Biometrics login, you have to enable that from device Settings.</string>
     <string name="fingerprint_supported">Fingerprint Supported</string>
