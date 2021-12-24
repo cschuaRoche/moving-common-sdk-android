@@ -1,6 +1,8 @@
 package com.roche.ssg.staticcontent
 
 import android.app.Application
+import android.app.DownloadManager
+import android.content.Context
 import com.roche.ssg.staticcontent.entity.ManifestInfo
 import com.roche.ssg.utils.NetworkUtils
 import com.roche.ssg.utils.UnZipUtils
@@ -48,10 +50,18 @@ class DownloadStaticContentTest : BaseMockkTest() {
     }
 
     private fun initSuccessfulDownloadFromUrl() {
-        val httpURLConnection = mockk<HttpURLConnection>(relaxed = true)
-        every { DownloadStaticContent.getUrlConnection(getZippedFileUrl()) } returns httpURLConnection
         every { appContext.filesDir } returns File(CONTEXT_FILES_DIR)
-        coEvery { DownloadStaticContent.writeStream(any(), any(), any(), any()) } returns Unit
+        val downloadManager = mockk<DownloadManager>(relaxed = true)
+        coEvery { appContext.getSystemService(Context.DOWNLOAD_SERVICE) } returns downloadManager
+        coEvery { DownloadStaticContent.trackProgress(any(), downloadManager, any()) } returns true
+        coEvery {
+            DownloadStaticContent.moveDownloadToInternalDir(
+                any(),
+                downloadManager,
+                getZippedFilePath(),
+                appContext
+            )
+        } returns Unit
         coEvery {
             DownloadStaticContent.downloadFromUrl(
                 appContext,
@@ -708,10 +718,18 @@ class DownloadStaticContentTest : BaseMockkTest() {
 
     @Test
     fun `when downloadFromUrl is successful then returns zipped file path`() = runBlocking {
-        val httpURLConnection = mockk<HttpURLConnection>(relaxed = true)
-        every { DownloadStaticContent.getUrlConnection(getZippedFileUrl()) } returns httpURLConnection
         every { appContext.filesDir } returns File(CONTEXT_FILES_DIR)
-        coEvery { DownloadStaticContent.writeStream(any(), any(), any(), any()) } returns Unit
+        val downloadManager = mockk<DownloadManager>(relaxed = true)
+        coEvery { appContext.getSystemService(Context.DOWNLOAD_SERVICE) } returns downloadManager
+        coEvery { DownloadStaticContent.trackProgress(any(), downloadManager, any()) } returns true
+        coEvery {
+            DownloadStaticContent.moveDownloadToInternalDir(
+                any(),
+                downloadManager,
+                getZippedFilePath(),
+                appContext
+            )
+        } returns Unit
 
         val zippedPath = DownloadStaticContent.downloadFromUrl(
             appContext,
@@ -720,7 +738,61 @@ class DownloadStaticContentTest : BaseMockkTest() {
             getSubDir()
         )
         Assert.assertEquals(getZippedFilePath(), zippedPath)
+        coVerify(exactly = 1) { DownloadStaticContent.trackProgress(any(), downloadManager, any()) }
+        coVerify(exactly = 1) {
+            DownloadStaticContent.moveDownloadToInternalDir(
+                any(),
+                downloadManager,
+                getZippedFilePath(),
+                appContext
+            )
+        }
     }
+
+    @Test
+    fun `downloadFromUrl throws EXCEPTION_DOWNLOAD_FAILED exception when downloading fails`() =
+        runBlocking {
+            every { appContext.filesDir } returns File(CONTEXT_FILES_DIR)
+            val downloadManager = mockk<DownloadManager>(relaxed = true)
+            coEvery { appContext.getSystemService(Context.DOWNLOAD_SERVICE) } returns downloadManager
+            coEvery {
+                DownloadStaticContent.trackProgress(
+                    any(),
+                    downloadManager,
+                    any()
+                )
+            } returns false
+
+            try {
+                DownloadStaticContent.downloadFromUrl(
+                    appContext,
+                    getZippedFileUrl(),
+                    ::showProgress,
+                    getSubDir()
+                )
+                Assert.fail("downloadFromUrl should have thrown EXCEPTION_DOWNLOAD_FAILED error")
+            } catch (e: IllegalStateException) {
+                Assert.assertEquals(
+                    DownloadStaticContent.EXCEPTION_DOWNLOAD_FAILED,
+                    e.message
+                )
+                coVerify(exactly = 1) {
+                    DownloadStaticContent.trackProgress(
+                        any(),
+                        downloadManager,
+                        any()
+                    )
+                }
+                coVerify(exactly = 0) {
+                    DownloadStaticContent.moveDownloadToInternalDir(
+                        any(),
+                        downloadManager,
+                        getZippedFilePath(),
+                        appContext
+                    )
+                }
+            }
+        }
 
     @Test
     fun `downloadFromUrl throws EXCEPTION_NETWORK_NOT_AVAILABLE exception when network is not available`() =
@@ -926,7 +998,9 @@ class DownloadStaticContentTest : BaseMockkTest() {
     private fun getManifestInfo(zippedFileUrl: String = getZippedFileUrl()) =
         ManifestInfo(zippedFileUrl, FILE_SIZE, ORIGINAL_FILE_SIZE)
 
-    private fun getZippedFilePath() = CONTEXT_FILES_DIR + File.separator + getSubDir() + File.separator + "zipped-file.zip"
+    private fun getZippedFilePath() =
+        CONTEXT_FILES_DIR + File.separator + getSubDir() + File.separator + "zipped-file.zip"
+
     private fun getUnzippedFilePath() = CONTEXT_FILES_DIR + File.separator + getSubDir()
     private fun getETag() = "ETAG"
     private fun getManifestContent(): String {
