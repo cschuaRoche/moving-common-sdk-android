@@ -130,7 +130,16 @@ object DownloadStaticContent {
             // download the file
             val subDirPath = targetSubDir + File.separator + appVersion
             val zipPath =
-                downloadFromUrl(context, manifestInfo.path, progress, subDirPath, allowWifiOnly)
+                downloadFromUrl(
+                    context,
+                    manifestInfo.path,
+                    appVersion,
+                    locale,
+                    fileKey,
+                    subDirPath,
+                    progress,
+                    allowWifiOnly
+                )
 
             // check free space to unzip the file
             if (context.filesDir.usableSpace <= manifestInfo.originalSize) {
@@ -138,7 +147,7 @@ object DownloadStaticContent {
             }
 
             // unzip the file and save the path to shared pref
-            val unzipPath = unzipFile(context, zipPath, subDirPath)
+            val unzipPath = unzipFile(context, zipPath, appVersion, locale, fileKey, subDirPath)
             DownloadStaticContentSharedPref.setFilePath(
                 context,
                 targetSubDir,
@@ -270,10 +279,24 @@ object DownloadStaticContent {
     suspend fun downloadFromUrl(
         context: Context,
         fileURL: String,
-        progress: (Int) -> Unit,
+        appVersion: String,
+        @LocaleType locale: String,
+        fileKey: String,
         targetSubDir: String,
+        progress: (Int) -> Unit,
         allowWifiOnly: Boolean = false
     ): String {
+        if (DownloadStaticContentSharedPref.isDownloadCancelled(
+                context,
+                targetSubDir,
+                appVersion,
+                locale,
+                fileKey
+            )
+        ) {
+            // TODO: throw exception
+        }
+
         checkConnection(context, allowWifiOnly)
         return withContext(Dispatchers.IO) {
             val fileName = fileURL.substring(fileURL.lastIndexOf("/") + 1)
@@ -294,7 +317,17 @@ object DownloadStaticContent {
             val downloadManager =
                 context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
             val downloadId = downloadManager.enqueue(request)
-            val isDownloadSuccessful = trackProgress(downloadId, downloadManager, progress)
+            val isDownloadSuccessful =
+                trackProgress(
+                    context,
+                    downloadId,
+                    downloadManager,
+                    appVersion,
+                    locale,
+                    fileKey,
+                    targetSubDir,
+                    progress
+                )
             if (!isDownloadSuccessful) {
                 throw IllegalStateException(EXCEPTION_DOWNLOAD_FAILED)
             }
@@ -318,14 +351,45 @@ object DownloadStaticContent {
     fun unzipFile(
         context: Context,
         filePath: String,
+        appVersion: String,
+        @LocaleType locale: String,
+        fileKey: String,
         targetSubDir: String
     ): String {
+        if (DownloadStaticContentSharedPref.isDownloadCancelled(
+                context,
+                targetSubDir,
+                appVersion,
+                locale,
+                fileKey
+            )
+        ) {
+            // TODO: throw exception
+        }
+
         val unzipPath = UnZipUtils.unzipFromAppFiles(filePath, context, targetSubDir)
         if (unzipPath == null) {
             Log.e(LOG_TAG, "error occurred in unzipping the file")
             throw IllegalStateException(EXCEPTION_UNZIPPING_FILE)
         }
         return unzipPath
+    }
+
+    fun cancelDownload(
+        context: Context,
+        appVersion: String,
+        @LocaleType locale: String,
+        fileKey: String,
+        targetSubDir: String
+    ) {
+        DownloadStaticContentSharedPref.setCancelDownload(
+            context,
+            targetSubDir,
+            appVersion,
+            locale,
+            fileKey,
+            true
+        )
     }
 
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
@@ -347,8 +411,13 @@ object DownloadStaticContent {
 
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     internal suspend fun trackProgress(
+        context: Context,
         downloadId: Long,
         downloadManager: DownloadManager,
+        appVersion: String,
+        @LocaleType locale: String,
+        fileKey: String,
+        targetSubDir: String,
         progress: (Int) -> Unit
     ): Boolean {
         var isDownloadFinished = false
@@ -362,6 +431,17 @@ object DownloadStaticContent {
                         isDownloadFinished = true
                     }
                     DownloadManager.STATUS_RUNNING -> {
+                        if (DownloadStaticContentSharedPref.isDownloadCancelled(
+                                context,
+                                targetSubDir,
+                                appVersion,
+                                locale,
+                                fileKey
+                            )
+                        ) {
+                            downloadManager.remove(downloadId)
+                            // TODO: throw exception
+                        }
                         val total =
                             cursor.getLong(cursor.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES))
                         if (total >= 0) {
