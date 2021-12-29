@@ -4,12 +4,12 @@ val versions = rootProject.ext["versions"] as HashMap<String, Any>
 
 plugins {
     kotlin("multiplatform")
-    kotlin("plugin.serialization") version "1.4.10"
     kotlin("native.cocoapods")
     id("com.android.library")
-    jacoco
+    kotlin("plugin.serialization") version "1.4.10"
     id("maven-publish")
     id("com.jfrog.artifactory")
+    jacoco
 }
 
 jacoco {
@@ -19,10 +19,7 @@ jacoco {
 version = "1.0.0"
 
 kotlin {
-    val ktor_version = "1.6.3"
-    val napier_version = "2.1.0"
-
-    android{
+    android {
         group = "RocheCommonComponent"
         publishLibraryVariants("release")
         mavenPublication {
@@ -50,40 +47,33 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                // logging
-                implementation("io.github.aakira:napier:$napier_version")
-
                 // ktor
-                implementation("io.ktor:ktor-client-core:$ktor_version")
-                implementation("io.ktor:ktor-client-logging:$ktor_version")
-                implementation("io.ktor:ktor-client-serialization:$ktor_version")
+                implementation("io.ktor:ktor-client-core:${versions["ktor_version"]}")
+                implementation("io.ktor:ktor-client-logging:${versions["ktor_version"]}")
+                implementation("io.ktor:ktor-client-serialization:${versions["ktor_version"]}")
             }
         }
         val commonTest by getting {
             dependencies {
                 implementation(kotlin("test-common"))
                 implementation(kotlin("test-annotations-common"))
-                implementation( "io.ktor:ktor-client-mock:$ktor_version")
-                implementation("io.mockk:mockk-common:1.9.3.kotlin12")
-                implementation("io.mockk:mockk:1.9.3.kotlin12")
+                implementation( "io.ktor:ktor-client-mock:${versions["ktor_version"]}")
             }
         }
         val androidMain by getting {
             dependencies {
-                implementation("io.ktor:ktor-client-android:$ktor_version")
+                implementation("io.ktor:ktor-client-android:${versions["ktor_version"]}")
             }
         }
         val androidTest by getting {
             dependencies {
                 implementation(kotlin("test-junit"))
                 implementation("junit:junit:${versions["junit"]}")
-                implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.5.2")
             }
         }
         val iosMain by getting {
             dependencies {
-                implementation("io.ktor:ktor-client-ios:$ktor_version")
-                implementation( "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2-native-mt")
+                implementation("io.ktor:ktor-client-ios:${versions["ktor_version"]}")
             }
         }
         val iosTest by getting
@@ -91,7 +81,6 @@ kotlin {
 }
 
 android {
-    val versions = rootProject.ext["versions"] as HashMap<String, Any>
     compileSdkVersion(versions["compile_sdk_version"].toString().toInt())
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
     defaultConfig {
@@ -142,13 +131,13 @@ artifactory {
             setProperty("repoKey", project.properties["artifactory.repokey"])
             setProperty("username", project.properties["artifactory.user"])
             setProperty("password", project.properties["artifactory.password"])
-            //setProperty("maven", true)
+            setProperty("maven", true)
         })
         defaults(delegateClosureOf<groovy.lang.GroovyObject> {
             setPublishPom(true)
             invokeMethod(
                 "publications", arrayOf(
-                    "aar"
+                    "androidRelease"
                 )
             )
             setProperty("publishArtifacts", true)

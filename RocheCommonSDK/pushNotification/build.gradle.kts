@@ -21,25 +21,6 @@ kotlin {
             artifactId = project.name
             artifact("$buildDir/outputs/aar/${project.name}-release.aar")
         }
-        /*configure<PublishingExtension> {
-            publications {
-                create<MavenPublication>("aar"){
-                    artifact("$buildDir/outputs/aar/${project.name}-release.aar")
-                    groupId ="RocheCommonComponent" //put here your groupId
-                    artifactId =  project.name   //put here your artifactId
-                    version = version
-
-                    // Tell maven to prepare the generated "*.aar" file for publishing
-
-
-                   *//* pom.withXml {
-                        val dependency=asNode().appendNode("dependencies")
-                        println(dependency)
-                    }*//*
-                }
-            }
-        }*/
-
     }
 
     val iosTarget: (String, KotlinNativeTarget.() -> Unit) -> KotlinNativeTarget = when {
@@ -104,13 +85,13 @@ android {
 
 }
 
-publishing {
+/*publishing {
     publications {
         create<MavenPublication>("aar") {
             artifact("$buildDir/outputs/aar/${project.name}-release.aar")
         }
     }
-}
+}*/
 
 artifactory {
     setContextUrl("https://dhs.jfrog.io/dhs/")
@@ -125,7 +106,7 @@ artifactory {
             setPublishPom(true)
             invokeMethod(
                 "publications", arrayOf(
-                    "aar"
+                    "androidRelease"
                 )
             )
             setProperty("publishArtifacts", true)
