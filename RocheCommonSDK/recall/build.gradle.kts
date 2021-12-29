@@ -7,21 +7,29 @@ plugins {
     kotlin("plugin.serialization") version "1.4.10"
     kotlin("native.cocoapods")
     id("com.android.library")
-
     jacoco
+    id("maven-publish")
+    id("com.jfrog.artifactory")
 }
 
 jacoco {
     toolVersion = "0.8.7"
 }
 
-version = "1.0"
+version = "1.0.0"
 
 kotlin {
     val ktor_version = "1.6.3"
     val napier_version = "2.1.0"
 
-    android()
+    android{
+        group = "RocheCommonComponent"
+        publishLibraryVariants("release")
+        mavenPublication {
+            artifactId = project.name
+            artifact("$buildDir/outputs/aar/${project.name}-release.aar")
+        }
+    }
 
     val iosTarget: (String, KotlinNativeTarget.() -> Unit) -> KotlinNativeTarget = when {
         System.getenv("SDK_NAME")?.startsWith("iphoneos") == true -> ::iosArm64
@@ -117,4 +125,33 @@ val jacocoTestReport by tasks.creating(JacocoReport::class.java) {
         xml.isEnabled = true
         html.isEnabled = true
     }
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("aar") {
+            artifact("$buildDir/outputs/aar/${project.name}-release.aar")
+        }
+    }
+}
+
+artifactory {
+    setContextUrl("https://dhs.jfrog.io/dhs/")
+    publish(delegateClosureOf<org.jfrog.gradle.plugin.artifactory.dsl.PublisherConfig> {
+        repository(delegateClosureOf<org.jfrog.gradle.plugin.artifactory.dsl.DoubleDelegateWrapper> {
+            setProperty("repoKey", project.properties["artifactory.repokey"])
+            setProperty("username", project.properties["artifactory.user"])
+            setProperty("password", project.properties["artifactory.password"])
+            //setProperty("maven", true)
+        })
+        defaults(delegateClosureOf<groovy.lang.GroovyObject> {
+            setPublishPom(true)
+            invokeMethod(
+                "publications", arrayOf(
+                    "aar"
+                )
+            )
+            setProperty("publishArtifacts", true)
+        })
+    })
 }

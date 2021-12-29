@@ -104,7 +104,8 @@ dependencies {
     implementation project(path: ':security')
     implementation project(path: ':recall')
     implementation project(path: ':systemMessages')
-    implementation project(path: ':pushNotification')
+    //implementation project(path: ':pushNotification')
+    implementation 'RocheCommonComponent:pushNotification:1.0.0'
 
     //  this is required if the security library is integrated via project source
     implementation project(path: ':lvl_library')
