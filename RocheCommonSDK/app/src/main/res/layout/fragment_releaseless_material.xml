@@ -94,10 +94,40 @@
             android:layout_marginTop="20dp"
             android:padding="10dp"
             android:text="@string/txt_download"
-            app:layout_constraintBottom_toTopOf="@id/txt_status"
+            app:layout_constraintBottom_toTopOf="@id/btn_cancel_download"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/switch_wifi_only" />
+
+        <LinearLayout
+            android:id="@+id/layout_cancel_download"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toTopOf="@id/txt_status"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btn_download">
+
+            <Button
+                android:id="@+id/btn_cancel_download"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_weight="1"
+                android:padding="10dp"
+                android:text="@string/txt_cancel_download" />
+
+            <TextView
+                android:id="@+id/txt_cancel_download_status"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textSize="18sp" />
+
+        </LinearLayout>
 
         <TextView
             android:id="@+id/txt_status"
@@ -107,11 +137,19 @@
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/btn_download" />
+            app:layout_constraintTop_toBottomOf="@id/layout_cancel_download" />
     </LinearLayout>
 
-    <include
-        android:id="@+id/progress_bar"
-        layout="@layout/v_progress_view"
-        tools:visibility="gone" />
+    <androidx.core.widget.ContentLoadingProgressBar
+        android:id="@+id/view_loading_progress_bar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:indeterminateTintMode="src_atop"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

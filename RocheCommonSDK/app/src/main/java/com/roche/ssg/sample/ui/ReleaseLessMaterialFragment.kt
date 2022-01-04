@@ -29,12 +29,16 @@ class ReleaseLessMaterialFragment : Fragment() {
         binding.btnDownload.setOnClickListener {
             downloadStaticContent()
         }
+        binding.btnCancelDownload.setOnClickListener {
+            cancelDownload()
+        }
     }
 
     private fun downloadStaticContent() {
         with(binding) {
-            progressBar.progressBarHolder.isVisible = true
+            viewLoadingProgressBar.isVisible = true
             txtStatus.text = ""
+            txtCancelDownloadStatus.text = ""
             lifecycleScope.launch {
                 txtStatus.text = try {
                     val path = DownloadStaticContent.downloadStaticAssets(
@@ -51,13 +55,37 @@ class ReleaseLessMaterialFragment : Fragment() {
                 } catch (e: Exception) {
                     getString(R.string.error, e.message)
                 }
-                progressBar.progressBarHolder.isVisible = false
+                viewLoadingProgressBar.isVisible = false
             }
+        }
+    }
+
+    private fun cancelDownload() {
+        with(binding) {
+            DownloadStaticContent.cancelDownload(
+                context = requireContext(),
+                appVersion = etAppVersion.text.toString(),
+                locale = etLocale.text.toString(),
+                fileKey = etFileType.text.toString(),
+                targetSubDir = etTargetSubdir.text.toString(),
+                callback = ::cancelDownloadCallback
+            )
         }
     }
 
     private fun showProgress(progress: Int) {
         Log.d(LOG_TAG, "Downloading Progress: $progress")
+    }
+
+    private fun cancelDownloadCallback(status: Boolean) {
+        with(binding) {
+            txtCancelDownloadStatus.text = if (status) {
+                getString(R.string.txt_cancel_succeeded)
+            } else {
+                getString(R.string.txt_cancel_failed)
+            }
+            viewLoadingProgressBar.isVisible = false
+        }
     }
 
     companion object {
