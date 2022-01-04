@@ -126,30 +126,3 @@ object Deps {
     }
 
 }
-
-/*val kotlin by lazy { "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${com.roche.ssg.build.Versions.kotlin}" }
-val materialDesign by lazy { "com.google.android.material:material:${com.roche.ssg.build.Versions.material}" }
-val constraintLayout by lazy { "androidx.constraintlayout:constraintlayout:${com.roche.ssg.build.Versions.constraintLayout}" }
-val junit by lazy { "junit:junit:${com.roche.ssg.build.Versions.junit}" }
-
-
-val espressoCore by lazy { "androidx.test.espresso:espresso-core:${com.roche.ssg.build.Versions.espressoCore}" }
-
-object AndroidX {
-    val appCompat by lazy { "androidx.appcompat:appcompat:${com.roche.ssg.build.Versions.appCompat}" }
-    val coreKtx by lazy { "androidx.core:core-ktx:${com.roche.ssg.build.Versions.coreKtx}" }
-    val androidxJunit by lazy { "androidx.test.ext:junit:${com.roche.ssg.build.Versions.androidxJunit}" }
-
-    object Navigation {
-        val navigationFragmentKtx by lazy { "androidx.navigation:navigation-fragment-ktx:${com.roche.ssg.build.Versions.navigation}" }
-        val navigationUiKtx by lazy { "androidx.navigation:navigation-ui-ktx:${com.roche.ssg.build.Versions.navigation}" }
-    }
-
-    object Recycler {
-        val recyclerviewSelection by lazy { "androidx.recyclerview:recyclerview-selection:${com.roche.ssg.build.Versions.recyclerviewSelection}" }
-    }
-
-    object Work {
-        val workRuntimeKtx by lazy { "androidx.work:work-runtime-ktx:${com.roche.ssg.build.Versions.work}" }
-    }
-}*/
