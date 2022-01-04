@@ -1,12 +1,11 @@
 package com.roche.apprecall.api
 
-import com.roche.apprecall.model.AppRecallResponse
 import com.roche.apprecall.RecallException
-import com.roche.apprecall.model.SamdResponse
 import com.roche.apprecall.getDevice
 import com.roche.apprecall.getOS
 import com.roche.apprecall.getOSVersion
-import com.roche.apprecall.initLogger
+import com.roche.apprecall.model.AppRecallResponse
+import com.roche.apprecall.model.SamdResponse
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.features.HttpRequestTimeoutException
@@ -14,9 +13,6 @@ import io.ktor.client.features.HttpTimeout
 import io.ktor.client.features.ResponseException
 import io.ktor.client.features.json.JsonFeature
 import io.ktor.client.features.json.serializer.KotlinxSerializer
-import io.ktor.client.features.logging.LogLevel
-import io.ktor.client.features.logging.Logger
-import io.ktor.client.features.logging.Logging
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import io.ktor.http.ContentType
@@ -39,14 +35,6 @@ class RecallApiClient(httpClientEngine: HttpClientEngine) {
             requestTimeoutMillis = TIME_OUT
             connectTimeoutMillis = TIME_OUT
         }
-        install(Logging) {
-            level = LogLevel.ALL
-            logger = object : Logger {
-                override fun log(message: String) {
-                    //Napier.v(tag = "HTTP Client", message = message)
-                }
-            }
-        }
         install(JsonFeature) {
             val json = Json {
                 ignoreUnknownKeys = true
@@ -54,8 +42,6 @@ class RecallApiClient(httpClientEngine: HttpClientEngine) {
                 isLenient = true
             }
             serializer = KotlinxSerializer(json)
-        }.also {
-            initLogger()
         }
     }
     @Throws(RecallException::class,Exception::class)

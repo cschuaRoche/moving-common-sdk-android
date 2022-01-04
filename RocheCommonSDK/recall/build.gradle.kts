@@ -1,6 +1,6 @@
+import com.roche.ssg.buildsrc.ConfigData
+import com.roche.ssg.buildsrc.Deps
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
-
-val versions = rootProject.ext["versions"] as HashMap<String, Any>
 
 plugins {
     kotlin("multiplatform")
@@ -18,8 +18,6 @@ jacoco {
 version = "1.0"
 
 kotlin {
-    val ktor_version = "1.6.3"
-    val napier_version = "2.1.0"
 
     android()
 
@@ -42,40 +40,33 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                // logging
-                implementation("io.github.aakira:napier:$napier_version")
-
                 // ktor
-                implementation("io.ktor:ktor-client-core:$ktor_version")
-                implementation("io.ktor:ktor-client-logging:$ktor_version")
-                implementation("io.ktor:ktor-client-serialization:$ktor_version")
+                implementation(Deps.Ktor.clientCore)
+                implementation(Deps.Ktor.clientLogging)
+                implementation(Deps.Ktor.clientSerialization)
             }
         }
         val commonTest by getting {
             dependencies {
                 implementation(kotlin("test-common"))
                 implementation(kotlin("test-annotations-common"))
-                implementation( "io.ktor:ktor-client-mock:$ktor_version")
-                implementation("io.mockk:mockk-common:1.9.3.kotlin12")
-                implementation("io.mockk:mockk:1.9.3.kotlin12")
+                implementation(Deps.Ktor.clientMock)
             }
         }
         val androidMain by getting {
             dependencies {
-                implementation("io.ktor:ktor-client-android:$ktor_version")
+                implementation(Deps.Ktor.clientAndroid)
             }
         }
         val androidTest by getting {
             dependencies {
                 implementation(kotlin("test-junit"))
-                implementation("junit:junit:${versions["junit"]}")
-                implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.5.2")
+                implementation(Deps.junit)
             }
         }
         val iosMain by getting {
             dependencies {
-                implementation("io.ktor:ktor-client-ios:$ktor_version")
-                implementation( "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2-native-mt")
+                implementation(Deps.Ktor.clientIos)
             }
         }
         val iosTest by getting
@@ -83,12 +74,11 @@ kotlin {
 }
 
 android {
-    val versions = rootProject.ext["versions"] as HashMap<String, Any>
-    compileSdkVersion(versions["compile_sdk_version"].toString().toInt())
+    compileSdkVersion(ConfigData.compileSdkVersion)
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
     defaultConfig {
-        minSdkVersion(versions["min_sdk_version"].toString().toInt())
-        targetSdkVersion(versions["target_sdk_version"].toString().toInt())
+        minSdkVersion(ConfigData.minSdkVersion)
+        targetSdkVersion(ConfigData.targetSdkVersion)
     }
 }
 
