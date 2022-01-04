@@ -39,6 +39,8 @@ object Deps {
     const val kotlinxCoroutinesTest =
         "org.jetbrains.kotlinx:kotlinx-coroutines-test:${Versions.kotlinxCoroutinesCore}"
     const val json = "org.json:json:${Versions.json}"
+    const val kotlinxCoroutinesAndroid =
+        "org.jetbrains.kotlinx:kotlinx-coroutines-android:${Versions.coroutines}"
 
 
     object AndroidX {
@@ -75,6 +77,13 @@ object Deps {
             const val core = "androidx.test:core:${Versions.testCore}"
             const val coreTesting = "androidx.arch.core:core-testing:${Versions.coreTesting}"
 
+        }
+
+        object Lifecycle {
+            const val lifecycleViewmodelKtx =
+                "androidx.lifecycle:lifecycle-viewmodel-ktx:${Versions.lifecycle}"
+            const val lifecycleRuntimeKtx =
+                "androidx.lifecycle:lifecycle-runtime-ktx:${Versions.lifecycle}"
         }
     }
 
