@@ -152,7 +152,7 @@ object DownloadStaticContent {
             }
 
             // unzip the file and save the path to shared pref
-            val unzipPath = unzipFile(context, zipPath, appVersion, locale, fileKey, targetSubDir)
+            val unzipPath = unzipFile(context, zipPath, appVersion, targetSubDir)
             DownloadStaticContentSharedPref.setFilePath(
                 context,
                 targetSubDir,
@@ -291,18 +291,6 @@ object DownloadStaticContent {
         progress: (Int) -> Unit,
         allowWifiOnly: Boolean = false
     ): String {
-        if (DownloadStaticContentSharedPref.isDownloadCancelled(
-                context,
-                targetSubDir,
-                appVersion,
-                locale,
-                fileKey
-            )
-        ) {
-            sendNotification(context, true)
-            throw IllegalStateException(EXCEPTION_DOWNLOAD_CANCELLED_BY_USER)
-        }
-
         checkConnection(context, allowWifiOnly)
         return withContext(Dispatchers.IO) {
             val fileName = fileURL.substring(fileURL.lastIndexOf("/") + 1)
@@ -358,24 +346,8 @@ object DownloadStaticContent {
         context: Context,
         filePath: String,
         appVersion: String,
-        @LocaleType locale: String,
-        fileKey: String,
         targetSubDir: String
     ): String {
-        if (DownloadStaticContentSharedPref.isDownloadCancelled(
-                context,
-                targetSubDir,
-                appVersion,
-                locale,
-                fileKey
-            )
-        ) {
-            // delete downloaded file
-            File(filePath).delete()
-            sendNotification(context, true)
-            throw IllegalStateException(EXCEPTION_DOWNLOAD_CANCELLED_BY_USER)
-        }
-
         val subDirPath = targetSubDir + File.separator + appVersion
         val unzipPath = UnZipUtils.unzipFromAppFiles(filePath, context, subDirPath)
         if (unzipPath == null) {
@@ -403,17 +375,19 @@ object DownloadStaticContent {
             true
         )
 
-        val mMessageReceiver = object : BroadcastReceiver() {
+        val receiver = object : BroadcastReceiver() {
             override fun onReceive(ctx: Context?, intent: Intent?) {
-                val status =
+                val isCancelled =
                     intent?.getBooleanExtra(EXTRA_DOWNLOAD_CANCELLED_STATUS, false) ?: false
-                if (status) {
+                if (isCancelled) {
+                    // remove all shared pref of given appVersion and targetSubDir
                     DownloadStaticContentSharedPref.removeAllKeysOfAppVersion(
                         context,
                         targetSubDir,
                         appVersion
                     )
                 } else {
+                    // reset the cancel download shared pref
                     DownloadStaticContentSharedPref.setCancelDownload(
                         context,
                         targetSubDir,
@@ -423,12 +397,12 @@ object DownloadStaticContent {
                         false
                     )
                 }
-                callback(status)
+                callback(isCancelled)
                 LocalBroadcastManager.getInstance(context).unregisterReceiver(this)
             }
         }
         LocalBroadcastManager.getInstance(context)
-            .registerReceiver(mMessageReceiver, IntentFilter(BROADCAST_DOWNLOAD_CANCELLED))
+            .registerReceiver(receiver, IntentFilter(BROADCAST_DOWNLOAD_CANCELLED))
     }
 
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
@@ -443,7 +417,7 @@ object DownloadStaticContent {
         var line: String?
         while (inputStream.readLine().also { line = it } != null) {
             sb.append(line)
-            Log.i("readStream", line!!)
+            Log.i(LOG_TAG, line!!)
         }
         return sb.toString()
     }
@@ -606,9 +580,9 @@ object DownloadStaticContent {
         }
     }
 
-    private fun sendNotification(context: Context, status: Boolean) {
+    private fun sendNotification(context: Context, isCancelled: Boolean) {
         val intent = Intent(BROADCAST_DOWNLOAD_CANCELLED)
-        intent.putExtra(EXTRA_DOWNLOAD_CANCELLED_STATUS, status)
+        intent.putExtra(EXTRA_DOWNLOAD_CANCELLED_STATUS, isCancelled)
         LocalBroadcastManager.getInstance(context).sendBroadcast(intent)
     }
 }
