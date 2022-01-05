@@ -85,14 +85,6 @@ android {
 
 }
 
-/*publishing {
-    publications {
-        create<MavenPublication>("aar") {
-            artifact("$buildDir/outputs/aar/${project.name}-release.aar")
-        }
-    }
-}*/
-
 artifactory {
     setContextUrl("https://dhs.jfrog.io/dhs/")
     publish(delegateClosureOf<org.jfrog.gradle.plugin.artifactory.dsl.PublisherConfig> {

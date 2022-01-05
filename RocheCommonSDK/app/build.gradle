@@ -102,10 +102,8 @@ dependencies {
     implementation project(path: ':staticContent')
     implementation project(path: ':biometrics')
     implementation project(path: ':security')
-    //implementation project(path: ':recall')
     implementation 'RocheCommonComponent:recall:1.0.0'
     implementation project(path: ':systemMessages')
-    //implementation project(path: ':pushNotification')
     implementation 'RocheCommonComponent:pushNotification:1.0.0'
 
     //  this is required if the security library is integrated via project source
@@ -117,7 +115,6 @@ dependencies {
     //uiautomator
     androidTestImplementation 'androidx.test.uiautomator:uiautomator:2.2.0'
     implementation project(path: ':rocheCommon')
-    //implementation project(path: ':utils')
     implementation 'RocheCommonComponent:utils:1.0.2'
 
     // testing
