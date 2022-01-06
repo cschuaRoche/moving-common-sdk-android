@@ -53,7 +53,18 @@ class DownloadStaticContentTest : BaseMockkTest() {
         every { appContext.filesDir } returns File(CONTEXT_FILES_DIR)
         val downloadManager = mockk<DownloadManager>(relaxed = true)
         coEvery { appContext.getSystemService(Context.DOWNLOAD_SERVICE) } returns downloadManager
-        coEvery { DownloadStaticContent.trackProgress(any(), downloadManager, any()) } returns true
+        coEvery {
+            DownloadStaticContent.trackProgress(
+                appContext,
+                any(),
+                downloadManager,
+                APP_VERSION,
+                LOCALE,
+                FILE_KEY,
+                TARGET_SUB_DIRECTORY,
+                any()
+            )
+        } returns true
         coEvery {
             DownloadStaticContent.moveDownloadToInternalDir(
                 any(),
@@ -66,8 +77,11 @@ class DownloadStaticContentTest : BaseMockkTest() {
             DownloadStaticContent.downloadFromUrl(
                 appContext,
                 getZippedFileUrl(),
+                APP_VERSION,
+                LOCALE,
+                FILE_KEY,
+                TARGET_SUB_DIRECTORY,
                 ::showProgress,
-                getSubDir(),
                 false
             )
         } returns getZippedFilePath()
@@ -93,7 +107,8 @@ class DownloadStaticContentTest : BaseMockkTest() {
             DownloadStaticContent.unzipFile(
                 appContext,
                 getZippedFilePath(),
-                getSubDir()
+                APP_VERSION,
+                TARGET_SUB_DIRECTORY
             )
         } returns getUnzippedFilePath()
     }
@@ -149,8 +164,11 @@ class DownloadStaticContentTest : BaseMockkTest() {
             DownloadStaticContent.downloadFromUrl(
                 appContext,
                 getZippedFileUrl(),
+                APP_VERSION,
+                LOCALE,
+                FILE_KEY,
+                TARGET_SUB_DIRECTORY,
                 ::showProgress,
-                getSubDir(),
                 false
             )
         }
@@ -159,7 +177,8 @@ class DownloadStaticContentTest : BaseMockkTest() {
             DownloadStaticContent.unzipFile(
                 appContext,
                 getZippedFilePath(),
-                getSubDir()
+                APP_VERSION,
+                TARGET_SUB_DIRECTORY
             )
         }
         verify(exactly = 1) {
@@ -227,10 +246,19 @@ class DownloadStaticContentTest : BaseMockkTest() {
                 )
             }
             coVerify(exactly = 0) {
-                DownloadStaticContent.downloadFromUrl(appContext, any(), any(), any(), any())
+                DownloadStaticContent.downloadFromUrl(
+                    appContext,
+                    any(),
+                    any(),
+                    any(),
+                    any(),
+                    any(),
+                    any(),
+                    any()
+                )
             }
             verify(exactly = 0) {
-                DownloadStaticContent.unzipFile(appContext, any(), any())
+                DownloadStaticContent.unzipFile(appContext, any(), any(), any())
             }
         }
 
@@ -279,10 +307,10 @@ class DownloadStaticContentTest : BaseMockkTest() {
                 )
             }
             coVerify(exactly = 0) {
-                DownloadStaticContent.downloadFromUrl(appContext, any(), any(), any(), any())
+                DownloadStaticContent.downloadFromUrl(appContext, any(), any(), any(), any(), any(), any(), any())
             }
             verify(exactly = 0) {
-                DownloadStaticContent.unzipFile(appContext, any(), any())
+                DownloadStaticContent.unzipFile(appContext, any(), any(), any())
             }
             verify(exactly = 1) { appContext.filesDir.usableSpace }
         }
@@ -306,8 +334,11 @@ class DownloadStaticContentTest : BaseMockkTest() {
                 DownloadStaticContent.downloadFromUrl(
                     appContext,
                     getZippedFileUrl(),
+                    APP_VERSION,
+                    LOCALE,
+                    FILE_KEY,
+                    TARGET_SUB_DIRECTORY,
                     any(),
-                    getSubDir(),
                     false
                 )
             } returns getZippedFilePath()
@@ -342,10 +373,19 @@ class DownloadStaticContentTest : BaseMockkTest() {
                 )
             }
             coVerify(exactly = 1) {
-                DownloadStaticContent.downloadFromUrl(appContext, any(), any(), any(), any())
+                DownloadStaticContent.downloadFromUrl(
+                    appContext,
+                    any(),
+                    any(),
+                    any(),
+                    any(),
+                    any(),
+                    any(),
+                    any()
+                )
             }
             verify(exactly = 0) {
-                DownloadStaticContent.unzipFile(appContext, any(), any())
+                DownloadStaticContent.unzipFile(appContext, any(), any(), any())
             }
             verify(exactly = 2) { appContext.filesDir.usableSpace }
         }
@@ -405,10 +445,19 @@ class DownloadStaticContentTest : BaseMockkTest() {
                 )
             }
             coVerify(exactly = 0) {
-                DownloadStaticContent.downloadFromUrl(appContext, any(), any(), any(), any())
+                DownloadStaticContent.downloadFromUrl(
+                    appContext,
+                    any(),
+                    any(),
+                    any(),
+                    any(),
+                    any(),
+                    any(),
+                    any()
+                )
             }
             verify(exactly = 0) {
-                DownloadStaticContent.unzipFile(appContext, any(), any())
+                DownloadStaticContent.unzipFile(appContext, any(), any(), any())
             }
         }
 
@@ -721,7 +770,18 @@ class DownloadStaticContentTest : BaseMockkTest() {
         every { appContext.filesDir } returns File(CONTEXT_FILES_DIR)
         val downloadManager = mockk<DownloadManager>(relaxed = true)
         coEvery { appContext.getSystemService(Context.DOWNLOAD_SERVICE) } returns downloadManager
-        coEvery { DownloadStaticContent.trackProgress(any(), downloadManager, any()) } returns true
+        coEvery {
+            DownloadStaticContent.trackProgress(
+                appContext,
+                any(),
+                downloadManager,
+                APP_VERSION,
+                LOCALE,
+                FILE_KEY,
+                TARGET_SUB_DIRECTORY,
+                any()
+            )
+        } returns true
         coEvery {
             DownloadStaticContent.moveDownloadToInternalDir(
                 any(),
@@ -734,11 +794,25 @@ class DownloadStaticContentTest : BaseMockkTest() {
         val zippedPath = DownloadStaticContent.downloadFromUrl(
             appContext,
             getZippedFileUrl(),
-            ::showProgress,
-            getSubDir()
+            APP_VERSION,
+            LOCALE,
+            FILE_KEY,
+            TARGET_SUB_DIRECTORY,
+            ::showProgress
         )
         Assert.assertEquals(getZippedFilePath(), zippedPath)
-        coVerify(exactly = 1) { DownloadStaticContent.trackProgress(any(), downloadManager, any()) }
+        coVerify(exactly = 1) {
+            DownloadStaticContent.trackProgress(
+                appContext,
+                any(),
+                downloadManager,
+                APP_VERSION,
+                LOCALE,
+                FILE_KEY,
+                TARGET_SUB_DIRECTORY,
+                any()
+            )
+        }
         coVerify(exactly = 1) {
             DownloadStaticContent.moveDownloadToInternalDir(
                 any(),
@@ -757,8 +831,13 @@ class DownloadStaticContentTest : BaseMockkTest() {
             coEvery { appContext.getSystemService(Context.DOWNLOAD_SERVICE) } returns downloadManager
             coEvery {
                 DownloadStaticContent.trackProgress(
+                    appContext,
                     any(),
                     downloadManager,
+                    APP_VERSION,
+                    LOCALE,
+                    FILE_KEY,
+                    TARGET_SUB_DIRECTORY,
                     any()
                 )
             } returns false
@@ -767,8 +846,11 @@ class DownloadStaticContentTest : BaseMockkTest() {
                 DownloadStaticContent.downloadFromUrl(
                     appContext,
                     getZippedFileUrl(),
-                    ::showProgress,
-                    getSubDir()
+                    APP_VERSION,
+                    LOCALE,
+                    FILE_KEY,
+                    TARGET_SUB_DIRECTORY,
+                    ::showProgress
                 )
                 Assert.fail("downloadFromUrl should have thrown EXCEPTION_DOWNLOAD_FAILED error")
             } catch (e: IllegalStateException) {
@@ -778,8 +860,13 @@ class DownloadStaticContentTest : BaseMockkTest() {
                 )
                 coVerify(exactly = 1) {
                     DownloadStaticContent.trackProgress(
+                        appContext,
                         any(),
                         downloadManager,
+                        APP_VERSION,
+                        LOCALE,
+                        FILE_KEY,
+                        TARGET_SUB_DIRECTORY,
                         any()
                     )
                 }
@@ -802,8 +889,11 @@ class DownloadStaticContentTest : BaseMockkTest() {
                 DownloadStaticContent.downloadFromUrl(
                     appContext,
                     getZippedFileUrl(),
-                    ::showProgress,
-                    getSubDir()
+                    APP_VERSION,
+                    LOCALE,
+                    FILE_KEY,
+                    TARGET_SUB_DIRECTORY,
+                    ::showProgress
                 )
                 Assert.fail("downloadFromUrl should have thrown EXCEPTION_NETWORK_NOT_AVAILABLE error")
             } catch (e: IllegalStateException) {
@@ -824,8 +914,11 @@ class DownloadStaticContentTest : BaseMockkTest() {
                 DownloadStaticContent.downloadFromUrl(
                     appContext,
                     getZippedFileUrl(),
+                    APP_VERSION,
+                    LOCALE,
+                    FILE_KEY,
+                    TARGET_SUB_DIRECTORY,
                     ::showProgress,
-                    getSubDir(),
                     allowWifiOnly = true
                 )
                 Assert.fail("downloadFromUrl should have thrown EXCEPTION_NETWORK_NOT_AVAILABLE error")
@@ -850,7 +943,7 @@ class DownloadStaticContentTest : BaseMockkTest() {
         } returns getUnzippedFilePath()
 
         val unzippedPath =
-            DownloadStaticContent.unzipFile(appContext, getZippedFilePath(), getSubDir())
+            DownloadStaticContent.unzipFile(appContext, getZippedFilePath(), APP_VERSION, TARGET_SUB_DIRECTORY)
         Assert.assertEquals(getUnzippedFilePath(), unzippedPath)
         verify(exactly = 1) {
             UnZipUtils.unzipFromAppFiles(
@@ -871,7 +964,7 @@ class DownloadStaticContentTest : BaseMockkTest() {
         } returns null
 
         try {
-            DownloadStaticContent.unzipFile(appContext, getZippedFilePath(), getSubDir())
+            DownloadStaticContent.unzipFile(appContext, getZippedFilePath(), APP_VERSION, TARGET_SUB_DIRECTORY)
             Assert.fail("unzipFile didn't throw EXCEPTION_UNZIPPING_FILE error")
         } catch (e: IllegalStateException) {
             Assert.assertEquals(DownloadStaticContent.EXCEPTION_UNZIPPING_FILE, e.message)
