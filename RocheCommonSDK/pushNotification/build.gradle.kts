@@ -7,12 +7,21 @@ plugins {
     kotlin("native.cocoapods")
     id("com.android.library")
     kotlin("plugin.serialization") version "1.4.10"
+    id("maven-publish")
+    id("com.jfrog.artifactory")
 }
 
-version = "1.0"
+version = "1.0.0"
 
 kotlin {
-    android()
+    android {
+        group = "RocheCommonComponent"
+        publishLibraryVariants("release")
+        mavenPublication {
+            artifactId = project.name
+            artifact("$buildDir/outputs/aar/${project.name}-release.aar")
+        }
+    }
 
     val iosTarget: (String, KotlinNativeTarget.() -> Unit) -> KotlinNativeTarget = when {
         System.getenv("SDK_NAME")?.startsWith("iphoneos") == true -> ::iosArm64
@@ -29,7 +38,7 @@ kotlin {
         frameworkName = "pushNotificationSDK"
         // set path to your ios project podfile, e.g. podfile = project.file("../iosApp/Podfile")
     }
-    
+
     sourceSets {
         val commonMain by getting {
             dependencies {
@@ -73,4 +82,26 @@ android {
         minSdkVersion(versions["min_sdk_version"].toString().toInt())
         targetSdkVersion(versions["target_sdk_version"].toString().toInt())
     }
+
+}
+
+artifactory {
+    setContextUrl("https://dhs.jfrog.io/dhs/")
+    publish(delegateClosureOf<org.jfrog.gradle.plugin.artifactory.dsl.PublisherConfig> {
+        repository(delegateClosureOf<org.jfrog.gradle.plugin.artifactory.dsl.DoubleDelegateWrapper> {
+            setProperty("repoKey", project.properties["artifactory.repokey"])
+            setProperty("username", project.properties["artifactory.user"])
+            setProperty("password", project.properties["artifactory.password"])
+            //setProperty("maven", true)
+        })
+        defaults(delegateClosureOf<groovy.lang.GroovyObject> {
+            setPublishPom(true)
+            invokeMethod(
+                "publications", arrayOf(
+                    "androidRelease"
+                )
+            )
+            setProperty("publishArtifacts", true)
+        })
+    })
 }
