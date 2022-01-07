@@ -35,7 +35,6 @@ class RecallApiClient(httpClientEngine: HttpClientEngine) {
             requestTimeoutMillis = TIME_OUT
             connectTimeoutMillis = TIME_OUT
         }
-
         install(JsonFeature) {
             val json = Json {
                 ignoreUnknownKeys = true

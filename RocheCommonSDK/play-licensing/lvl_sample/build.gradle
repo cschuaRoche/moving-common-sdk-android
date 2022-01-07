@@ -1,12 +1,12 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 23
+    compileSdkVersion ConfigData.compileSdkVersion
 
     defaultConfig {
         applicationId "com.example.google.play.licensing"
-        minSdkVersion 8
-        targetSdkVersion 23
+        minSdkVersion ConfigData.minSdkVersion
+        targetSdkVersion ConfigData.targetSdkVersion
 
         testApplicationId "com.example.google.play.licensing.test"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"

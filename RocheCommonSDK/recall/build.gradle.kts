@@ -1,6 +1,6 @@
+import com.roche.ssg.buildsrc.ConfigData
+import com.roche.ssg.buildsrc.Deps
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
-
-val versions = rootProject.ext["versions"] as HashMap<String, Any>
 
 plugins {
     kotlin("multiplatform")
@@ -19,6 +19,8 @@ jacoco {
 version = "1.0.0"
 
 kotlin {
+
+    android()
     android {
         group = "RocheCommonComponent"
         publishLibraryVariants("release")
@@ -48,32 +50,32 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 // ktor
-                implementation("io.ktor:ktor-client-core:${versions["ktor_version"]}")
-                implementation("io.ktor:ktor-client-logging:${versions["ktor_version"]}")
-                implementation("io.ktor:ktor-client-serialization:${versions["ktor_version"]}")
+                implementation(Deps.Ktor.clientCore)
+                implementation(Deps.Ktor.clientLogging)
+                implementation(Deps.Ktor.clientSerialization)
             }
         }
         val commonTest by getting {
             dependencies {
                 implementation(kotlin("test-common"))
                 implementation(kotlin("test-annotations-common"))
-                implementation( "io.ktor:ktor-client-mock:${versions["ktor_version"]}")
+                implementation(Deps.Ktor.clientMock)
             }
         }
         val androidMain by getting {
             dependencies {
-                implementation("io.ktor:ktor-client-android:${versions["ktor_version"]}")
+                implementation(Deps.Ktor.clientAndroid)
             }
         }
         val androidTest by getting {
             dependencies {
                 implementation(kotlin("test-junit"))
-                implementation("junit:junit:${versions["junit"]}")
+                implementation(Deps.junit)
             }
         }
         val iosMain by getting {
             dependencies {
-                implementation("io.ktor:ktor-client-ios:${versions["ktor_version"]}")
+                implementation(Deps.Ktor.clientIos)
             }
         }
         val iosTest by getting
@@ -81,11 +83,11 @@ kotlin {
 }
 
 android {
-    compileSdkVersion(versions["compile_sdk_version"].toString().toInt())
+    compileSdkVersion(ConfigData.compileSdkVersion)
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
     defaultConfig {
-        minSdkVersion(versions["min_sdk_version"].toString().toInt())
-        targetSdkVersion(versions["target_sdk_version"].toString().toInt())
+        minSdkVersion(ConfigData.minSdkVersion)
+        targetSdkVersion(ConfigData.targetSdkVersion)
     }
 }
 

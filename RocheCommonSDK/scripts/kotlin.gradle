@@ -1,7 +1,9 @@
+import com.roche.ssg.buildsrc.*
+
 dependencies {
-    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$versions.lifecycle"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$versions.coroutines"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$versions.coroutines"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$versions.coroutines"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$versions.lifecycle"
+    implementation Deps.AndroidX.Lifecycle.lifecycleRuntimeKtx
+    implementation Deps.kotlinxCoroutinesCore
+    implementation Deps.kotlinxCoroutinesTest
+    implementation Deps.kotlinxCoroutinesAndroid
+    implementation Deps.AndroidX.Lifecycle.lifecycleViewmodelKtx
 }

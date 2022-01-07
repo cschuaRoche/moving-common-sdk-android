@@ -1,15 +1,17 @@
+import com.roche.ssg.buildsrc.*
+
 plugins {
     id 'com.android.library'
     id 'kotlin-android'
 }
 
 android {
-    compileSdkVersion 30
-    buildToolsVersion "30.0.3"
+    compileSdkVersion ConfigData.compileSdkVersion
+    buildToolsVersion ConfigData.buildToolsVersion
 
     defaultConfig {
-        minSdkVersion 24
-        targetSdkVersion 30
+        minSdkVersion ConfigData.minSdkVersion
+        targetSdkVersion ConfigData.targetSdkVersion
         versionCode 1
         versionName "1.0.3"
 
@@ -43,24 +45,24 @@ android {
 
 dependencies {
 
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:${versions.kotlin_version}"
-    implementation 'androidx.core:core-ktx:1.6.0'
-    implementation 'androidx.appcompat:appcompat:1.3.1'
-    implementation 'com.google.android.material:material:1.4.0'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.1'
+    implementation Deps.kotlin
+    implementation Deps.AndroidX.coreKtx
+    implementation Deps.AndroidX.appCompat
+    implementation Deps.materialDesign
+    implementation Deps.kotlinxCoroutinesCore
 
     //implementation project(path: ':utils')
-    api 'RocheCommonComponent:utils:1.0.2'
+    api Deps.RocheCommonComponent.utils
 
-    testImplementation "junit:junit:${versions.junit}"
-    testImplementation "io.mockk:mockk:1.12.0"
-    testImplementation "androidx.arch.core:core-testing:2.1.0"
-    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.5.1"
-    testImplementation "androidx.security:security-crypto:1.1.0-alpha03"
-    testImplementation "org.json:json:20210307"
+    testImplementation Deps.junit
+    testImplementation Deps.Mockito.mockk
+    testImplementation Deps.AndroidX.Test.coreTesting
+    testImplementation Deps.kotlinxCoroutinesTest
+    testImplementation Deps.AndroidX.Security.securityCrypto
+    testImplementation Deps.json
 
-    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+    androidTestImplementation Deps.AndroidX.Test.testExt
+    androidTestImplementation Deps.AndroidX.Test.espressoCore
 }
 
 apply from: "$project.rootDir/scripts/artifactory.gradle"
