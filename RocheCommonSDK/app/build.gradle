@@ -104,13 +104,13 @@ dependencies {
     implementation project(path: ':staticContent')
     implementation project(path: ':biometrics')
     implementation project(path: ':security')
-    implementation project(path: ':recall')
+    implementation 'RocheCommonComponent:recall:1.0.0'
     implementation project(path: ':systemMessages')
-    implementation project(path: ':pushNotification')
+    implementation 'RocheCommonComponent:pushNotification:1.0.0'
+
     //  this is required if the security library is integrated via project source
     implementation project(path: ':lvl_library')
     implementation project(path: ':rocheCommon')
-    //implementation project(path: ':utils')
     implementation Deps.RocheCommonComponent.utils
 
     implementation Deps.AndroidX.Biometric.biometric
