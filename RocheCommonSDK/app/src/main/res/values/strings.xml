@@ -49,6 +49,9 @@
     <string name="hint_file_type">File Type</string>
     <string name="txt_wifi_only">Wifi Only</string>
     <string name="txt_download">Download</string>
+    <string name="txt_cancel_download">Cancel Download</string>
+    <string name="txt_cancel_failed">Cancel Failed</string>
+    <string name="txt_cancel_succeeded">Cancel Succeeded</string>
     <string name="txt_fcm_token_with_label">FCM Token: %1$s</string>
 
     <!-- Salesforce strings must be included if you want to localize them -->

@@ -20,6 +20,9 @@ object DownloadStaticContentSharedPref {
     @VisibleForTesting
     internal const val PREF_KEY_FILE_PATH_PREFIX = "key_file_path"
 
+    @VisibleForTesting
+    internal const val PREF_KEY_CANCEL_DOWNLOAD = "key_cancel_download"
+
     fun getVersion(context: Context, targetSubDir: String): String {
         val key = "${PREF_KEY_VERSION_PREFIX}_$targetSubDir"
         val pref = PreferenceUtil.createOrGetPreference(context, USER_MANUALS_PREFS)
@@ -82,11 +85,37 @@ object DownloadStaticContentSharedPref {
         pref.set(key, filePath)
     }
 
+    fun setCancelDownload(
+        context: Context,
+        targetSubDir: String,
+        appVersion: String,
+        @DownloadStaticContent.LocaleType locale: String,
+        fileKey: String,
+        shouldCancel: Boolean
+    ) {
+        val key = generateKey(PREF_KEY_CANCEL_DOWNLOAD, targetSubDir, appVersion, locale, fileKey)
+        val pref = PreferenceUtil.createOrGetPreference(context, USER_MANUALS_PREFS)
+        pref.set(key, shouldCancel)
+    }
+
+    fun isDownloadCancelled(
+        context: Context,
+        targetSubDir: String,
+        appVersion: String,
+        @DownloadStaticContent.LocaleType locale: String,
+        fileKey: String
+    ): Boolean {
+        val key = generateKey(PREF_KEY_CANCEL_DOWNLOAD, targetSubDir, appVersion, locale, fileKey)
+        val pref = PreferenceUtil.createOrGetPreference(context, USER_MANUALS_PREFS)
+        return pref.get(key, false) ?: false
+    }
+
     fun removeAllKeysOfAppVersion(context: Context, targetSubDir: String, appVersion: String) {
         val pref = PreferenceUtil.createOrGetPreference(context, USER_MANUALS_PREFS)
         for (key in pref.all.keys) {
             if (key.startsWith("${PREF_KEY_ETAG_PREFIX}_${targetSubDir}_${getAppVersionKey(appVersion)}_") ||
-                key.startsWith("${PREF_KEY_FILE_PATH_PREFIX}_${targetSubDir}_${getAppVersionKey(appVersion)}_")
+                key.startsWith("${PREF_KEY_FILE_PATH_PREFIX}_${targetSubDir}_${getAppVersionKey(appVersion)}_")||
+                key.startsWith("${PREF_KEY_CANCEL_DOWNLOAD}_${targetSubDir}_${getAppVersionKey(appVersion)}_")
             ) {
                 pref.remove(key)
             }

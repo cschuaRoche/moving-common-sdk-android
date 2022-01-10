@@ -1,11 +1,15 @@
 package com.roche.ssg.staticcontent
 
 import android.app.DownloadManager
+import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.net.Uri
 import android.util.Log
 import androidx.annotation.StringDef
 import androidx.annotation.VisibleForTesting
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.roche.ssg.staticcontent.entity.ManifestInfo
 import com.roche.ssg.utils.NetworkUtils
 import com.roche.ssg.utils.UnZipUtils
@@ -55,6 +59,8 @@ object DownloadStaticContent {
     private const val JSON_KEY_PATH = "path"
     private const val JSON_KEY_FILE_SIZE = "fileSize"
     private const val JSON_KEY_ORIGINAL_SIZE = "originalSize"
+    private const val BROADCAST_DOWNLOAD_CANCELLED = "BROADCAST_DOWNLOAD_CANCELLED"
+    private const val EXTRA_DOWNLOAD_CANCELLED_STATUS = "EXTRA_DOWNLOAD_CANCELLED_STATUS"
 
     const val EXCEPTION_TARGET_SUB_DIRECTORY_EMPTY = "Target sub directory is empty"
     const val EXCEPTION_WIFI_NOT_AVAILABLE = "Wifi Not Available"
@@ -67,6 +73,7 @@ object DownloadStaticContent {
     const val EXCEPTION_UNZIPPING_FILE = "Error In Unzipping The File"
     const val EXCEPTION_INSUFFICIENT_STORAGE = "Insufficient Storage"
     const val EXCEPTION_DOWNLOAD_FAILED = "Downloading Failed"
+    const val EXCEPTION_DOWNLOAD_CANCELLED_BY_USER = "Download Cancelled by User"
 
     /**
      * Download static assets and unzips them of given app version, locale and file key.
@@ -128,9 +135,16 @@ object DownloadStaticContent {
             }
 
             // download the file
-            val subDirPath = targetSubDir + File.separator + appVersion
-            val zipPath =
-                downloadFromUrl(context, manifestInfo.path, progress, subDirPath, allowWifiOnly)
+            val zipPath = downloadFromUrl(
+                context,
+                manifestInfo.path,
+                appVersion,
+                locale,
+                fileKey,
+                targetSubDir,
+                progress,
+                allowWifiOnly
+            )
 
             // check free space to unzip the file
             if (context.filesDir.usableSpace <= manifestInfo.originalSize) {
@@ -138,7 +152,7 @@ object DownloadStaticContent {
             }
 
             // unzip the file and save the path to shared pref
-            val unzipPath = unzipFile(context, zipPath, subDirPath)
+            val unzipPath = unzipFile(context, zipPath, appVersion, targetSubDir)
             DownloadStaticContentSharedPref.setFilePath(
                 context,
                 targetSubDir,
@@ -270,14 +284,18 @@ object DownloadStaticContent {
     suspend fun downloadFromUrl(
         context: Context,
         fileURL: String,
-        progress: (Int) -> Unit,
+        appVersion: String,
+        @LocaleType locale: String,
+        fileKey: String,
         targetSubDir: String,
+        progress: (Int) -> Unit,
         allowWifiOnly: Boolean = false
     ): String {
         checkConnection(context, allowWifiOnly)
         return withContext(Dispatchers.IO) {
             val fileName = fileURL.substring(fileURL.lastIndexOf("/") + 1)
-            val file = File(context.filesDir.toString() + File.separator + targetSubDir)
+            val file =
+                File(context.filesDir.toString() + File.separator + targetSubDir + File.separator + appVersion)
             if (file.exists().not()) {
                 file.mkdirs()
             }
@@ -294,7 +312,16 @@ object DownloadStaticContent {
             val downloadManager =
                 context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
             val downloadId = downloadManager.enqueue(request)
-            val isDownloadSuccessful = trackProgress(downloadId, downloadManager, progress)
+            val isDownloadSuccessful = trackProgress(
+                context,
+                downloadId,
+                downloadManager,
+                appVersion,
+                locale,
+                fileKey,
+                targetSubDir,
+                progress
+            )
             if (!isDownloadSuccessful) {
                 throw IllegalStateException(EXCEPTION_DOWNLOAD_FAILED)
             }
@@ -318,14 +345,64 @@ object DownloadStaticContent {
     fun unzipFile(
         context: Context,
         filePath: String,
+        appVersion: String,
         targetSubDir: String
     ): String {
-        val unzipPath = UnZipUtils.unzipFromAppFiles(filePath, context, targetSubDir)
+        val subDirPath = targetSubDir + File.separator + appVersion
+        val unzipPath = UnZipUtils.unzipFromAppFiles(filePath, context, subDirPath)
         if (unzipPath == null) {
             Log.e(LOG_TAG, "error occurred in unzipping the file")
             throw IllegalStateException(EXCEPTION_UNZIPPING_FILE)
         }
+        sendNotification(context, false)
         return unzipPath
+    }
+
+    fun cancelDownload(
+        context: Context,
+        appVersion: String,
+        @LocaleType locale: String,
+        fileKey: String,
+        targetSubDir: String,
+        callback: (Boolean) -> Unit
+    ) {
+        DownloadStaticContentSharedPref.setCancelDownload(
+            context,
+            targetSubDir,
+            appVersion,
+            locale,
+            fileKey,
+            true
+        )
+
+        val receiver = object : BroadcastReceiver() {
+            override fun onReceive(ctx: Context?, intent: Intent?) {
+                val isCancelled =
+                    intent?.getBooleanExtra(EXTRA_DOWNLOAD_CANCELLED_STATUS, false) ?: false
+                if (isCancelled) {
+                    // remove all shared pref of given appVersion and targetSubDir
+                    DownloadStaticContentSharedPref.removeAllKeysOfAppVersion(
+                        context,
+                        targetSubDir,
+                        appVersion
+                    )
+                } else {
+                    // reset the cancel download shared pref
+                    DownloadStaticContentSharedPref.setCancelDownload(
+                        context,
+                        targetSubDir,
+                        appVersion,
+                        locale,
+                        fileKey,
+                        false
+                    )
+                }
+                callback(isCancelled)
+                LocalBroadcastManager.getInstance(context).unregisterReceiver(this)
+            }
+        }
+        LocalBroadcastManager.getInstance(context)
+            .registerReceiver(receiver, IntentFilter(BROADCAST_DOWNLOAD_CANCELLED))
     }
 
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
@@ -340,20 +417,39 @@ object DownloadStaticContent {
         var line: String?
         while (inputStream.readLine().also { line = it } != null) {
             sb.append(line)
-            Log.i("readStream", line!!)
+            Log.i(LOG_TAG, line!!)
         }
         return sb.toString()
     }
 
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     internal suspend fun trackProgress(
+        context: Context,
         downloadId: Long,
         downloadManager: DownloadManager,
+        appVersion: String,
+        @LocaleType locale: String,
+        fileKey: String,
+        targetSubDir: String,
         progress: (Int) -> Unit
     ): Boolean {
         var isDownloadFinished = false
         var isDownloadSuccessful = false
         while (!isDownloadFinished) {
+            // check download has been cancelled or not by user
+            if (DownloadStaticContentSharedPref.isDownloadCancelled(
+                    context,
+                    targetSubDir,
+                    appVersion,
+                    locale,
+                    fileKey
+                )
+            ) {
+                downloadManager.remove(downloadId)
+                sendNotification(context, true)
+                throw IllegalStateException(EXCEPTION_DOWNLOAD_CANCELLED_BY_USER)
+            }
+
             val cursor = downloadManager.query(DownloadManager.Query().setFilterById(downloadId))
             if (cursor.moveToFirst()) {
                 when (cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS))) {
@@ -482,6 +578,12 @@ object DownloadStaticContent {
             // update new version
             DownloadStaticContentSharedPref.setVersion(context, targetSubDir, appVersion)
         }
+    }
+
+    private fun sendNotification(context: Context, isCancelled: Boolean) {
+        val intent = Intent(BROADCAST_DOWNLOAD_CANCELLED)
+        intent.putExtra(EXTRA_DOWNLOAD_CANCELLED_STATUS, isCancelled)
+        LocalBroadcastManager.getInstance(context).sendBroadcast(intent)
     }
 }
 
