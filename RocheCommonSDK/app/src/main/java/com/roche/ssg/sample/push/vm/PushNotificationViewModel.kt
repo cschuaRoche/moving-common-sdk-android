@@ -12,6 +12,8 @@ import com.amazonaws.mobile.client.AWSMobileClient
 import com.amplifyframework.AmplifyException
 import com.amplifyframework.auth.cognito.AWSCognitoAuthPlugin
 import com.amplifyframework.core.Amplify
+import com.amplifyframework.core.AmplifyConfiguration
+import com.amplifyframework.core.Resources
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.messaging.FirebaseMessaging
 import com.roche.ssg.pushnotification.PushNotificationException
@@ -41,7 +43,14 @@ class PushNotificationViewModel(application: Application) : AndroidViewModel(app
     private fun initAmplify() {
         try {
             Amplify.addPlugin(AWSCognitoAuthPlugin())
-            Amplify.configure(getApplication())
+            val configuration = AmplifyConfiguration.builder(
+                getApplication(),
+                Resources.getRawResourceId(
+                    getApplication(),
+                    "push_notification_amplify_configuration"
+                )
+            ).build()
+            Amplify.configure(configuration, getApplication())
         } catch (error: AmplifyException) {
             if (!(error is Amplify.AlreadyConfiguredException))
                 pushNotificationStates.postValue(

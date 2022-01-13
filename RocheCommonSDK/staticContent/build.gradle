@@ -63,6 +63,8 @@ dependencies {
 
     androidTestImplementation Deps.AndroidX.Test.testExt
     androidTestImplementation Deps.AndroidX.Test.espressoCore
+
+    implementation Deps.AndroidX.localBroadcastManager
 }
 
 apply from: "$project.rootDir/scripts/artifactory.gradle"

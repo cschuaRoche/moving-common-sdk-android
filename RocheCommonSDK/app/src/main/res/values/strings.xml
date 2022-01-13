@@ -120,4 +120,6 @@
     <string name="system_messages_type">quality,system</string>
     <string name="system_messages_samd">com.roche.floodlight</string>
     <string name="system_message_samd_version">1.3.2</string>
+    <string name="etl_pipeline">ETL Pipeline</string>
+    <string name="btn_txt_get_pre_signed_url">Get Pre-Signed URL</string>
 </resources>

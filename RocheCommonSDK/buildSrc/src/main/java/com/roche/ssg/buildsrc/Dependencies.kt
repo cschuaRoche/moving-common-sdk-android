@@ -72,7 +72,7 @@ object Deps {
 
         object Test {
             const val uiautomator = "androidx.test.uiautomator:uiautomator:${Versions.uiAutomator}"
-            const val testExt = "androidx.test.ext:junit:${Versions.junit}"
+            const val testExt = "androidx.test.ext:junit:${Versions.androidxJunit}"
             const val espressoCore = "androidx.test.espresso:espresso-core:${Versions.espressoCore}"
             const val core = "androidx.test:core:${Versions.testCore}"
             const val coreTesting = "androidx.arch.core:core-testing:${Versions.coreTesting}"

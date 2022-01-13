@@ -59,5 +59,10 @@
             android:title="@string/navify_platform_login"
             app:actionLayout="@layout/action_view_arrow" />
 
+        <item
+            android:id="@+id/etlPipelineFragment"
+            android:title="@string/etl_pipeline"
+            app:actionLayout="@layout/action_view_arrow" />
+
     </group>
 </menu>
