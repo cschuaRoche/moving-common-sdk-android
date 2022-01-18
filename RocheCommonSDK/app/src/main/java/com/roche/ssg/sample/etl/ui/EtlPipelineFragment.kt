@@ -4,9 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.roche.ssg.sample.R
 import com.roche.ssg.sample.databinding.FragmentEtlPipelineBinding
 import com.roche.ssg.sample.etl.vm.EtlViewModel
 
@@ -29,14 +31,28 @@ class EtlPipelineFragment : Fragment() {
 
     private fun setPreSignedUrlListener() {
         mBinding.btnGetPreSignedUrl.setOnClickListener {
+            toggleProgressVisibility()
             mEtlViewModel.getPreSignedUrl()
         }
     }
 
     private fun setLoginClickListener() {
         mBinding.btnGetCognitoToken.setOnClickListener {
+            if (mBinding.etUsername.text.toString().trim()
+                    .isEmpty() || mBinding.etPassword.text.toString().trim().isEmpty()
+            ) {
+                Toast.makeText(
+                    requireContext(),
+                    getString(R.string.please_enter_valid_credentials),
+                    Toast.LENGTH_LONG
+                ).show()
+                return@setOnClickListener
+            }
             toggleProgressVisibility()
-            mEtlViewModel.login()
+            mEtlViewModel.login(
+                mBinding.etUsername.text.toString().trim(),
+                mBinding.etPassword.text.toString().trim()
+            )
         }
     }
 
@@ -52,6 +68,12 @@ class EtlPipelineFragment : Fragment() {
                 }
                 is EtlViewModel.EtlResult.LoginFailed -> {
                     showMessage("Login Failed")
+                }
+                is EtlViewModel.EtlResult.SignedUrlFailed -> {
+                    showMessage("Signed URL Failed ${it.result.error}")
+                }
+                is EtlViewModel.EtlResult.SignedUrlSuccess -> {
+                    showMessage("Success ${it.result.response.url}")
                 }
             }
         })

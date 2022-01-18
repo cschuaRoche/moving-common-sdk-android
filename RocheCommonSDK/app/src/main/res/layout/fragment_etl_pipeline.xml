@@ -8,38 +8,68 @@
         android:layout_height="match_parent"
         tools:context=".EtlPipelineFragment">
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btn_get_cognito_token"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/unit_10"
-            android:text="@string/btn_txt_login"
-            android:textAllCaps="false"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btn_get_pre_signed_url"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@string/btn_txt_get_pre_signed_url"
-            android:textAllCaps="false"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/btn_get_cognito_token" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/txt_status"
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/unit_4"
-            android:textSize="18sp"
-            android:visibility="visible"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/btn_get_pre_signed_url" />
+            android:layout_height="match_parent">
 
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp">
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/et_username"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/etl_username"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/et_password"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPassword"
+                    android:text="@string/etl_password"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/et_username" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btn_get_cognito_token"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/btn_txt_login"
+                    android:textAllCaps="false"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/et_password" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btn_get_pre_signed_url"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/btn_txt_get_pre_signed_url"
+                    android:textAllCaps="false"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/btn_get_cognito_token" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/txt_status"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/unit_4"
+                    android:textSize="18sp"
+                    android:visibility="visible"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/btn_get_pre_signed_url" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </ScrollView>
 
         <include
             android:id="@+id/progress_bar"

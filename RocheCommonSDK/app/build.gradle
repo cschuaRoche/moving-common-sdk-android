@@ -111,6 +111,7 @@ dependencies {
     //  this is required if the security library is integrated via project source
     implementation project(path: ':lvl_library')
     implementation project(path: ':rocheCommon')
+    implementation project(path: ':etlPipeline')
     implementation Deps.RocheCommonComponent.utils
 
     implementation Deps.AndroidX.Biometric.biometric
