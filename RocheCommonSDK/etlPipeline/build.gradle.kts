@@ -26,9 +26,9 @@ kotlin {
     cocoapods {
         summary = "Some description for the Shared Module"
         homepage = "Link to the Shared Module homepage"
-        ios.deploymentTarget = "14.1"
+        ios.deploymentTarget = "12.0"
         framework {
-            baseName = "etlPipeline"
+            baseName = "ETLPipelineSDK"
         }
     }
 

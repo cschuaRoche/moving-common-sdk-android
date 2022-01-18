@@ -38,6 +38,7 @@
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btn_get_cognito_token"
+                    style="@style/Base_Button"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:text="@string/btn_txt_login"
@@ -48,6 +49,7 @@
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btn_get_pre_signed_url"
+                    style="@style/Base_Button"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:text="@string/btn_txt_get_pre_signed_url"

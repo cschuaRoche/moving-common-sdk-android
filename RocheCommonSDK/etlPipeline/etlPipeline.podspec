@@ -7,11 +7,11 @@ Pod::Spec.new do |spec|
     spec.license                  = ''
     spec.summary                  = 'Some description for the Shared Module'
 
-    spec.vendored_frameworks      = "build/cocoapods/framework/etlPipeline.framework"
+    spec.vendored_frameworks      = "build/cocoapods/framework/ETLPipelineSDK.framework"
     spec.libraries                = "c++"
     spec.module_name              = "#{spec.name}_umbrella"
 
-    spec.ios.deployment_target = '14.1'
+    spec.ios.deployment_target = '12.0'
 
                 
 

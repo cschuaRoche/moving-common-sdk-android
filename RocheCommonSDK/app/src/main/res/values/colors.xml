@@ -19,6 +19,7 @@
     <color name="colorPrimaryButtonPressed">#004C99</color>
     <color name="colorPrimaryButtonDisabled">#8C9395</color>
     <color name="colorXCloseButton">@color/white</color>
+    <color name="colorBlueButtonText">#deffffff</color>
 
     <color name="ic_launcher_background">#ffffff</color>
 </resources>

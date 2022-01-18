@@ -24,7 +24,7 @@
     <!-- Fields -->
     <color name="light_grey">#888888</color>
     <color name="medium_grey">#646464</color>
-    <color name="blue">#228af2</color>
+    <color name="blue">#0066cc</color>
     <color name="colorHamburger">@color/white</color>
     <color name="colorLightBlue">#e3f2ff</color>
 </resources>
