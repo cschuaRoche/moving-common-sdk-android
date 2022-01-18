@@ -81,30 +81,20 @@ class DownloadStaticContent private constructor(context: Context) {
                 val unzipPath = unzipFile(context, zipPath, it.staticContentInfo)
                 DownloadStaticContentSharedPref.setFilePath(
                     context,
-                    it.staticContentInfo.targetSubDir,
-                    it.staticContentInfo.appVersion,
-                    it.staticContentInfo.locale,
-                    it.staticContentInfo.fileKey,
+                    it.staticContentInfo.prefKey,
                     unzipPath
                 )
                 // Delete zipped file
                 File(zipPath).delete()
                 // check and delete old version
-                checkAndDeleteOldVersionData(
-                    context,
-                    it.staticContentInfo.targetSubDir,
-                    it.staticContentInfo.appVersion
-                )
+                checkAndDeleteOldVersionData(context, it.staticContentInfo)
                 it.result(DownloadStaticContentResult.Success(it.staticContentInfo, unzipPath))
             } catch (e: Exception) {
                 if (e.message == EXCEPTION_NOT_MODIFIED) {
                     // return existing file path as manifest is not modified
                     val unzipPath = DownloadStaticContentSharedPref.getFilePath(
                         context,
-                        it.staticContentInfo.targetSubDir,
-                        it.staticContentInfo.appVersion,
-                        it.staticContentInfo.locale,
-                        it.staticContentInfo.fileKey
+                        it.staticContentInfo.prefKey
                     )
                     it.result(DownloadStaticContentResult.Success(it.staticContentInfo, unzipPath))
                 } else {
@@ -154,20 +144,10 @@ class DownloadStaticContent private constructor(context: Context) {
                 urlConnection = getUrlConnection(staticContentInfo.manifestUrl)
 
                 // get etag and downloaded file path value from secure shared preference
-                val etag = DownloadStaticContentSharedPref.getETag(
-                    context,
-                    staticContentInfo.targetSubDir,
-                    staticContentInfo.appVersion,
-                    staticContentInfo.locale,
-                    staticContentInfo.fileKey
-                )
-                val filePath = DownloadStaticContentSharedPref.getFilePath(
-                    context,
-                    staticContentInfo.targetSubDir,
-                    staticContentInfo.appVersion,
-                    staticContentInfo.locale,
-                    staticContentInfo.fileKey
-                )
+                val etag =
+                    DownloadStaticContentSharedPref.getETag(context, staticContentInfo.prefKey)
+                val filePath =
+                    DownloadStaticContentSharedPref.getFilePath(context, staticContentInfo.prefKey)
                 if (etag.isNotBlank() && filePath.isNotBlank()) {
                     // If both eTag and file path are available then add etag in header
                     urlConnection.addRequestProperty("If-None-Match", etag)
@@ -189,10 +169,7 @@ class DownloadStaticContent private constructor(context: Context) {
                     if (newETag != null && newETag.isNotEmpty()) {
                         DownloadStaticContentSharedPref.setETag(
                             context,
-                            staticContentInfo.targetSubDir,
-                            staticContentInfo.appVersion,
-                            staticContentInfo.locale,
-                            staticContentInfo.fileKey,
+                            staticContentInfo.prefKey,
                             newETag[0]
                         )
                     }
@@ -434,25 +411,25 @@ class DownloadStaticContent private constructor(context: Context) {
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     internal fun checkAndDeleteOldVersionData(
         context: Context,
-        targetSubDir: String,
-        appVersion: String
+        staticContentInfo: StaticContentInfo
     ) {
-        val existingVersion = DownloadStaticContentSharedPref.getVersion(context, targetSubDir)
-        if (existingVersion != appVersion) {
+        val existingVersion =
+            DownloadStaticContentSharedPref.getVersion(context, staticContentInfo.targetSubDir)
+        if (existingVersion != staticContentInfo.appVersion) {
             if (existingVersion.isNotBlank()) {
                 // delete old version's data
                 val path =
-                    context.filesDir.toString() + File.separator + targetSubDir + File.separator + existingVersion
+                    context.filesDir.toString() + File.separator + staticContentInfo.targetSubDir + File.separator + existingVersion
                 File(path).deleteRecursively()
                 // remove shared pref data
-                DownloadStaticContentSharedPref.removeAllKeysOfAppVersion(
-                    context,
-                    targetSubDir,
-                    existingVersion
-                )
+                DownloadStaticContentSharedPref.removeAllKeys(context, staticContentInfo.prefKey)
             }
             // update new version
-            DownloadStaticContentSharedPref.setVersion(context, targetSubDir, appVersion)
+            DownloadStaticContentSharedPref.setVersion(
+                context,
+                staticContentInfo.targetSubDir,
+                staticContentInfo.appVersion
+            )
         }
     }
 

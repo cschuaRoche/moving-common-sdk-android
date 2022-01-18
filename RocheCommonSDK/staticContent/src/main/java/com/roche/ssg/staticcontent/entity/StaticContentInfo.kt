@@ -7,4 +7,8 @@ data class StaticContentInfo(
     val fileKey: String,
     val targetSubDir: String,
     val allowWifiOnly: Boolean = false
-)
+) {
+    internal val prefKey: String by lazy {
+        "${targetSubDir}_${appVersion.replace(".", "_")}_${locale}_${fileKey}"
+    }
+}

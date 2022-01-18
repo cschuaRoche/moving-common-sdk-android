@@ -1000,7 +1000,7 @@ class DownloadStaticContentTest : BaseMockkTest() {
             )
         }
         verify(exactly = 0) {
-            DownloadStaticContentSharedPref.removeAllKeysOfAppVersion(
+            DownloadStaticContentSharedPref.removeAllKeys(
                 appContext,
                 TARGET_SUB_DIRECTORY,
                 existingVersion
@@ -1019,7 +1019,7 @@ class DownloadStaticContentTest : BaseMockkTest() {
             )
         } returns existingVersion
         every {
-            DownloadStaticContentSharedPref.removeAllKeysOfAppVersion(
+            DownloadStaticContentSharedPref.removeAllKeys(
                 appContext,
                 TARGET_SUB_DIRECTORY,
                 existingVersion
@@ -1039,7 +1039,7 @@ class DownloadStaticContentTest : BaseMockkTest() {
             newerVersion
         )
         verify(exactly = 1) {
-            DownloadStaticContentSharedPref.removeAllKeysOfAppVersion(
+            DownloadStaticContentSharedPref.removeAllKeys(
                 appContext,
                 TARGET_SUB_DIRECTORY,
                 existingVersion
@@ -1071,7 +1071,7 @@ class DownloadStaticContentTest : BaseMockkTest() {
             newerVersion
         )
         verify(exactly = 0) {
-            DownloadStaticContentSharedPref.removeAllKeysOfAppVersion(
+            DownloadStaticContentSharedPref.removeAllKeys(
                 appContext,
                 TARGET_SUB_DIRECTORY,
                 existingVersion
