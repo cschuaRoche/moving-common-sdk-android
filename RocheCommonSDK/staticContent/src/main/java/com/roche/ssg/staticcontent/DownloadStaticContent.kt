@@ -41,17 +41,17 @@ class DownloadStaticContent private constructor(context: Context) {
 
     private tailrec suspend fun processDownload() {
         val materialInfo = queue.peek()
-        materialInfo?.let {
+        materialInfo?.run {
             val context =
                 weakReference.get() ?: throw IllegalStateException(EXCEPTION_UNKNOWN_ERROR)
             try {
                 // target sub directory should not be empty
-                if (it.staticContentInfo.targetSubDir.isBlank()) {
+                if (staticContentInfo.targetSubDir.isBlank()) {
                     throw IllegalArgumentException(EXCEPTION_TARGET_SUB_DIRECTORY_EMPTY)
                 }
 
                 // read manifest file and get the url
-                val manifestInfo = getInfoFromManifest(it.staticContentInfo)
+                val manifestInfo = getInfoFromManifest(staticContentInfo)
 
                 // check if the url is not a zip file type then throw exception
                 val fileExtension = manifestInfo.path.substring(manifestInfo.path.lastIndexOf("."))
@@ -67,9 +67,9 @@ class DownloadStaticContent private constructor(context: Context) {
                 // download the file
                 val zipPath = downloadFromUrl(
                     context,
-                    it.staticContentInfo,
+                    staticContentInfo,
                     manifestInfo.path,
-                    it.result
+                    result
                 )
 
                 // check free space to unzip the file
@@ -78,32 +78,27 @@ class DownloadStaticContent private constructor(context: Context) {
                 }
 
                 // unzip the file and save the path to shared pref
-                val unzipPath = unzipFile(context, zipPath, it.staticContentInfo)
+                val unzipPath = unzipFile(context, zipPath, staticContentInfo)
                 DownloadStaticContentSharedPref.setFilePath(
                     context,
-                    it.staticContentInfo.prefKey,
+                    staticContentInfo.prefKey,
                     unzipPath
                 )
                 // Delete zipped file
                 File(zipPath).delete()
                 // check and delete old version
-                checkAndDeleteOldVersionData(context, it.staticContentInfo)
-                it.result(DownloadStaticContentResult.Success(it.staticContentInfo, unzipPath))
+                checkAndDeleteOldVersionData(context, staticContentInfo)
+                result(DownloadStaticContentResult.Success(staticContentInfo, unzipPath))
             } catch (e: Exception) {
                 if (e.message == EXCEPTION_NOT_MODIFIED) {
                     // return existing file path as manifest is not modified
                     val unzipPath = DownloadStaticContentSharedPref.getFilePath(
                         context,
-                        it.staticContentInfo.prefKey
+                        staticContentInfo.prefKey
                     )
-                    it.result(DownloadStaticContentResult.Success(it.staticContentInfo, unzipPath))
+                    result(DownloadStaticContentResult.Success(staticContentInfo, unzipPath))
                 } else {
-                    it.result(
-                        DownloadStaticContentResult.Failure(
-                            it.staticContentInfo,
-                            e.message ?: ""
-                        )
-                    )
+                    result(DownloadStaticContentResult.Failure(staticContentInfo, e.message ?: ""))
                 }
             }
             // remove from the queue
@@ -200,19 +195,10 @@ class DownloadStaticContent private constructor(context: Context) {
         context: Context,
         staticContentInfo: StaticContentInfo,
         fileUrl: String,
-        progress: (DownloadStaticContentResult) -> Unit
+        progress: (DownloadStaticContentResult.DownloadProgress) -> Unit
     ): String {
         checkConnection(context, staticContentInfo.allowWifiOnly)
         return withContext(Dispatchers.IO) {
-            val fileName = fileUrl.substring(fileUrl.lastIndexOf("/") + 1)
-            val file =
-                File(context.filesDir.toString() + File.separator + staticContentInfo.targetSubDir + File.separator + staticContentInfo.appVersion)
-            if (file.exists().not()) {
-                file.mkdirs()
-            }
-            val path = file.path + File.separator + fileName
-
-            // download the file
             val request = DownloadManager.Request(Uri.parse(fileUrl))
             if (staticContentInfo.allowWifiOnly) {
                 request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI)
@@ -223,22 +209,14 @@ class DownloadStaticContent private constructor(context: Context) {
             val downloadManager =
                 context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
             val downloadId = downloadManager.enqueue(request)
-            val isDownloadSuccessful = trackProgress(
-                downloadId,
-                downloadManager,
-                staticContentInfo,
-                progress
-            )
-            if (!isDownloadSuccessful) {
-                throw IllegalStateException(EXCEPTION_DOWNLOAD_FAILED)
-            }
+            trackProgress(downloadId, downloadManager, staticContentInfo, progress)
             moveDownloadToInternalDir(
                 context,
                 downloadId,
                 downloadManager,
-                path
+                fileUrl,
+                staticContentInfo
             )
-            path
         }
     }
 
@@ -335,21 +313,21 @@ class DownloadStaticContent private constructor(context: Context) {
     }
 
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    @Throws(IllegalStateException::class)
     internal suspend fun trackProgress(
         downloadId: Long,
         downloadManager: DownloadManager,
         staticContentInfo: StaticContentInfo,
-        progress: (DownloadStaticContentResult) -> Unit
-    ): Boolean {
+        progress: (DownloadStaticContentResult.DownloadProgress) -> Unit
+    ) {
         var isDownloadFinished = false
-        var isDownloadSuccessful = false
+        var currentProgress = -1
         while (!isDownloadFinished) {
             val cursor = downloadManager.query(DownloadManager.Query().setFilterById(downloadId))
             if (cursor.moveToFirst()) {
                 when (cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS))) {
                     DownloadManager.STATUS_FAILED -> {
-                        isDownloadSuccessful = false
-                        isDownloadFinished = true
+                        throw IllegalStateException(EXCEPTION_DOWNLOAD_FAILED)
                     }
                     DownloadManager.STATUS_RUNNING -> {
                         val total =
@@ -357,13 +335,17 @@ class DownloadStaticContent private constructor(context: Context) {
                         if (total >= 0) {
                             val downloaded =
                                 cursor.getLong(cursor.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR))
-                            withContext(Dispatchers.Main) {
-                                progress(
-                                    DownloadStaticContentResult.DownloadProgress(
-                                        staticContentInfo,
-                                        (downloaded * 100L / total).toInt()
+                            val newProgress = (downloaded * 100L / total).toInt()
+                            if (currentProgress != newProgress) {
+                                currentProgress = newProgress
+                                withContext(Dispatchers.Main) {
+                                    progress(
+                                        DownloadStaticContentResult.DownloadProgress(
+                                            staticContentInfo,
+                                            currentProgress
+                                        )
                                     )
-                                )
+                                }
                             }
                         }
                     }
@@ -374,14 +356,12 @@ class DownloadStaticContent private constructor(context: Context) {
                                 100
                             )
                         )
-                        isDownloadSuccessful = true
                         isDownloadFinished = true
                     }
                 }
             }
             cursor.close()
         }
-        return isDownloadSuccessful
     }
 
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
@@ -389,12 +369,22 @@ class DownloadStaticContent private constructor(context: Context) {
         context: Context,
         downloadId: Long,
         downloadManager: DownloadManager,
-        destPath: String
-    ) {
+        fileUrl: String,
+        staticContentInfo: StaticContentInfo
+    ): String {
         val uri = downloadManager.getUriForDownloadedFile(downloadId)
         val inputStream = context.contentResolver.openInputStream(uri)
+
+        val fileName = fileUrl.substring(fileUrl.lastIndexOf("/") + 1)
+        val file =
+            File(context.filesDir.toString() + File.separator + staticContentInfo.targetSubDir + File.separator + staticContentInfo.appVersion)
+        if (file.exists().not()) {
+            file.mkdirs()
+        }
+        val destPath = file.path + File.separator + fileName
         val outputFile = File(destPath)
         val outputStream = FileOutputStream(outputFile)
+
         val buf = ByteArray(1024)
         var len: Int
         while (run {
@@ -406,6 +396,7 @@ class DownloadStaticContent private constructor(context: Context) {
         outputStream.close()
         inputStream?.close()
         downloadManager.remove(downloadId)
+        return destPath
     }
 
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
