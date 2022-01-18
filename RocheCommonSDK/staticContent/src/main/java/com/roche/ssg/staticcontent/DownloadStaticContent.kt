@@ -1,16 +1,13 @@
 package com.roche.ssg.staticcontent
 
 import android.app.DownloadManager
-import android.content.BroadcastReceiver
 import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
 import android.net.Uri
 import android.util.Log
-import androidx.annotation.StringDef
 import androidx.annotation.VisibleForTesting
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.roche.ssg.staticcontent.entity.ManifestInfo
+import com.roche.ssg.staticcontent.entity.MaterialInfo
+import com.roche.ssg.staticcontent.entity.StaticContentInfo
 import com.roche.ssg.utils.NetworkUtils
 import com.roche.ssg.utils.UnZipUtils
 import kotlinx.coroutines.Dispatchers
@@ -22,162 +19,109 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.io.InputStreamReader
+import java.lang.ref.WeakReference
 import java.net.HttpURLConnection
 import java.net.URL
-import java.net.UnknownHostException
+import java.util.LinkedList
+import java.util.Queue
 
-object DownloadStaticContent {
-    @Retention(AnnotationRetention.SOURCE)
-    @StringDef(
-        LocaleType.SV_FI,
-        LocaleType.DE_DE,
-        LocaleType.EN_AU,
-        LocaleType.EN_GB,
-        LocaleType.EN_US,
-        LocaleType.FI_FI,
-        LocaleType.FR_FR,
-        LocaleType.IT_IT,
-        LocaleType.PT_PT
-    )
-    annotation class LocaleType {
-        companion object {
-            const val SV_FI = "sv_FI"
-            const val DE_DE = "de_DE"
-            const val EN_AU = "en_AU"
-            const val EN_GB = "en_GB"
-            const val EN_US = "en_US"
-            const val FI_FI = "fi_FI"
-            const val FR_FR = "fr_FR"
-            const val IT_IT = "it_IT"
-            const val PT_PT = "pt_PT"
+class DownloadStaticContent private constructor(context: Context) {
+    private val weakReference = WeakReference(context)
+    private val queue: Queue<MaterialInfo> = LinkedList()
+
+    suspend fun downloadStaticAssets(
+        staticContentInfo: StaticContentInfo,
+        result: (DownloadStaticContentResult) -> Unit
+    ) {
+        queue.add(MaterialInfo(staticContentInfo, result))
+        if (queue.size == 1) {
+            processDownload()
         }
     }
 
-    private const val LOG_TAG = "DownloadStaticContent"
-    private const val ZIPPED_FILE_EXTENSION = ".zip"
-    private const val HEADER_KEY_ETAG = "ETag"
-    private const val JSON_KEY_PATH = "path"
-    private const val JSON_KEY_FILE_SIZE = "fileSize"
-    private const val JSON_KEY_ORIGINAL_SIZE = "originalSize"
-    private const val BROADCAST_DOWNLOAD_CANCELLED = "BROADCAST_DOWNLOAD_CANCELLED"
-    private const val EXTRA_DOWNLOAD_CANCELLED_STATUS = "EXTRA_DOWNLOAD_CANCELLED_STATUS"
+    private tailrec suspend fun processDownload() {
+        val materialInfo = queue.peek()
+        materialInfo?.let {
+            val context =
+                weakReference.get() ?: throw IllegalStateException(EXCEPTION_UNKNOWN_ERROR)
+            try {
+                // target sub directory should not be empty
+                if (it.staticContentInfo.targetSubDir.isBlank()) {
+                    throw IllegalArgumentException(EXCEPTION_TARGET_SUB_DIRECTORY_EMPTY)
+                }
 
-    const val EXCEPTION_TARGET_SUB_DIRECTORY_EMPTY = "Target sub directory is empty"
-    const val EXCEPTION_WIFI_NOT_AVAILABLE = "Wifi Not Available"
-    const val EXCEPTION_NETWORK_NOT_AVAILABLE = "Network Not Available"
-    const val EXCEPTION_NOT_MODIFIED = "Not Modified"
-    const val EXCEPTION_INVALID_MANIFEST_FILE_FORMAT = "Invalid Manifest File Format"
-    const val EXCEPTION_MANIFEST_APP_VERSION_NOT_FOUND = "Manifest App Version Not Found"
-    const val EXCEPTION_MANIFEST_LOCALE_NOT_FOUND = "Manifest Locale Not Found"
-    const val EXCEPTION_MANIFEST_FILE_KEY_NOT_FOUND = "Manifest File Key Not Found"
-    const val EXCEPTION_UNZIPPING_FILE = "Error In Unzipping The File"
-    const val EXCEPTION_INSUFFICIENT_STORAGE = "Insufficient Storage"
-    const val EXCEPTION_DOWNLOAD_FAILED = "Downloading Failed"
-    const val EXCEPTION_DOWNLOAD_CANCELLED_BY_USER = "Download Cancelled by User"
+                // read manifest file and get the url
+                val manifestInfo = getInfoFromManifest(it.staticContentInfo)
 
-    /**
-     * Download static assets and unzips them of given app version, locale and file key.
-     * Deletes older app version's content if newer app version's data is requested.
-     *
-     * @param context application context
-     * @param manifestUrl url of the manifest file
-     * @param appVersion application version
-     * @param locale locale for which static assets needs to be downloaded
-     * @param fileKey file key for which static assets needs to be downloaded (e.g. user_manual)
-     * @param progress callback which will return the progress of the download
-     * @param targetSubDir sub directory where the files will be downloaded to
-     * @param allowWifiOnly download asset on WIFI only (Default is false).
-     *
-     * @return downloaded and unzipped static asset's path
-     */
-    @Throws(
-        IllegalStateException::class,
-        IllegalArgumentException::class,
-        IOException::class,
-        JSONException::class,
-        UnknownHostException::class
-    )
-    suspend fun downloadStaticAssets(
-        context: Context,
-        manifestUrl: String,
-        appVersion: String,
-        @LocaleType locale: String,
-        fileKey: String,
-        progress: (Int) -> Unit,
-        targetSubDir: String,
-        allowWifiOnly: Boolean = false
-    ): String {
-        try {
-            // target sub directory should not be empty
-            if (targetSubDir.isBlank()) {
-                throw IllegalArgumentException(EXCEPTION_TARGET_SUB_DIRECTORY_EMPTY)
-            }
-            // read manifest file and get the url
-            val manifestInfo = getInfoFromManifest(
-                context,
-                manifestUrl,
-                appVersion,
-                locale,
-                fileKey,
-                targetSubDir,
-                allowWifiOnly
-            )
+                // check if the url is not a zip file type then throw exception
+                val fileExtension = manifestInfo.path.substring(manifestInfo.path.lastIndexOf("."))
+                if (fileExtension.equals(ZIPPED_FILE_EXTENSION, true).not()) {
+                    throw IllegalStateException(EXCEPTION_INVALID_MANIFEST_FILE_FORMAT)
+                }
 
-            // check if the url is not a zip file type then throw exception
-            val fileExtension = manifestInfo.path.substring(manifestInfo.path.lastIndexOf("."))
-            if (fileExtension.equals(ZIPPED_FILE_EXTENSION, true).not()) {
-                throw IllegalStateException(EXCEPTION_INVALID_MANIFEST_FILE_FORMAT)
-            }
+                // check free space to download the file
+                if (context.filesDir.usableSpace <= manifestInfo.fileSize) {
+                    throw IllegalStateException(EXCEPTION_INSUFFICIENT_STORAGE)
+                }
 
-            // check free space to download the file
-            if (context.filesDir.usableSpace <= manifestInfo.fileSize) {
-                throw IllegalStateException(EXCEPTION_INSUFFICIENT_STORAGE)
-            }
-
-            // download the file
-            val zipPath = downloadFromUrl(
-                context,
-                manifestInfo.path,
-                appVersion,
-                locale,
-                fileKey,
-                targetSubDir,
-                progress,
-                allowWifiOnly
-            )
-
-            // check free space to unzip the file
-            if (context.filesDir.usableSpace <= manifestInfo.originalSize) {
-                throw IllegalStateException(EXCEPTION_INSUFFICIENT_STORAGE)
-            }
-
-            // unzip the file and save the path to shared pref
-            val unzipPath = unzipFile(context, zipPath, appVersion, targetSubDir)
-            DownloadStaticContentSharedPref.setFilePath(
-                context,
-                targetSubDir,
-                appVersion,
-                locale,
-                fileKey,
-                unzipPath
-            )
-            // Delete zipped file
-            File(zipPath).delete()
-            // check and delete old version
-            checkAndDeleteOldVersionData(context, targetSubDir, appVersion)
-            return unzipPath
-        } catch (e: Exception) {
-            if (e.message == EXCEPTION_NOT_MODIFIED) {
-                // return existing file path as manifest is not modified
-                return DownloadStaticContentSharedPref.getFilePath(
+                // download the file
+                val zipPath = downloadFromUrl(
                     context,
-                    targetSubDir,
-                    appVersion,
-                    locale,
-                    fileKey
+                    it.staticContentInfo,
+                    manifestInfo.path,
+                    it.result
                 )
+
+                // check free space to unzip the file
+                if (context.filesDir.usableSpace <= manifestInfo.originalSize) {
+                    throw IllegalStateException(EXCEPTION_INSUFFICIENT_STORAGE)
+                }
+
+                // unzip the file and save the path to shared pref
+                val unzipPath = unzipFile(context, zipPath, it.staticContentInfo)
+                DownloadStaticContentSharedPref.setFilePath(
+                    context,
+                    it.staticContentInfo.targetSubDir,
+                    it.staticContentInfo.appVersion,
+                    it.staticContentInfo.locale,
+                    it.staticContentInfo.fileKey,
+                    unzipPath
+                )
+                // Delete zipped file
+                File(zipPath).delete()
+                // check and delete old version
+                checkAndDeleteOldVersionData(
+                    context,
+                    it.staticContentInfo.targetSubDir,
+                    it.staticContentInfo.appVersion
+                )
+                it.result(DownloadStaticContentResult.Success(it.staticContentInfo, unzipPath))
+            } catch (e: Exception) {
+                if (e.message == EXCEPTION_NOT_MODIFIED) {
+                    // return existing file path as manifest is not modified
+                    val unzipPath = DownloadStaticContentSharedPref.getFilePath(
+                        context,
+                        it.staticContentInfo.targetSubDir,
+                        it.staticContentInfo.appVersion,
+                        it.staticContentInfo.locale,
+                        it.staticContentInfo.fileKey
+                    )
+                    it.result(DownloadStaticContentResult.Success(it.staticContentInfo, unzipPath))
+                } else {
+                    it.result(
+                        DownloadStaticContentResult.Failure(
+                            it.staticContentInfo,
+                            e.message ?: ""
+                        )
+                    )
+                }
             }
-            throw e
+            // remove from the queue
+            queue.remove()
+        }
+
+        if (queue.isNotEmpty()) {
+            processDownload()
         }
     }
 
@@ -200,35 +144,29 @@ object DownloadStaticContent {
         IOException::class,
         JSONException::class
     )
-    suspend fun getInfoFromManifest(
-        context: Context,
-        manifestUrl: String,
-        appVersion: String,
-        @LocaleType locale: String,
-        fileKey: String,
-        targetSubDir: String,
-        allowWifiOnly: Boolean = false
-    ): ManifestInfo {
-        checkConnection(context, allowWifiOnly)
+    suspend fun getInfoFromManifest(staticContentInfo: StaticContentInfo): ManifestInfo {
+        val context = weakReference.get() ?: throw IllegalStateException(EXCEPTION_UNKNOWN_ERROR)
+        checkConnection(context, staticContentInfo.allowWifiOnly)
+
         return withContext(Dispatchers.IO) {
             var urlConnection: HttpURLConnection? = null
             try {
-                urlConnection = getUrlConnection(manifestUrl)
+                urlConnection = getUrlConnection(staticContentInfo.manifestUrl)
 
                 // get etag and downloaded file path value from secure shared preference
                 val etag = DownloadStaticContentSharedPref.getETag(
                     context,
-                    targetSubDir,
-                    appVersion,
-                    locale,
-                    fileKey
+                    staticContentInfo.targetSubDir,
+                    staticContentInfo.appVersion,
+                    staticContentInfo.locale,
+                    staticContentInfo.fileKey
                 )
                 val filePath = DownloadStaticContentSharedPref.getFilePath(
                     context,
-                    targetSubDir,
-                    appVersion,
-                    locale,
-                    fileKey
+                    staticContentInfo.targetSubDir,
+                    staticContentInfo.appVersion,
+                    staticContentInfo.locale,
+                    staticContentInfo.fileKey
                 )
                 if (etag.isNotBlank() && filePath.isNotBlank()) {
                     // If both eTag and file path are available then add etag in header
@@ -246,15 +184,15 @@ object DownloadStaticContent {
                         )
                     )
                     val jsonResponse = readStream(inputStream)
-                    val manifestInfo = parseManifest(jsonResponse, appVersion, locale, fileKey)
+                    val manifestInfo = parseManifest(jsonResponse, staticContentInfo)
                     // Cache new eTag to secured shared pref
                     if (newETag != null && newETag.isNotEmpty()) {
                         DownloadStaticContentSharedPref.setETag(
                             context,
-                            targetSubDir,
-                            appVersion,
-                            locale,
-                            fileKey,
+                            staticContentInfo.targetSubDir,
+                            staticContentInfo.appVersion,
+                            staticContentInfo.locale,
+                            staticContentInfo.fileKey,
                             newETag[0]
                         )
                     }
@@ -273,7 +211,7 @@ object DownloadStaticContent {
      * Download a file to the app's files directory.
      *
      * @param context application context
-     * @param fileURL the file url
+     * @param fileUrl the file url
      * @param progress callback which will return the progress of the download
      * @param targetSubDir sub directory where the files will be downloaded to
      * @param allowWifiOnly download asset on WIFI only (Default is false).
@@ -283,27 +221,23 @@ object DownloadStaticContent {
     @Throws(IOException::class, IllegalStateException::class)
     suspend fun downloadFromUrl(
         context: Context,
-        fileURL: String,
-        appVersion: String,
-        @LocaleType locale: String,
-        fileKey: String,
-        targetSubDir: String,
-        progress: (Int) -> Unit,
-        allowWifiOnly: Boolean = false
+        staticContentInfo: StaticContentInfo,
+        fileUrl: String,
+        progress: (DownloadStaticContentResult) -> Unit
     ): String {
-        checkConnection(context, allowWifiOnly)
+        checkConnection(context, staticContentInfo.allowWifiOnly)
         return withContext(Dispatchers.IO) {
-            val fileName = fileURL.substring(fileURL.lastIndexOf("/") + 1)
+            val fileName = fileUrl.substring(fileUrl.lastIndexOf("/") + 1)
             val file =
-                File(context.filesDir.toString() + File.separator + targetSubDir + File.separator + appVersion)
+                File(context.filesDir.toString() + File.separator + staticContentInfo.targetSubDir + File.separator + staticContentInfo.appVersion)
             if (file.exists().not()) {
                 file.mkdirs()
             }
             val path = file.path + File.separator + fileName
 
             // download the file
-            val request = DownloadManager.Request(Uri.parse(fileURL))
-            if (allowWifiOnly) {
+            val request = DownloadManager.Request(Uri.parse(fileUrl))
+            if (staticContentInfo.allowWifiOnly) {
                 request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI)
             } else {
                 request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI or DownloadManager.Request.NETWORK_MOBILE)
@@ -313,19 +247,20 @@ object DownloadStaticContent {
                 context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
             val downloadId = downloadManager.enqueue(request)
             val isDownloadSuccessful = trackProgress(
-                context,
                 downloadId,
                 downloadManager,
-                appVersion,
-                locale,
-                fileKey,
-                targetSubDir,
+                staticContentInfo,
                 progress
             )
             if (!isDownloadSuccessful) {
                 throw IllegalStateException(EXCEPTION_DOWNLOAD_FAILED)
             }
-            moveDownloadToInternalDir(downloadId, downloadManager, path, context)
+            moveDownloadToInternalDir(
+                context,
+                downloadId,
+                downloadManager,
+                path
+            )
             path
         }
     }
@@ -345,64 +280,28 @@ object DownloadStaticContent {
     fun unzipFile(
         context: Context,
         filePath: String,
-        appVersion: String,
-        targetSubDir: String
+        staticContentInfo: StaticContentInfo
     ): String {
-        val subDirPath = targetSubDir + File.separator + appVersion
+        val subDirPath =
+            staticContentInfo.targetSubDir + File.separator + staticContentInfo.appVersion
         val unzipPath = UnZipUtils.unzipFromAppFiles(filePath, context, subDirPath)
         if (unzipPath == null) {
             Log.e(LOG_TAG, "error occurred in unzipping the file")
             throw IllegalStateException(EXCEPTION_UNZIPPING_FILE)
         }
-        sendNotification(context, false)
         return unzipPath
     }
 
-    fun cancelDownload(
-        context: Context,
-        appVersion: String,
-        @LocaleType locale: String,
-        fileKey: String,
-        targetSubDir: String,
-        callback: (Boolean) -> Unit
-    ) {
-        DownloadStaticContentSharedPref.setCancelDownload(
-            context,
-            targetSubDir,
-            appVersion,
-            locale,
-            fileKey,
-            true
-        )
-
-        val receiver = object : BroadcastReceiver() {
-            override fun onReceive(ctx: Context?, intent: Intent?) {
-                val isCancelled =
-                    intent?.getBooleanExtra(EXTRA_DOWNLOAD_CANCELLED_STATUS, false) ?: false
-                if (isCancelled) {
-                    // remove all shared pref of given appVersion and targetSubDir
-                    DownloadStaticContentSharedPref.removeAllKeysOfAppVersion(
-                        context,
-                        targetSubDir,
-                        appVersion
-                    )
-                } else {
-                    // reset the cancel download shared pref
-                    DownloadStaticContentSharedPref.setCancelDownload(
-                        context,
-                        targetSubDir,
-                        appVersion,
-                        locale,
-                        fileKey,
-                        false
-                    )
-                }
-                callback(isCancelled)
-                LocalBroadcastManager.getInstance(context).unregisterReceiver(this)
+    private fun checkConnection(context: Context, allowWifiOnly: Boolean) {
+        if (allowWifiOnly) {
+            if (NetworkUtils.isWifiConnected(context).not()) {
+                throw IllegalStateException(EXCEPTION_WIFI_NOT_AVAILABLE)
+            }
+        } else {
+            if (NetworkUtils.hasInternetConnection(context).not()) {
+                throw IllegalStateException(EXCEPTION_NETWORK_NOT_AVAILABLE)
             }
         }
-        LocalBroadcastManager.getInstance(context)
-            .registerReceiver(receiver, IntentFilter(BROADCAST_DOWNLOAD_CANCELLED))
     }
 
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
@@ -422,34 +321,52 @@ object DownloadStaticContent {
         return sb.toString()
     }
 
+    @Throws(IllegalArgumentException::class, JSONException::class)
+    private fun parseManifest(
+        jsonResponse: String,
+        staticContentInfo: StaticContentInfo
+    ): ManifestInfo {
+        return try {
+            val jsonObject = JSONObject(jsonResponse)
+            if (jsonObject.has(staticContentInfo.appVersion)) {
+                val versionObj = jsonObject.getJSONObject(staticContentInfo.appVersion)
+                if (versionObj.has(staticContentInfo.locale)) {
+                    val localeObj = versionObj.getJSONObject(staticContentInfo.locale)
+                    if (localeObj.has(staticContentInfo.fileKey)) {
+                        val fileObj = localeObj.getJSONObject(staticContentInfo.fileKey)
+                        ManifestInfo(
+                            fileObj.getString(JSON_KEY_PATH),
+                            fileObj.getLong(JSON_KEY_FILE_SIZE),
+                            fileObj.getLong(JSON_KEY_ORIGINAL_SIZE)
+                        )
+                    } else {
+                        Log.e(LOG_TAG, "Content not found for ${staticContentInfo.fileKey} key")
+                        throw IllegalArgumentException(EXCEPTION_MANIFEST_FILE_KEY_NOT_FOUND)
+                    }
+                } else {
+                    Log.e(LOG_TAG, "Content not found for ${staticContentInfo.locale} locale")
+                    throw IllegalArgumentException(EXCEPTION_MANIFEST_LOCALE_NOT_FOUND)
+                }
+            } else {
+                Log.e(LOG_TAG, "Content not found for ${staticContentInfo.appVersion} version")
+                throw IllegalArgumentException(EXCEPTION_MANIFEST_APP_VERSION_NOT_FOUND)
+            }
+        } catch (e: JSONException) {
+            Log.e(LOG_TAG, "error: $e")
+            throw e
+        }
+    }
+
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     internal suspend fun trackProgress(
-        context: Context,
         downloadId: Long,
         downloadManager: DownloadManager,
-        appVersion: String,
-        @LocaleType locale: String,
-        fileKey: String,
-        targetSubDir: String,
-        progress: (Int) -> Unit
+        staticContentInfo: StaticContentInfo,
+        progress: (DownloadStaticContentResult) -> Unit
     ): Boolean {
         var isDownloadFinished = false
         var isDownloadSuccessful = false
         while (!isDownloadFinished) {
-            // check download has been cancelled or not by user
-            if (DownloadStaticContentSharedPref.isDownloadCancelled(
-                    context,
-                    targetSubDir,
-                    appVersion,
-                    locale,
-                    fileKey
-                )
-            ) {
-                downloadManager.remove(downloadId)
-                sendNotification(context, true)
-                throw IllegalStateException(EXCEPTION_DOWNLOAD_CANCELLED_BY_USER)
-            }
-
             val cursor = downloadManager.query(DownloadManager.Query().setFilterById(downloadId))
             if (cursor.moveToFirst()) {
                 when (cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS))) {
@@ -464,12 +381,22 @@ object DownloadStaticContent {
                             val downloaded =
                                 cursor.getLong(cursor.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR))
                             withContext(Dispatchers.Main) {
-                                progress((downloaded * 100L / total).toInt())
+                                progress(
+                                    DownloadStaticContentResult.DownloadProgress(
+                                        staticContentInfo,
+                                        (downloaded * 100L / total).toInt()
+                                    )
+                                )
                             }
                         }
                     }
                     DownloadManager.STATUS_SUCCESSFUL -> {
-                        progress(100)
+                        progress(
+                            DownloadStaticContentResult.DownloadProgress(
+                                staticContentInfo,
+                                100
+                            )
+                        )
                         isDownloadSuccessful = true
                         isDownloadFinished = true
                     }
@@ -482,10 +409,10 @@ object DownloadStaticContent {
 
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     internal fun moveDownloadToInternalDir(
+        context: Context,
         downloadId: Long,
         downloadManager: DownloadManager,
-        destPath: String,
-        context: Context
+        destPath: String
     ) {
         val uri = downloadManager.getUriForDownloadedFile(downloadId)
         val inputStream = context.contentResolver.openInputStream(uri)
@@ -502,57 +429,6 @@ object DownloadStaticContent {
         outputStream.close()
         inputStream?.close()
         downloadManager.remove(downloadId)
-    }
-
-    @Throws(IllegalArgumentException::class, JSONException::class)
-    private fun parseManifest(
-        jsonResponse: String,
-        appVersion: String,
-        @LocaleType locale: String,
-        fileKey: String
-    ): ManifestInfo {
-        return try {
-            val jsonObject = JSONObject(jsonResponse)
-            if (jsonObject.has(appVersion)) {
-                val versionObj = jsonObject.getJSONObject(appVersion)
-                if (versionObj.has(locale)) {
-                    val localeObj = versionObj.getJSONObject(locale)
-                    if (localeObj.has(fileKey)) {
-                        val fileObj = localeObj.getJSONObject(fileKey)
-                        ManifestInfo(
-                            fileObj.getString(JSON_KEY_PATH),
-                            fileObj.getLong(JSON_KEY_FILE_SIZE),
-                            fileObj.getLong(JSON_KEY_ORIGINAL_SIZE)
-                        )
-                    } else {
-                        Log.e(LOG_TAG, "Content not found for $fileKey key")
-                        throw IllegalArgumentException(EXCEPTION_MANIFEST_FILE_KEY_NOT_FOUND)
-                    }
-                } else {
-                    Log.e(LOG_TAG, "Content not found for $locale locale")
-                    throw IllegalArgumentException(EXCEPTION_MANIFEST_LOCALE_NOT_FOUND)
-                }
-            } else {
-                Log.e(LOG_TAG, "Content not found for $appVersion version")
-                throw IllegalArgumentException(EXCEPTION_MANIFEST_APP_VERSION_NOT_FOUND)
-            }
-        } catch (e: JSONException) {
-            Log.e(LOG_TAG, "error: $e")
-            throw e
-        }
-    }
-
-    @Throws(IllegalStateException::class)
-    private fun checkConnection(context: Context, allowWifiOnly: Boolean) {
-        if (allowWifiOnly) {
-            if (NetworkUtils.isWifiConnected(context).not()) {
-                throw IllegalStateException(EXCEPTION_WIFI_NOT_AVAILABLE)
-            }
-        } else {
-            if (NetworkUtils.hasInternetConnection(context).not()) {
-                throw IllegalStateException(EXCEPTION_NETWORK_NOT_AVAILABLE)
-            }
-        }
     }
 
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
@@ -580,10 +456,33 @@ object DownloadStaticContent {
         }
     }
 
-    private fun sendNotification(context: Context, isCancelled: Boolean) {
-        val intent = Intent(BROADCAST_DOWNLOAD_CANCELLED)
-        intent.putExtra(EXTRA_DOWNLOAD_CANCELLED_STATUS, isCancelled)
-        LocalBroadcastManager.getInstance(context).sendBroadcast(intent)
+    companion object {
+        private const val LOG_TAG = "DownloadStaticContent"
+        private const val ZIPPED_FILE_EXTENSION = ".zip"
+        private const val HEADER_KEY_ETAG = "ETag"
+        private const val JSON_KEY_PATH = "path"
+        private const val JSON_KEY_FILE_SIZE = "fileSize"
+        private const val JSON_KEY_ORIGINAL_SIZE = "originalSize"
+
+        const val EXCEPTION_UNKNOWN_ERROR = "Unknown Error"
+        const val EXCEPTION_TARGET_SUB_DIRECTORY_EMPTY = "Target sub directory is empty"
+        const val EXCEPTION_WIFI_NOT_AVAILABLE = "Wifi Not Available"
+        const val EXCEPTION_NETWORK_NOT_AVAILABLE = "Network Not Available"
+        const val EXCEPTION_NOT_MODIFIED = "Not Modified"
+        const val EXCEPTION_INVALID_MANIFEST_FILE_FORMAT = "Invalid Manifest File Format"
+        const val EXCEPTION_MANIFEST_APP_VERSION_NOT_FOUND = "Manifest App Version Not Found"
+        const val EXCEPTION_MANIFEST_LOCALE_NOT_FOUND = "Manifest Locale Not Found"
+        const val EXCEPTION_MANIFEST_FILE_KEY_NOT_FOUND = "Manifest File Key Not Found"
+        const val EXCEPTION_UNZIPPING_FILE = "Error In Unzipping The File"
+        const val EXCEPTION_INSUFFICIENT_STORAGE = "Insufficient Storage"
+        const val EXCEPTION_DOWNLOAD_FAILED = "Downloading Failed"
+
+        @Volatile
+        private var INSTANCE: DownloadStaticContent? = null
+
+        @Synchronized
+        fun getInstance(context: Context): DownloadStaticContent =
+            INSTANCE ?: DownloadStaticContent(context).also { INSTANCE = it }
     }
 }
 

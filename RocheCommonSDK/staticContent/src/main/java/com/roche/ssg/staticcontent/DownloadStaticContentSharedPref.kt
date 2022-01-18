@@ -39,7 +39,7 @@ object DownloadStaticContentSharedPref {
         context: Context,
         targetSubDir: String,
         appVersion: String,
-        @DownloadStaticContent.LocaleType locale: String,
+        locale: String,
         fileKey: String
     ): String {
         val key = generateKey(PREF_KEY_ETAG_PREFIX, targetSubDir, appVersion, locale, fileKey)
@@ -51,7 +51,7 @@ object DownloadStaticContentSharedPref {
         context: Context,
         targetSubDir: String,
         appVersion: String,
-        @DownloadStaticContent.LocaleType locale: String,
+        locale: String,
         fileKey: String,
         eTag: String
     ) {
@@ -64,7 +64,7 @@ object DownloadStaticContentSharedPref {
         context: Context,
         targetSubDir: String,
         appVersion: String,
-        @DownloadStaticContent.LocaleType locale: String,
+        locale: String,
         fileKey: String
     ): String {
         val key = generateKey(PREF_KEY_FILE_PATH_PREFIX, targetSubDir, appVersion, locale, fileKey)
@@ -76,7 +76,7 @@ object DownloadStaticContentSharedPref {
         context: Context,
         targetSubDir: String,
         appVersion: String,
-        @DownloadStaticContent.LocaleType locale: String,
+        locale: String,
         fileKey: String,
         filePath: String
     ) {
@@ -89,7 +89,7 @@ object DownloadStaticContentSharedPref {
         context: Context,
         targetSubDir: String,
         appVersion: String,
-        @DownloadStaticContent.LocaleType locale: String,
+        locale: String,
         fileKey: String,
         shouldCancel: Boolean
     ) {
@@ -102,7 +102,7 @@ object DownloadStaticContentSharedPref {
         context: Context,
         targetSubDir: String,
         appVersion: String,
-        @DownloadStaticContent.LocaleType locale: String,
+        locale: String,
         fileKey: String
     ): Boolean {
         val key = generateKey(PREF_KEY_CANCEL_DOWNLOAD, targetSubDir, appVersion, locale, fileKey)
@@ -126,7 +126,7 @@ object DownloadStaticContentSharedPref {
         prefix: String,
         targetSubDir: String,
         appVersion: String,
-        @DownloadStaticContent.LocaleType locale: String,
+        locale: String,
         fileKey: String
     ) = "${prefix}_${targetSubDir}_${getAppVersionKey(appVersion)}_${locale}_${fileKey}"
 

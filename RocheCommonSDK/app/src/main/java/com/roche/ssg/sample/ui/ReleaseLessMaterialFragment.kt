@@ -11,16 +11,21 @@ import androidx.lifecycle.lifecycleScope
 import com.roche.ssg.sample.R
 import com.roche.ssg.sample.databinding.FragmentReleaselessMaterialBinding
 import com.roche.ssg.staticcontent.DownloadStaticContent
+import com.roche.ssg.staticcontent.DownloadStaticContentResult
+import com.roche.ssg.staticcontent.entity.StaticContentInfo
 import kotlinx.coroutines.launch
 
 class ReleaseLessMaterialFragment : Fragment() {
     private lateinit var binding: FragmentReleaselessMaterialBinding
+    private lateinit var downloadStaticContent: DownloadStaticContent
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentReleaselessMaterialBinding.inflate(inflater, container, false)
+        downloadStaticContent =
+            DownloadStaticContent.getInstance(requireContext().applicationContext)
         initUI()
         return binding.root
     }
@@ -28,9 +33,6 @@ class ReleaseLessMaterialFragment : Fragment() {
     private fun initUI() {
         binding.btnDownload.setOnClickListener {
             downloadStaticContent()
-        }
-        binding.btnCancelDownload.setOnClickListener {
-            cancelDownload()
         }
     }
 
@@ -40,51 +42,37 @@ class ReleaseLessMaterialFragment : Fragment() {
             txtStatus.text = ""
             txtCancelDownloadStatus.text = ""
             lifecycleScope.launch {
-                txtStatus.text = try {
-                    val path = DownloadStaticContent.downloadStaticAssets(
-                        context = requireContext(),
-                        manifestUrl = etManifestUrl.text.toString(),
-                        appVersion = etAppVersion.text.toString(),
-                        locale = etLocale.text.toString(),
-                        fileKey = etFileType.text.toString(),
-                        progress = ::showProgress,
-                        targetSubDir = etTargetSubdir.text.toString(),
-                        allowWifiOnly = switchWifiOnly.isChecked
-                    )
-                    getString(R.string.downloaded_path, path)
-                } catch (e: Exception) {
-                    getString(R.string.error, e.message)
+                val staticContentInfo = StaticContentInfo(
+                    manifestUrl = etManifestUrl.text.toString(),
+                    appVersion = etAppVersion.text.toString(),
+                    locale = etLocale.text.toString(),
+                    fileKey = etFileType.text.toString(),
+                    targetSubDir = etTargetSubdir.text.toString(),
+                    allowWifiOnly = switchWifiOnly.isChecked
+                )
+                downloadStaticContent.downloadStaticAssets(
+                    staticContentInfo,
+                    ::downloadStaticContentCallback
+                )
+            }
+        }
+    }
+
+    private fun downloadStaticContentCallback(result: DownloadStaticContentResult) {
+        with(binding) {
+            when (result) {
+                is DownloadStaticContentResult.Success -> {
+                    txtStatus.text = getString(R.string.downloaded_path, result.path)
+                    viewLoadingProgressBar.isVisible = false
                 }
-                viewLoadingProgressBar.isVisible = false
+                is DownloadStaticContentResult.Failure -> {
+                    txtStatus.text = getString(R.string.downloaded_path, result.message)
+                    viewLoadingProgressBar.isVisible = false
+                }
+                is DownloadStaticContentResult.DownloadProgress -> {
+                    Log.d(LOG_TAG, "Downloading Progress: ${result.progress}")
+                }
             }
-        }
-    }
-
-    private fun cancelDownload() {
-        with(binding) {
-            DownloadStaticContent.cancelDownload(
-                context = requireContext(),
-                appVersion = etAppVersion.text.toString(),
-                locale = etLocale.text.toString(),
-                fileKey = etFileType.text.toString(),
-                targetSubDir = etTargetSubdir.text.toString(),
-                callback = ::cancelDownloadCallback
-            )
-        }
-    }
-
-    private fun showProgress(progress: Int) {
-        Log.d(LOG_TAG, "Downloading Progress: $progress")
-    }
-
-    private fun cancelDownloadCallback(status: Boolean) {
-        with(binding) {
-            txtCancelDownloadStatus.text = if (status) {
-                getString(R.string.txt_cancel_succeeded)
-            } else {
-                getString(R.string.txt_cancel_failed)
-            }
-            viewLoadingProgressBar.isVisible = false
         }
     }
 
