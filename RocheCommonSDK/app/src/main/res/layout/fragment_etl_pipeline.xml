@@ -17,24 +17,40 @@
                 android:layout_height="wrap_content"
                 android:padding="10dp">
 
-                <androidx.appcompat.widget.AppCompatEditText
-                    android:id="@+id/et_username"
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/til_username"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="@string/etl_username"
+                    android:hint="@string/username"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent">
 
-                <androidx.appcompat.widget.AppCompatEditText
-                    android:id="@+id/et_password"
+                    <androidx.appcompat.widget.AppCompatEditText
+                        android:id="@+id/et_username"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+
+                        android:text="@string/etl_username" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/til_password"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:inputType="textPassword"
-                    android:text="@string/etl_password"
+                    android:hint="@string/password"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/et_username" />
+                    app:layout_constraintTop_toBottomOf="@id/til_username">
+
+                    <androidx.appcompat.widget.AppCompatEditText
+                        android:id="@+id/et_password"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textPassword"
+                        android:text="@string/etl_password" />
+                </com.google.android.material.textfield.TextInputLayout>
+
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btn_get_cognito_token"
@@ -45,7 +61,7 @@
                     android:textAllCaps="false"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/et_password" />
+                    app:layout_constraintTop_toBottomOf="@id/til_password" />
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btn_get_pre_signed_url"

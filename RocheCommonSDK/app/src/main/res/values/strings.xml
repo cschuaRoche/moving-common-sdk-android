@@ -125,4 +125,6 @@
     <string name="etl_username">ssg-etl-patient-1@putsbox.com</string>
     <string name="etl_password">DHPAutomation@123</string>
     <string name="please_enter_valid_credentials">Please Enter Valid Credentials</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
 </resources>
