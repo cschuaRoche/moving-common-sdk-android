@@ -100,6 +100,7 @@ object Deps {
 
     object RocheCommonComponent {
         const val utils = "RocheCommonComponent:utils:${Versions.RocheCommonComponent.utils}"
+        const val etlPipeline = "RocheCommonComponent:etlPipeline:${Versions.RocheCommonComponent.etlPipeline}"
     }
 
     object Hilt {

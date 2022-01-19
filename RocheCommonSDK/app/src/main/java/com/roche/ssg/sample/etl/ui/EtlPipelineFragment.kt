@@ -61,19 +61,19 @@ class EtlPipelineFragment : Fragment() {
             toggleProgressVisibility()
             when (it.result) {
                 is EtlViewModel.EtlResult.AmplifyError -> {
-                    showMessage("Amplify initialization error")
+                    showMessage(getString(R.string.amplify_initialization_error))
                 }
                 is EtlViewModel.EtlResult.LoginSuccess -> {
-                    showMessage("Login Successful")
+                    showMessage(getString(R.string.login_success))
                 }
                 is EtlViewModel.EtlResult.LoginFailed -> {
-                    showMessage("Login Failed")
+                    showMessage(getString(R.string.login_failed))
                 }
                 is EtlViewModel.EtlResult.SignedUrlFailed -> {
-                    showMessage("Signed URL Failed ${it.result.error}")
+                    showMessage(getString(R.string.signed_url_failed, it.result.error))
                 }
                 is EtlViewModel.EtlResult.SignedUrlSuccess -> {
-                    showMessage("Success ${it.result.response.url}")
+                    showMessage(getString(R.string.success, it.result.response.url))
                 }
             }
         })

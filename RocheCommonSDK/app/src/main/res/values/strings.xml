@@ -127,4 +127,9 @@
     <string name="please_enter_valid_credentials">Please Enter Valid Credentials</string>
     <string name="username">Username</string>
     <string name="password">Password</string>
+    <string name="amplify_initialization_error">Amplify Initialization Error</string>
+    <string name="login_success">Login Successful</string>
+    <string name="login_failed">Login Failed</string>
+    <string name="signed_url_failed">Signed URL Failed %s</string>
+    <string name="success">Success %s</string>
 </resources>

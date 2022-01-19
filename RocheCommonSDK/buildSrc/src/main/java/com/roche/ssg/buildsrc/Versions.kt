@@ -49,6 +49,7 @@ object Versions {
 
     object RocheCommonComponent {
         const val utils = "1.0.2"
+        const val etlPipeline = "1.0.0"
     }
 
 }
