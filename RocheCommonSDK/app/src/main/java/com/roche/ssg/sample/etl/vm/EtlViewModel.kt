@@ -19,13 +19,6 @@ import kotlinx.coroutines.launch
 class EtlViewModel(application: Application) : AndroidViewModel(application) {
 
     val etlStates = MutableLiveData<EtlViewState>()
-    private val xAmzTags: HashMap<String, String> =
-        hashMapOf(
-            "Key1" to "Value1",
-            "Key2" to "Value2",
-            "Key3" to "Value3",
-            "Key4" to "Value4",
-        )
 
     init {
         initAmplify()
@@ -78,10 +71,14 @@ class EtlViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun getPreSignedUrl() {
+    fun getPreSignedUrl(tagCount: Int) {
         viewModelScope.launch(Dispatchers.IO) {
-
             try {
+                val xAmzTags = hashMapOf<String, String>()
+                for (i in 1..tagCount) {
+                    xAmzTags["Key$i"] = "Value$i"
+                }
+
                 val response = EtlApiClient().getPreSignedUrl(
                     "https://alic7sdeef.execute-api.us-east-1.amazonaws.com/api",
                     AWSMobileClient.getInstance().tokens.idToken.tokenString,

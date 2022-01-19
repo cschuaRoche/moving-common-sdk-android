@@ -127,4 +127,6 @@
     <string name="please_enter_valid_credentials">Please Enter Valid Credentials</string>
     <string name="username">Username</string>
     <string name="password">Password</string>
+    <string name="tag_count">Tag Count</string>
+    <string name="please_enter_tag_count">Please Enter Tag Count</string>
 </resources>
