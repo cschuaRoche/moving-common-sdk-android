@@ -1,12 +1,10 @@
 package com.roche.ssg.staticcontent
 
-import android.app.DownloadManager
 import android.content.Context
-import android.net.Uri
 import android.util.Log
 import androidx.annotation.VisibleForTesting
 import com.roche.ssg.staticcontent.entity.ManifestInfo
-import com.roche.ssg.staticcontent.entity.MaterialInfo
+import com.roche.ssg.staticcontent.entity.StaticContentTask
 import com.roche.ssg.staticcontent.entity.StaticContentInfo
 import com.roche.ssg.utils.NetworkUtils
 import com.roche.ssg.utils.UnZipUtils
@@ -16,7 +14,6 @@ import org.json.JSONException
 import org.json.JSONObject
 import java.io.BufferedReader
 import java.io.File
-import java.io.FileOutputStream
 import java.io.IOException
 import java.io.InputStreamReader
 import java.lang.ref.WeakReference
@@ -27,21 +24,29 @@ import java.util.Queue
 
 class DownloadStaticContent private constructor(context: Context) {
     private val weakReference = WeakReference(context)
-    private val queue: Queue<MaterialInfo> = LinkedList()
+    private val queue: Queue<StaticContentTask> = LinkedList()
 
+    /**
+     * Download static assets and unzips them of given app version, locale, file key and
+     * target sub directory. Deletes older app version's content if newer app version's
+     * data is requested.
+     *
+     * @param staticContentInfo StaticContentInfo object
+     * @param result callback
+     */
     suspend fun downloadStaticAssets(
         staticContentInfo: StaticContentInfo,
         result: (DownloadStaticContentResult) -> Unit
     ) {
-        queue.add(MaterialInfo(staticContentInfo, result))
+        queue.add(StaticContentTask(staticContentInfo, result))
         if (queue.size == 1) {
-            processDownload()
+            startDownload()
         }
     }
 
-    private tailrec suspend fun processDownload() {
-        val materialInfo = queue.peek()
-        materialInfo?.run {
+    private tailrec suspend fun startDownload() {
+        val staticContentTask = queue.peek()
+        staticContentTask?.run {
             val context =
                 weakReference.get() ?: throw IllegalStateException(EXCEPTION_UNKNOWN_ERROR)
             try {
@@ -106,20 +111,14 @@ class DownloadStaticContent private constructor(context: Context) {
         }
 
         if (queue.isNotEmpty()) {
-            processDownload()
+            startDownload()
         }
     }
 
     /**
      * get manifest info based on the app version, locale and file key from given manifest
      *
-     * @param context Context
-     * @param manifestUrl Url of the manifest file
-     * @param appVersion Application version
-     * @param locale Locale
-     * @param fileKey file key for which static assets needs to be downloaded (e.g. user_manual)
-     * @param targetSubDir sub directory where the files will be downloaded to
-     * @param allowWifiOnly download asset on WIFI only (Default is false).
+     * @param staticContentInfo StaticContentInfo object
      *
      * @return returns ManifestInfo object
      */
@@ -183,10 +182,9 @@ class DownloadStaticContent private constructor(context: Context) {
      * Download a file to the app's files directory.
      *
      * @param context application context
+     * @param staticContentInfo StaticContentInfo object
      * @param fileUrl the file url
      * @param progress callback which will return the progress of the download
-     * @param targetSubDir sub directory where the files will be downloaded to
-     * @param allowWifiOnly download asset on WIFI only (Default is false).
      *
      * @return downloaded zipped file's path
      */
@@ -199,24 +197,22 @@ class DownloadStaticContent private constructor(context: Context) {
     ): String {
         checkConnection(context, staticContentInfo.allowWifiOnly)
         return withContext(Dispatchers.IO) {
-            val request = DownloadManager.Request(Uri.parse(fileUrl))
-            if (staticContentInfo.allowWifiOnly) {
-                request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI)
-            } else {
-                request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI or DownloadManager.Request.NETWORK_MOBILE)
+            val fileName = fileUrl.substring(fileUrl.lastIndexOf("/") + 1)
+            val file =
+                File(context.filesDir.toString() + File.separator + staticContentInfo.targetSubDir + File.separator + staticContentInfo.appVersion)
+            if (file.exists().not()) {
+                file.mkdirs()
             }
-            request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_HIDDEN)
-            val downloadManager =
-                context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
-            val downloadId = downloadManager.enqueue(request)
-            trackProgress(downloadId, downloadManager, staticContentInfo, progress)
-            moveDownloadToInternalDir(
+            val destPath = file.path + File.separator + fileName
+            DownloadManagerUtil.download(
                 context,
-                downloadId,
-                downloadManager,
                 fileUrl,
-                staticContentInfo
-            )
+                destPath,
+                staticContentInfo.allowWifiOnly,
+                true
+            ) { value ->
+                progress(DownloadStaticContentResult.DownloadProgress(staticContentInfo, value))
+            }
         }
     }
 
@@ -225,8 +221,7 @@ class DownloadStaticContent private constructor(context: Context) {
      *
      * @param context the application context
      * @param filePath location of the zipped file
-     * @param targetSubDir sub directory where the files will be unzipped to.
-     * If not provided then it will unzip to app's files directory
+     * @param staticContentInfo StaticContentInfo object
      *
      * @return unzip file path if zip file was successfully unzipped to the app's directory,
      * otherwise throws error
@@ -310,93 +305,6 @@ class DownloadStaticContent private constructor(context: Context) {
             Log.e(LOG_TAG, "error: $e")
             throw e
         }
-    }
-
-    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
-    @Throws(IllegalStateException::class)
-    internal suspend fun trackProgress(
-        downloadId: Long,
-        downloadManager: DownloadManager,
-        staticContentInfo: StaticContentInfo,
-        progress: (DownloadStaticContentResult.DownloadProgress) -> Unit
-    ) {
-        var isDownloadFinished = false
-        var currentProgress = -1
-        while (!isDownloadFinished) {
-            val cursor = downloadManager.query(DownloadManager.Query().setFilterById(downloadId))
-            if (cursor.moveToFirst()) {
-                when (cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS))) {
-                    DownloadManager.STATUS_FAILED -> {
-                        throw IllegalStateException(EXCEPTION_DOWNLOAD_FAILED)
-                    }
-                    DownloadManager.STATUS_RUNNING -> {
-                        val total =
-                            cursor.getLong(cursor.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES))
-                        if (total >= 0) {
-                            val downloaded =
-                                cursor.getLong(cursor.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR))
-                            val newProgress = (downloaded * 100L / total).toInt()
-                            if (currentProgress != newProgress) {
-                                currentProgress = newProgress
-                                withContext(Dispatchers.Main) {
-                                    progress(
-                                        DownloadStaticContentResult.DownloadProgress(
-                                            staticContentInfo,
-                                            currentProgress
-                                        )
-                                    )
-                                }
-                            }
-                        }
-                    }
-                    DownloadManager.STATUS_SUCCESSFUL -> {
-                        progress(
-                            DownloadStaticContentResult.DownloadProgress(
-                                staticContentInfo,
-                                100
-                            )
-                        )
-                        isDownloadFinished = true
-                    }
-                }
-            }
-            cursor.close()
-        }
-    }
-
-    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
-    internal fun moveDownloadToInternalDir(
-        context: Context,
-        downloadId: Long,
-        downloadManager: DownloadManager,
-        fileUrl: String,
-        staticContentInfo: StaticContentInfo
-    ): String {
-        val uri = downloadManager.getUriForDownloadedFile(downloadId)
-        val inputStream = context.contentResolver.openInputStream(uri)
-
-        val fileName = fileUrl.substring(fileUrl.lastIndexOf("/") + 1)
-        val file =
-            File(context.filesDir.toString() + File.separator + staticContentInfo.targetSubDir + File.separator + staticContentInfo.appVersion)
-        if (file.exists().not()) {
-            file.mkdirs()
-        }
-        val destPath = file.path + File.separator + fileName
-        val outputFile = File(destPath)
-        val outputStream = FileOutputStream(outputFile)
-
-        val buf = ByteArray(1024)
-        var len: Int
-        while (run {
-                len = inputStream!!.read(buf)
-                len
-            } > 0) {
-            outputStream.write(buf, 0, len)
-        }
-        outputStream.close()
-        inputStream?.close()
-        downloadManager.remove(downloadId)
-        return destPath
     }
 
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
