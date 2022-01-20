@@ -31,46 +31,96 @@ class ReleaseLessMaterialFragment : Fragment() {
     }
 
     private fun initUI() {
-        binding.btnDownload.setOnClickListener {
-            downloadStaticContent()
+        with(binding) {
+            btnDownload1.setOnClickListener {
+                viewLoadingProgressBar1.isVisible = true
+                txtStatus1.text = ""
+                downloadStaticContent(etFileType1.text.toString())
+            }
+            btnDownload2.setOnClickListener {
+                viewLoadingProgressBar2.isVisible = true
+                txtStatus2.text = ""
+                downloadStaticContent(etFileType2.text.toString())
+            }
+            btnDownload3.setOnClickListener {
+                viewLoadingProgressBar3.isVisible = true
+                txtStatus3.text = ""
+                downloadStaticContent(etFileType3.text.toString())
+            }
         }
     }
 
-    private fun downloadStaticContent() {
-        with(binding) {
-            viewLoadingProgressBar.isVisible = true
-            txtStatus.text = ""
-            txtCancelDownloadStatus.text = ""
-            lifecycleScope.launch {
-                val staticContentInfo = StaticContentInfo(
-                    manifestUrl = etManifestUrl.text.toString(),
-                    appVersion = etAppVersion.text.toString(),
-                    locale = etLocale.text.toString(),
-                    fileKey = etFileType.text.toString(),
-                    targetSubDir = etTargetSubdir.text.toString(),
-                    allowWifiOnly = switchWifiOnly.isChecked
-                )
-                downloadStaticContent.downloadStaticAssets(
-                    staticContentInfo,
-                    ::downloadStaticContentCallback
+    private fun downloadStaticContent(fileType: String) {
+        lifecycleScope.launch {
+            val staticContentInfo = StaticContentInfo(
+                manifestUrl = getString(R.string.static_content_base_url),
+                appVersion = getString(R.string.static_content_version),
+                locale = getString(R.string.static_content_locale),
+                fileKey = fileType,
+                targetSubDir = "SSG",
+                allowWifiOnly = false
+            )
+            downloadStaticContent.downloadStaticAssets(
+                staticContentInfo,
+                ::downloadStaticContentCallback
+            )
+        }
+    }
+
+    private fun downloadStaticContentCallback(result: DownloadStaticContentResult) {
+        when (result) {
+            is DownloadStaticContentResult.Success -> {
+                processSuccess(result.staticContentInfo.fileKey, result.path)
+            }
+            is DownloadStaticContentResult.Failure -> {
+                processFailure(result.staticContentInfo.fileKey, result.message)
+            }
+            is DownloadStaticContentResult.DownloadProgress -> {
+                Log.d(
+                    LOG_TAG,
+                    "Downloading Progress for ${result.staticContentInfo.fileKey}: ${result.progress}%"
                 )
             }
         }
     }
 
-    private fun downloadStaticContentCallback(result: DownloadStaticContentResult) {
+    private fun processSuccess(fileType: String, path: String) {
         with(binding) {
-            when (result) {
-                is DownloadStaticContentResult.Success -> {
-                    txtStatus.text = getString(R.string.downloaded_path, result.path)
-                    viewLoadingProgressBar.isVisible = false
+            when (fileType) {
+                etFileType1.text.toString() -> {
+                    txtStatus1.text = getString(R.string.downloaded_path, path)
+                    viewLoadingProgressBar1.isVisible = false
                 }
-                is DownloadStaticContentResult.Failure -> {
-                    txtStatus.text = getString(R.string.downloaded_path, result.message)
-                    viewLoadingProgressBar.isVisible = false
+
+                etFileType2.text.toString() -> {
+                    txtStatus2.text = getString(R.string.downloaded_path, path)
+                    viewLoadingProgressBar2.isVisible = false
                 }
-                is DownloadStaticContentResult.DownloadProgress -> {
-                    Log.d(LOG_TAG, "Downloading Progress: ${result.progress}")
+
+                etFileType3.text.toString() -> {
+                    txtStatus3.text = getString(R.string.downloaded_path, path)
+                    viewLoadingProgressBar3.isVisible = false
+                }
+            }
+        }
+    }
+
+    private fun processFailure(fileType: String, message: String) {
+        with(binding) {
+            when (fileType) {
+                etFileType1.text.toString() -> {
+                    txtStatus1.text = getString(R.string.error, message)
+                    viewLoadingProgressBar1.isVisible = false
+                }
+
+                etFileType2.text.toString() -> {
+                    txtStatus2.text = getString(R.string.error, message)
+                    viewLoadingProgressBar2.isVisible = false
+                }
+
+                etFileType3.text.toString() -> {
+                    txtStatus3.text = getString(R.string.error, message)
+                    viewLoadingProgressBar3.isVisible = false
                 }
             }
         }

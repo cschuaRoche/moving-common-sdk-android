@@ -113,10 +113,12 @@
     <string name="version_1_0">1.0</string>
     <string name="locale_fr">fr</string>
     <string name="samd_id">com.roche.ssg.test.samd.one:1.0.0,com.roche.ssg.test.samd.two:1.0.1</string>
-    <string name="static_content_base_url">https://static-content.dhp-dev.dhs.platform.navify.com/com.roche.floodlight/sdk/docs/sdk-metadata.json</string>
-    <string name="static_content_version">1.4.0</string>
-    <string name="static_content_locale">pt_BR</string>
-    <string name="static_content_file_type">assessment_user_manuals</string>
+    <string name="static_content_base_url">https://ssg-release-less.s3.amazonaws.com/com.roche.ssg/app/docs/app-metadata.json</string>
+    <string name="static_content_version">7.0.0</string>
+    <string name="static_content_locale">en_US</string>
+    <string name="static_content_file_type_1">assessment_user_manuals</string>
+    <string name="static_content_file_type_2">terms_and_condition</string>
+    <string name="static_content_file_type_3">privacy_policy</string>
     <string name="system_messages_type">quality,system</string>
     <string name="system_messages_samd">com.roche.floodlight</string>
     <string name="system_message_samd_version">1.3.2</string>
