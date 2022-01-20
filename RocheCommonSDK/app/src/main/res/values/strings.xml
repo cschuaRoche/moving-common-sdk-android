@@ -132,4 +132,5 @@
     <string name="login_failed">Login Failed</string>
     <string name="signed_url_failed">Signed URL Failed %s</string>
     <string name="success">Success %s</string>
+    <string name="ssg">SSG</string>
 </resources>

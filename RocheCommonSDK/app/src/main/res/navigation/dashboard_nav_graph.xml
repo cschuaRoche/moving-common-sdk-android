@@ -7,18 +7,19 @@
     <fragment
         android:id="@+id/biometrics_nav_f"
         android:name="com.roche.ssg.sample.ui.BiometricsFragment"
+        android:label="@string/biometrics"
         tools:layout="@layout/biometrics_fragment" />
 
     <fragment
         android:id="@+id/recallFragment"
         android:name="com.roche.ssg.sample.ui.RecallFragment"
-        android:label="fragment_recall"
+        android:label="@string/recall"
         tools:layout="@layout/fragment_recall" />
 
     <fragment
         android:id="@+id/mainFragment"
         android:name="com.roche.ssg.sample.ui.MainFragment"
-        android:label="fragment_main"
+        android:label="@string/ssg"
         tools:layout="@layout/fragment_main">
         <action
             android:id="@+id/action_to_user_one"
@@ -40,18 +41,18 @@
     <fragment
         android:id="@+id/utilsFragment"
         android:name="com.roche.ssg.sample.ui.UtilsFragment"
-        android:label="fragment_utils"
+        android:label="@string/utilities"
         tools:layout="@layout/fragment_utils" />
 
     <fragment
         android:id="@+id/releaseLessMaterialFragment"
         android:name="com.roche.ssg.sample.ui.ReleaseLessMaterialFragment"
-        android:label="fragment_utils"
+        android:label="@string/release_less_material"
         tools:layout="@layout/fragment_releaseless_material" />
     <fragment
         android:id="@+id/salesforceFragment"
         android:name="com.roche.ssg.sample.salesforce.ui.SalesforceFragment"
-        android:label="fragment_salesforce"
+        android:label="@string/salesforce"
         tools:layout="@layout/fragment_salesforce">
 
         <action
@@ -72,37 +73,37 @@
     <fragment
         android:id="@+id/splitIoFragment"
         android:name="com.roche.ssg.sample.splitio.ui.SplitIoFragment"
-        android:label="fragment_split_io"
+        android:label="@string/split_io_user"
         tools:layout="@layout/fragment_split_io" />
 
     <fragment
         android:id="@+id/systemMessagesFragment"
         android:name="com.roche.ssg.sample.systemmessages.ui.SystemMessagesFragment"
-        android:label="fragment_system_messages"
+        android:label="@string/system_messages"
         tools:layout="@layout/fragment_system_messages" />
 
     <fragment
         android:id="@+id/pushNotificationFragment"
         android:name="com.roche.ssg.sample.push.ui.RegisterPushFragment"
-        android:label="fragment_system_messages"
+        android:label="@string/push_notification"
         tools:layout="@layout/fragment_push_register" />
 
     <fragment
         android:id="@+id/securityCheckerFragment"
         android:name="com.roche.ssg.sample.security.ui.MySecurityCheckerFragment"
-        android:label="fragment_security_checker"
+        android:label="@string/verify_license"
         tools:layout="@layout/fragment_security_checker" />
 
     <fragment
         android:id="@+id/amplitudeFragment"
         android:name="com.roche.ssg.sample.amplitude.AmplitudeFragment"
-        android:label="fragment_amplitude"
+        android:label="@string/amplitude"
         tools:layout="@layout/fragment_amplitude" />
 
     <fragment
         android:id="@+id/navifyLoginFragment"
         android:name="com.roche.ssg.sample.login.navify.NavifyLoginFragment"
-        android:label="fragment_navify_login"
+        android:label="@string/navify_platform_login"
         tools:layout="@layout/fragment_navify_login" />
 
     <fragment

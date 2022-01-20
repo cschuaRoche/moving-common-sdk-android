@@ -44,7 +44,7 @@ class MainActivity : AppCompatActivity() {
         val toolbar = binding.root.findViewById<Toolbar>(R.id.main_tool_bar)
         setSupportActionBar(toolbar) //Set toolbar
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setDisplayShowTitleEnabled(false)// remove default titles of the fragments
+        supportActionBar?.setDisplayShowTitleEnabled(true)// remove default titles of the fragments
         setupActionBarWithNavController(navController, appBarConfiguration)
         binding.mainNavigationView.setupWithNavController(navController)
 
