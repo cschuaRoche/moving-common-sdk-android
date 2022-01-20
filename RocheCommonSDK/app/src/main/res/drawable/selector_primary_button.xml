@@ -1,21 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:state_pressed="true">
-        <shape android:shape="rectangle">
-            <solid android:color="@color/colorPrimaryButtonPressed" />
-            <corners android:radius="@dimen/btn_rounded_corner_radius" />
-        </shape>
+
+    <item android:state_pressed="true" >
+        <inset android:inset="@dimen/btn_inset">
+            <shape android:shape="rectangle">
+                <solid android:color="@color/colorPrimaryButtonPressed"/>
+                <corners android:radius="@dimen/btn_rounded_corner_radius" />
+            </shape>
+        </inset>
+
     </item>
-    <item android:state_enabled="false">
-        <shape android:shape="rectangle">
-            <solid android:color="@color/colorPrimaryButtonDisabled" />
-            <corners android:radius="@dimen/btn_rounded_corner_radius" />
-        </shape>
+    <item android:state_enabled="false" >
+        <inset android:inset="@dimen/btn_inset" >
+            <shape android:shape="rectangle">
+                <solid android:color="@color/colorPrimaryButtonDisabled"/>
+                <corners android:radius="@dimen/btn_rounded_corner_radius" />
+            </shape>
+        </inset>
     </item>
-    <item>
-        <shape android:shape="rectangle">
-            <solid android:color="@color/colorPrimaryButtonNormal" />
-            <corners android:radius="@dimen/btn_rounded_corner_radius" />
-        </shape>
+    <item >
+        <inset android:inset="@dimen/btn_inset">
+            <shape android:shape="rectangle">
+                <solid android:color="@color/colorPrimaryButtonNormal"/>
+                <corners android:radius="@dimen/btn_rounded_corner_radius" />
+            </shape>
+        </inset>
     </item>
 </selector>

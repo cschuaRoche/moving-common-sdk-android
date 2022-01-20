@@ -12,6 +12,7 @@
         <item name="android:statusBarColor" tools:targetApi="l">@color/colorPrimary</item>
         <!-- Windows -->
         <item name="android:windowBackground">@color/white</item>
+        <item name="android:buttonStyle">@style/Base_Button</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.MaterialComponents.Dark.ActionBar" />
@@ -28,11 +29,12 @@
     </style>
 
     <style name="Base_Button" parent="Widget.AppCompat.Button">
+        <item name="android:paddingLeft">@dimen/unit_4</item>
+        <item name="android:paddingRight">@dimen/unit_4</item>
         <item name="android:background">@drawable/selector_primary_button</item>
         <item name="android:textColor">@color/colorBlueButtonText</item>
         <item name="android:textAllCaps">true</item>
         <item name="android:maxLines">1</item>
-        <item name="android:layout_margin">5dp</item>
         <item name="android:ellipsize">end</item>
         <item name="android:textSize">@dimen/text_regular</item>
     </style>
