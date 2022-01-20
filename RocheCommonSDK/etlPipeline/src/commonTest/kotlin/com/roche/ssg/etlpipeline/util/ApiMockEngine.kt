@@ -1,6 +1,6 @@
 package com.roche.ssg.etlpipeline.util
 
-import com.roche.ssg.etlpipeline.api.EtlApiClient
+import com.roche.ssg.etlpipeline.api.EtlRepository
 import com.roche.ssg.etlpipeline.mockresponse.SignedUrlMockResponse
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.mock.MockEngine
@@ -17,13 +17,13 @@ class ApiMockEngine {
         headersOf("Content-Type" to listOf(ContentType.Application.Json.toString()))
     private val client = HttpClient(MockEngine) {
         install(HttpTimeout) {
-            requestTimeoutMillis = EtlApiClient.TIME_OUT
-            connectTimeoutMillis = EtlApiClient.TIME_OUT
+            requestTimeoutMillis = EtlRepository.TIME_OUT
+            connectTimeoutMillis = EtlRepository.TIME_OUT
         }
         engine {
             addHandler { request ->
                 when (request.url.encodedPath) {
-                    EtlApiClient.SIGNED_URL_END_POINT -> {
+                    EtlRepository.SIGNED_URL_END_POINT -> {
 
                         when {
                             request.headers["Authorization"]?.contains("invalid_mock_auth_token") == true -> {

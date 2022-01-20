@@ -11,7 +11,7 @@ import com.amplifyframework.core.Amplify
 import com.amplifyframework.core.AmplifyConfiguration
 import com.amplifyframework.core.Resources
 import com.roche.ssg.etlpipeline.EtlException
-import com.roche.ssg.etlpipeline.api.EtlApiClient
+import com.roche.ssg.etlpipeline.api.EtlRepository
 import com.roche.ssg.etlpipeline.model.SignedUrlResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -82,7 +82,7 @@ class EtlViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch(Dispatchers.IO) {
 
             try {
-                val response = EtlApiClient().getPreSignedUrl(
+                val response = EtlRepository().getPreSignedUrl(
                     "https://alic7sdeef.execute-api.us-east-1.amazonaws.com/api",
                     AWSMobileClient.getInstance().tokens.idToken.tokenString,
                     "draw_shape",

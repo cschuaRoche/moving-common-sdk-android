@@ -1,16 +1,16 @@
 package com.roche.ssg.etlpipeline.test
 
 import com.roche.ssg.etlpipeline.EtlException
-import com.roche.ssg.etlpipeline.api.EtlApiClient
+import com.roche.ssg.etlpipeline.api.EtlRepository
 import com.roche.ssg.etlpipeline.runBlockingTest
 import com.roche.ssg.etlpipeline.util.ApiMockEngine
 import kotlin.test.Test
 import kotlin.test.assertFailsWith
 import kotlin.test.assertNotNull
 
-class EtlApiClientTest {
+class EtlRepositoryTest {
     private val apiMockEngine = ApiMockEngine()
-    private val apiMock = EtlApiClient(apiMockEngine.get())
+    private val apiMock = EtlRepository(apiMockEngine.get())
 
     @Test
     fun shouldGetValidResponse() = runBlockingTest {

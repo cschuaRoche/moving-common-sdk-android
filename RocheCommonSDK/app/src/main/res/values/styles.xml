@@ -30,7 +30,6 @@
     <style name="Base_Button" parent="Widget.AppCompat.Button">
         <item name="android:background">@drawable/selector_primary_button</item>
         <item name="android:textColor">@color/colorBlueButtonText</item>
-<!--        <item name="android:fontFamily">@font/roboto_medium</item>-->
         <item name="android:textAllCaps">true</item>
         <item name="android:maxLines">1</item>
         <item name="android:layout_margin">5dp</item>

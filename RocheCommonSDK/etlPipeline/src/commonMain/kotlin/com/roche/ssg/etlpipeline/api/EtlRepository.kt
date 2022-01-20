@@ -20,7 +20,7 @@ import io.ktor.network.sockets.SocketTimeoutException
 import io.ktor.utils.io.core.use
 
 
-class EtlApiClient(httpClientEngine: HttpClientEngine) {
+class EtlRepository(httpClientEngine: HttpClientEngine) {
 
     constructor() : this(HttpClient().engine)
 
