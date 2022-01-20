@@ -4,8 +4,8 @@ import android.content.Context
 import android.util.Log
 import androidx.annotation.VisibleForTesting
 import com.roche.ssg.staticcontent.entity.ManifestInfo
-import com.roche.ssg.staticcontent.entity.StaticContentTask
 import com.roche.ssg.staticcontent.entity.StaticContentInfo
+import com.roche.ssg.staticcontent.entity.StaticContentTask
 import com.roche.ssg.utils.NetworkUtils
 import com.roche.ssg.utils.UnZipUtils
 import kotlinx.coroutines.Dispatchers
@@ -19,12 +19,12 @@ import java.io.InputStreamReader
 import java.lang.ref.WeakReference
 import java.net.HttpURLConnection
 import java.net.URL
-import java.util.LinkedList
 import java.util.Queue
+import java.util.concurrent.ConcurrentLinkedQueue
 
 class DownloadStaticContent private constructor(context: Context) {
     private val weakReference = WeakReference(context)
-    private val queue: Queue<StaticContentTask> = LinkedList()
+    private val queue: Queue<StaticContentTask> = ConcurrentLinkedQueue()
 
     /**
      * Download static assets and unzips them of given app version, locale, file key and
