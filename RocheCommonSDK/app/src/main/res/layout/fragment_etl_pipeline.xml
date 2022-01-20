@@ -30,7 +30,6 @@
                         android:id="@+id/et_username"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-
                         android:text="@string/etl_username" />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -51,6 +50,22 @@
                         android:text="@string/etl_password" />
                 </com.google.android.material.textfield.TextInputLayout>
 
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/til_tag_count"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/tag_count"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/til_password">
+
+                    <androidx.appcompat.widget.AppCompatEditText
+                        android:id="@+id/et_tag_count"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="number"
+                        android:text="2" />
+                </com.google.android.material.textfield.TextInputLayout>
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btn_get_cognito_token"
@@ -61,7 +76,7 @@
                     android:textAllCaps="false"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/til_password" />
+                    app:layout_constraintTop_toBottomOf="@id/til_tag_count" />
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btn_get_pre_signed_url"
@@ -81,6 +96,7 @@
                     android:layout_marginTop="@dimen/unit_4"
                     android:textSize="18sp"
                     android:visibility="visible"
+                    android:autoLink="web"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/btn_get_pre_signed_url" />

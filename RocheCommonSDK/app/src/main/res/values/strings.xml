@@ -133,4 +133,6 @@
     <string name="signed_url_failed">Signed URL Failed %s</string>
     <string name="success">Success %s</string>
     <string name="ssg">SSG</string>
+    <string name="tag_count">Tag Count</string>
+    <string name="please_enter_tag_count">Please Enter Tag Count</string>
 </resources>

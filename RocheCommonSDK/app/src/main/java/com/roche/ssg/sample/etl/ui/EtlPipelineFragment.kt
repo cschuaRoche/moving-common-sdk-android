@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -31,8 +30,14 @@ class EtlPipelineFragment : Fragment() {
 
     private fun setPreSignedUrlListener() {
         mBinding.btnGetPreSignedUrl.setOnClickListener {
-            toggleProgressVisibility()
-            mEtlViewModel.getPreSignedUrl()
+
+            val tagCount = mBinding.etTagCount.text.toString().trim()
+            if (tagCount.isEmpty())
+                showMessage(getString(R.string.please_enter_tag_count))
+            else {
+                toggleProgressVisibility()
+                mEtlViewModel.getPreSignedUrl(tagCount.toInt())
+            }
         }
     }
 
@@ -41,11 +46,7 @@ class EtlPipelineFragment : Fragment() {
             if (mBinding.etUsername.text.toString().trim()
                     .isEmpty() || mBinding.etPassword.text.toString().trim().isEmpty()
             ) {
-                Toast.makeText(
-                    requireContext(),
-                    getString(R.string.please_enter_valid_credentials),
-                    Toast.LENGTH_LONG
-                ).show()
+                showMessage(getString(R.string.please_enter_valid_credentials))
                 return@setOnClickListener
             }
             toggleProgressVisibility()
