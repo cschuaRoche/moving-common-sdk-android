@@ -135,4 +135,10 @@
     <string name="ssg">SSG</string>
     <string name="tag_count">Tag Count</string>
     <string name="please_enter_tag_count">Please Enter Tag Count</string>
+    <string name="dhp_assessment_id">DHP Assessment ID</string>
+    <string name="dhp_app_id">DHP Application ID</string>
+    <string name="please_enter_dhp_assessment_id">Please enter DHP Assessment ID</string>
+    <string name="please_enter_dhp_app_id">Please enter DHP Application ID</string>
+    <string name="draw_shape">draw_shape</string>
+    <string name="com_roche_dummy">com.roche.dummy</string>
 </resources>

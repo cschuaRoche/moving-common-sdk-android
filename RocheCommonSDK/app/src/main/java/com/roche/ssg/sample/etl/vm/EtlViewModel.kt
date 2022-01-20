@@ -71,7 +71,7 @@ class EtlViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun getPreSignedUrl(tagCount: Int) {
+    fun getPreSignedUrl(assessmentId: String, appId: String, tagCount: Int) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val xAmzTags = hashMapOf<String, String>()
@@ -81,8 +81,8 @@ class EtlViewModel(application: Application) : AndroidViewModel(application) {
                 val response = EtlRepository().getPreSignedUrl(
                     "https://alic7sdeef.execute-api.us-east-1.amazonaws.com/api",
                     AWSMobileClient.getInstance().tokens.idToken.tokenString,
-                    "draw_shape",
-                    "com.roche.dummy",
+                    assessmentId,
+                    appId,
                     xAmzTags
                 )
                 etlStates.postValue(

@@ -31,13 +31,27 @@ class EtlPipelineFragment : Fragment() {
     private fun setPreSignedUrlListener() {
         mBinding.btnGetPreSignedUrl.setOnClickListener {
 
-            val tagCount = mBinding.etTagCount.text.toString().trim()
-            if (tagCount.isEmpty())
-                showMessage(getString(R.string.please_enter_tag_count))
-            else {
-                toggleProgressVisibility()
-                mEtlViewModel.getPreSignedUrl(tagCount.toInt())
+            val dhpAssessmentId = mBinding.etDhpAssessmentId.text.toString().trim()
+            if (dhpAssessmentId.isEmpty()) {
+                showMessage(getString(R.string.please_enter_dhp_assessment_id))
+                return@setOnClickListener
             }
+
+            val appId = mBinding.etAppId.text.toString().trim()
+            if (appId.isEmpty()) {
+                showMessage(getString(R.string.please_enter_dhp_app_id))
+                return@setOnClickListener
+            }
+
+            val tagCount = mBinding.etTagCount.text.toString().trim()
+            if (tagCount.isEmpty()) {
+                showMessage(getString(R.string.please_enter_tag_count))
+                return@setOnClickListener
+            }
+
+            toggleProgressVisibility()
+            mEtlViewModel.getPreSignedUrl(dhpAssessmentId, appId, tagCount.toInt())
+
         }
     }
 

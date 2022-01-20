@@ -50,6 +50,50 @@
                         android:text="@string/etl_password" />
                 </com.google.android.material.textfield.TextInputLayout>
 
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btn_get_cognito_token"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/btn_txt_login"
+                    android:textAllCaps="false"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/til_password" />
+
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/til_dhp_assessment_id"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/unit_4"
+                    android:hint="@string/dhp_assessment_id"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/btn_get_cognito_token">
+
+                    <androidx.appcompat.widget.AppCompatEditText
+                        android:id="@+id/et_dhp_assessment_id"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/draw_shape" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/til_app_id"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/dhp_app_id"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/til_dhp_assessment_id">
+
+                    <androidx.appcompat.widget.AppCompatEditText
+                        android:id="@+id/et_app_id"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/com_roche_dummy" />
+                </com.google.android.material.textfield.TextInputLayout>
+
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/til_tag_count"
                     android:layout_width="0dp"
@@ -57,7 +101,7 @@
                     android:hint="@string/tag_count"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/til_password">
+                    app:layout_constraintTop_toBottomOf="@id/til_app_id">
 
                     <androidx.appcompat.widget.AppCompatEditText
                         android:id="@+id/et_tag_count"
@@ -68,16 +112,6 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/btn_get_cognito_token"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:text="@string/btn_txt_login"
-                    android:textAllCaps="false"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/til_tag_count" />
-
-                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btn_get_pre_signed_url"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -85,16 +119,16 @@
                     android:textAllCaps="false"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/btn_get_cognito_token" />
+                    app:layout_constraintTop_toBottomOf="@id/til_tag_count" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/txt_status"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/unit_4"
+                    android:autoLink="web"
                     android:textSize="18sp"
                     android:visibility="visible"
-                    android:autoLink="web"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/btn_get_pre_signed_url" />
